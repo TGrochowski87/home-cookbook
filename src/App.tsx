@@ -1,4 +1,4 @@
-import "./App.scss";
+import "./App.less";
 
 function App() {
   return (
