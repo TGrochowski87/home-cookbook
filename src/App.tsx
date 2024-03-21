@@ -1,12 +1,8 @@
+import { Outlet } from "react-router-dom";
 import "./App.less";
 
 function App() {
-  return (
-    <div>
-      <h1>XD</h1>
-      <h1>XD</h1>
-    </div>
-  );
+  return <Outlet />;
 }
 
 export default App;
