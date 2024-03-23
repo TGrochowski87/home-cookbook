@@ -1,15 +1,18 @@
-#colors() {
-  primary: linear-gradient(180deg, #40a28a 0%, #679916 100%);
-  secondary: #ccc;
-  background: #d8d8d8;
-  text: #111;
-}
+@import "./variables.less";
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
 :root {
   background-color: #colors[background];
 }
 
 * {
+  font-family: "Roboto Mono", sans-serif;
   box-sizing: border-box;
   margin: 0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

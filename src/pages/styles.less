@@ -1,0 +1,54 @@
+@import "../variables.less";
+
+.main-page-layout {
+  padding: 16px;
+
+  .page-switch {
+    position: relative;
+    background-color: #colors[background];
+    width: 280px;
+    height: 48px;
+    padding: 0;
+
+    border: 1px solid black;
+    border-radius: #numeric[big-border-radius];
+
+    overflow: hidden;
+
+    isolation: isolate;
+
+    .switch-thumb {
+      position: relative;
+      background: #colors[primary];
+      display: block;
+      width: 50%;
+      height: 100%;
+      border-radius: #numeric[big-border-radius];
+
+      will-change: left;
+      left: 0;
+      transition: left 200ms ease;
+    }
+
+    .switch-thumb[data-state="checked"] {
+      left: 50%;
+    }
+
+    .labels {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      z-index: 2;
+
+      p {
+        width: 50%;
+        font-size: 1.2rem;
+        font-weight: 600;
+        letter-spacing: 2px;
+      }
+    }
+  }
+}
