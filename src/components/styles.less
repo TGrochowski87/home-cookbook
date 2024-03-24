@@ -3,10 +3,20 @@
 .category-chip {
   background: #colors[secondary];
   padding: 4px 12px;
+  white-space: nowrap;
 
   .font-category();
 }
 
-.category-chip.active {
+.tag-chip {
+  background: #colors[secondary];
+  padding: 2px 8px;
+  white-space: nowrap;
+
+  .font-tag();
+}
+
+.category-chip.active,
+.tag-chip.active {
   background: #colors[primary];
 }

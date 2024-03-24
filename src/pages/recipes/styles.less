@@ -1,22 +1,52 @@
 .recipe-list-page {
   width: 100%;
 
-  .search-bar {
+  .search-section {
     width: 100%;
-    height: 32px;
-
     display: flex;
-    padding-inline: 8px;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
 
-    input {
-      background-color: transparent;
-      border: none;
-      outline: none;
-      flex-grow: 1;
+    .search-bar {
+      width: calc(100% - 16px);
+      height: 32px;
+
+      display: flex;
+      padding-inline: 8px;
+
+      input {
+        background-color: transparent;
+        border: none;
+        outline: none;
+        flex-grow: 1;
+      }
     }
-  }
 
-  .search-bar:has(input:focus-visible) {
-    outline: 2px solid black;
+    .search-bar:has(input:focus-visible) {
+      outline: 2px solid black;
+    }
+
+    .category-list {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 3px;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .tag-list {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
   }
 }

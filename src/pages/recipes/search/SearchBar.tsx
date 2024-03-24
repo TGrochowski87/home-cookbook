@@ -6,7 +6,7 @@ const SearchBar = () => {
   const [input, setInput] = useState<string>("");
   return (
     <BaseBlock className="search-bar">
-      <input type="search" value={input} onChange={event => setInput(event.target.value)} />
+      <input type="search" maxLength={30} value={input} onChange={event => setInput(event.target.value)} />
       <img src={searchIcon} alt="search icon" />
     </BaseBlock>
   );
