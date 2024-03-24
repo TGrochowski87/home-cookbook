@@ -1,17 +1,21 @@
-import { PropsWithChildren } from "react";
-
-interface BaseBlockProps extends PropsWithChildren {
-  readonly className?: string;
+interface BaseBlockProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
   readonly cornersRounding?: "default" | "big";
   readonly disableShadow?: boolean;
 }
 
-const BaseBlock = ({ className, cornersRounding = "default", disableShadow = false, children }: BaseBlockProps) => {
+const BaseBlock = ({
+  className,
+  cornersRounding = "default",
+  disableShadow = false,
+  children,
+  ...others
+}: BaseBlockProps) => {
   return (
     <div
       className={`block ${cornersRounding === "big" ? "big-rounding" : ""} ${
         disableShadow === false && "floating"
-      } ${className}`}>
+      } ${className}`}
+      {...others}>
       {children}
     </div>
   );
