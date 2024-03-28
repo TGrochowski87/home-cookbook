@@ -5,15 +5,11 @@ interface CategoryListProps {}
 const CategoryList = ({}: CategoryListProps) => {
   return (
     <div className="category-list">
-      <CategoryChip name="dsf" />
-      <CategoryChip name="Teasdgagst" />
-      <CategoryChip name=" asd f" />
-      <CategoryChip name=" sdfas" />
-      <CategoryChip name="sadfsag" />
-      <CategoryChip name="fsdfds" />
-      <CategoryChip name="asgsdagsadg" />
-      <CategoryChip name="Tesdfgsadfst" />
-      <CategoryChip name="as" />
+      <CategoryChip name="dsf" activeColor="purple" />
+      <CategoryChip name="Teasdgagst" activeColor="red" />
+      <CategoryChip name=" asd f" activeColor="blue" />
+      <CategoryChip name=" sdfas" activeColor="orange" />
+      <CategoryChip name="sadfsag" activeColor="lightblue" />
     </div>
   );
 };

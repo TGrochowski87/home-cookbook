@@ -2,6 +2,7 @@
 
 .main-page {
   width: 100%;
+  height: 100%;
   padding: 16px;
 
   .page-switch {
@@ -11,9 +12,10 @@
     height: 48px;
     padding: 0;
     margin-bottom: 8px;
+    flex-shrink: 0;
 
-    outline: 2px solid black;
-    border: none;
+    border: 2px solid black;
+    // border: none;
     border-radius: #numeric[big-border-radius];
 
     overflow: hidden;
@@ -26,7 +28,7 @@
       display: block;
       width: 50%;
       height: 100%;
-      border-radius: #numeric[big-border-radius];
+      border-radius: 7px;
 
       will-change: left;
       left: 0;

@@ -1,5 +1,7 @@
 .recipe-list-page {
   width: 100%;
+  flex-grow: 1;
+  flex-shrink: 0;
 
   .search-section {
     width: 100%;
@@ -33,7 +35,9 @@
       flex-direction: row;
       gap: 12px;
       overflow-x: auto;
-      padding-bottom: 3px;
+
+      padding-bottom: 4px;
+      margin-bottom: -4px;
 
       &::-webkit-scrollbar {
         display: none;
@@ -48,5 +52,16 @@
       flex-wrap: wrap;
       gap: 8px;
     }
+  }
+
+  .recipe-list {
+    flex-grow: 1;
+    flex-basis: 0px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    overflow: auto;
+    align-self: start;
   }
 }
