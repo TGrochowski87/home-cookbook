@@ -4,13 +4,18 @@ import BaseBlock from "components/BaseBlock";
 
 interface TagChipProps {
   readonly name: string;
+  readonly disableShadow?: boolean;
+  // readonly active: boolean;
 }
 
-const TagChip = ({ name }: TagChipProps) => {
+const TagChip = ({ name, disableShadow = false }: TagChipProps) => {
   const [active, setActive] = useState<boolean>(false);
 
   return (
-    <BaseBlock className={`tag-chip ${active && "active"}`} onClick={() => setActive(prev => !prev)}>
+    <BaseBlock
+      disableShadow={disableShadow}
+      className={`tag-chip ${active ? "active" : ""}`}
+      onClick={() => setActive(prev => !prev)}>
       {name}
     </BaseBlock>
   );

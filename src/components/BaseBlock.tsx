@@ -13,7 +13,7 @@ const BaseBlock = ({
   return (
     <div
       className={`block ${cornersRounding === "big" ? "big-rounding" : ""} ${
-        disableShadow === false && "floating"
+        disableShadow === false ? "floating" : ""
       } ${className}`}
       {...others}>
       {children}
