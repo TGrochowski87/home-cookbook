@@ -30,6 +30,7 @@ const RecipeListPage = () => {
         </div>
       </form>
       <RecipeList />
+      <div className="shadow"></div>
     </div>
   );
 };
