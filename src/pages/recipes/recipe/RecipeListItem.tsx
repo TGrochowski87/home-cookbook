@@ -3,29 +3,25 @@ import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
 import TagChip from "components/chips/TagChip";
 import "./styles.less";
 import CategoryIndicator from "./CategoryIndicator";
+import { RecipeGetDto } from "api/GET/DTOs";
 
-interface RecipeListItemProps {}
+interface RecipeListItemProps {
+  readonly recipe: RecipeGetDto;
+}
 
-const RecipeListItem = ({}: RecipeListItemProps) => {
+const RecipeListItem = ({ recipe }: RecipeListItemProps) => {
   return (
     <article>
       <BaseBlock className="recipe-list-item">
         <img src={BurgerPlaceHolder} />
-        <h1>Burger jakiśtam</h1>
-        <p>Ten przepis jest super, serio!</p>
+        <h1>{recipe.title}</h1>
+        <p>{recipe.description}</p>
         <div className="tag-list-info">
-          <TagChip disableShadow name="dfgdf" />
-          <TagChip disableShadow name="sdgdsfgsdg" />
-          <TagChip disableShadow name=" sadf sda" />
-          <TagChip disableShadow name="sfsadfasg" />
-          <TagChip disableShadow name="sdf" />
-          <TagChip disableShadow name="gas asd" />
-          <TagChip disableShadow name="asdfsdf" />
-          <TagChip disableShadow name="sdfsadfsa " />
-          <TagChip disableShadow name="sdfsa" />
-          <TagChip disableShadow name="sdf" />
+          {recipe.tags.map(tag => (
+            <TagChip key={tag.id} disableShadow name={tag.name} />
+          ))}
         </div>
-        <CategoryIndicator categoryColor="purple" categoryName="Kategoria :DDD" />
+        <CategoryIndicator categoryColor={recipe.category.color} categoryName={recipe.category.name} />
       </BaseBlock>
     </article>
   );

@@ -16,7 +16,8 @@ const CategoryIndicator = ({ categoryName, categoryColor }: CategoryIndicatorPro
         onMouseLeave={() => setShow(false)}
         onTouchStart={() => setShow(prev => !prev)}
       />
-      <div className={`category-indicator ${show ? "show" : ""}`} style={{ background: categoryColor }}>
+      {/* @ts-ignore */}
+      <div style={{ "--color": categoryColor }} className={`category-indicator ${show ? "show" : ""}`}>
         <p>{categoryName}</p>
       </div>
     </>

@@ -1,10 +1,22 @@
 import axios from "axios";
-import Category from "models/Category";
+import { CategoryGetDto, RecipeGetDto, TagGetDto } from "./DTOs";
 
 const baseUrl = "http://192.168.1.135:3000";
 
-export const getCategories = async (): Promise<Category[]> => {
+export const getCategories = async (): Promise<CategoryGetDto[]> => {
   const url = `${baseUrl}/categories`;
-  const response = await axios.get<Category[]>(url);
+  const response = await axios.get<CategoryGetDto[]>(url);
+  return response.data;
+};
+
+export const getTags = async (): Promise<TagGetDto[]> => {
+  const url = `${baseUrl}/tags`;
+  const response = await axios.get<TagGetDto[]>(url);
+  return response.data;
+};
+
+export const getRecipes = async (): Promise<RecipeGetDto[]> => {
+  const url = `${baseUrl}/recipes`;
+  const response = await axios.get<RecipeGetDto[]>(url);
   return response.data;
 };

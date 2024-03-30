@@ -1,22 +1,29 @@
 import SearchBar from "./SearchBar";
-import RecipeList from "./RecipeList";
 import CategoryChip from "components/chips/CategoryChip";
 import TagChip from "components/chips/TagChip";
 import "./styles.less";
 import { useEffect, useState } from "react";
 import api from "api/api";
-import Category from "models/Category";
+import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
+import RecipeListItem from "./recipe/RecipeListItem";
 
 const RecipeListPage = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [categories, setCategories] = useState<CategoryGetDto[]>([]);
+  const [tags, setTags] = useState<TagGetDto[]>([]);
+  const [recipes, setRecipes] = useState<RecipeGetDto[]>([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const fetchData = async () => {
       const categories = await api.getCategories();
+      const tags = await api.getTags();
+      const recipes = await api.getRecipes();
+
       setCategories(categories);
+      setTags(tags);
+      setRecipes(recipes);
     };
 
-    fetchCategories();
+    fetchData();
   }, []);
   return (
     <div className="recipe-list-page page-layout">
@@ -28,19 +35,16 @@ const RecipeListPage = () => {
           ))}
         </div>
         <div className="tag-list">
-          <TagChip name="dfgdf" />
-          <TagChip name="sdgdsfgsdg" />
-          <TagChip name=" sadf sda" />
-          <TagChip name="sfsadfasg" />
-          <TagChip name="sdf" />
-          <TagChip name="gas asd" />
-          <TagChip name="asdfsdf" />
-          <TagChip name="sdfsadfsa " />
-          <TagChip name="sdfsa" />
-          <TagChip name="sdf" />
+          {tags.map(tag => (
+            <TagChip key={tag.id} name={tag.name} />
+          ))}
         </div>
       </form>
-      <RecipeList />
+      <div className="recipe-list">
+        {recipes.map(recipe => (
+          <RecipeListItem key={recipe.id} recipe={recipe} />
+        ))}
+      </div>
       <div className="shadow"></div>
     </div>
   );
