@@ -3,18 +3,29 @@ import RecipeList from "./RecipeList";
 import CategoryChip from "components/chips/CategoryChip";
 import TagChip from "components/chips/TagChip";
 import "./styles.less";
+import { useEffect, useState } from "react";
+import api from "api/api";
+import Category from "models/Category";
 
 const RecipeListPage = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const categories = await api.getCategories();
+      setCategories(categories);
+    };
+
+    fetchCategories();
+  }, []);
   return (
     <div className="recipe-list-page page-layout">
       <form className="search-section">
         <SearchBar />
         <div className="category-list">
-          <CategoryChip name="dsf" activeColor="purple" />
-          <CategoryChip name="Teasdgagst" activeColor="red" />
-          <CategoryChip name=" asd f" activeColor="blue" />
-          <CategoryChip name=" sdfas" activeColor="orange" />
-          <CategoryChip name="sadfsag" activeColor="lightblue" />
+          {categories.map(category => (
+            <CategoryChip key={category.id} name={category.name} activeColor={category.color} />
+          ))}
         </div>
         <div className="tag-list">
           <TagChip name="dfgdf" />

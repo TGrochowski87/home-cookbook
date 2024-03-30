@@ -1,0 +1,104 @@
+{
+  "categories": [
+    { "id": 1, "name": "obiad", "color": "#9821C5" },
+    { "id": 2, "name": "deser", "color": "#3BE198" },
+    { "id": 3, "name": "śniadanie/kolacja", "color": "#D9D12B" },
+    { "id": 4, "name": "zupa", "color": "#D62929" },
+    { "id": 5, "name": "sos", "color": "#29C9D6" },
+    { "id": 6, "name": "Alkohol", "color": "#2943D6" },
+    { "id": 7, "name": "Inne", "color": "#E13BCB" }
+  ],
+  "tags": [
+    { "id": 1, "name": "meksykańskie" },
+    { "id": 2, "name": "tajskie" },
+    { "id": 3, "name": "wegetariańskie" },
+    { "id": 4, "name": "tanie" },
+    { "id": 5, "name": "kosztowne" },
+    { "id": 6, "name": "ostre" },
+    { "id": 7, "name": "łagodne" },
+    { "id": 8, "name": "kurczak" },
+    { "id": 9, "name": "wołowina" }
+  ],
+  "recipes": [
+    {
+      "id": 1,
+      "title": "Burger z halloumi",
+      "subtitle": "Ten przepis jest super, serio!",
+      "category": {
+        "id": 1,
+        "name": "obiad",
+        "color": "#9821C5"
+      },
+      "tags": [
+        { "id": 3, "name": "wegetariańskie" },
+        { "id": 4, "name": "tanie" },
+        { "id": 6, "name": "ostre" },
+        { "id": 7, "name": "łagodne" }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Burger z halloumi",
+      "subtitle": "Ten przepis jest super, serio!",
+      "category": {
+        "id": 1,
+        "name": "obiad",
+        "color": "#9821C5"
+      },
+      "tags": [
+        { "id": 3, "name": "wegetariańskie" },
+        { "id": 4, "name": "tanie" },
+        { "id": 6, "name": "ostre" },
+        { "id": 7, "name": "łagodne" }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Burger z halloumi",
+      "subtitle": "Ten przepis jest super, serio!",
+      "category": {
+        "id": 1,
+        "name": "obiad",
+        "color": "#9821C5"
+      },
+      "tags": [
+        { "id": 3, "name": "wegetariańskie" },
+        { "id": 4, "name": "tanie" },
+        { "id": 6, "name": "ostre" },
+        { "id": 7, "name": "łagodne" }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Burger z halloumi",
+      "subtitle": "Ten przepis jest super, serio!",
+      "category": {
+        "id": 1,
+        "name": "obiad",
+        "color": "#9821C5"
+      },
+      "tags": [
+        { "id": 3, "name": "wegetariańskie" },
+        { "id": 4, "name": "tanie" },
+        { "id": 6, "name": "ostre" },
+        { "id": 7, "name": "łagodne" }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Burger z halloumi",
+      "subtitle": "Ten przepis jest super, serio!",
+      "category": {
+        "id": 1,
+        "name": "obiad",
+        "color": "#9821C5"
+      },
+      "tags": [
+        { "id": 3, "name": "wegetariańskie" },
+        { "id": 4, "name": "tanie" },
+        { "id": 6, "name": "ostre" },
+        { "id": 7, "name": "łagodne" }
+      ]
+    }
+  ]
+}
