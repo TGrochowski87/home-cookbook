@@ -5,8 +5,8 @@
     { "id": 3, "name": "śniadanie/kolacja", "color": "#D9D12B" },
     { "id": 4, "name": "zupa", "color": "#D62929" },
     { "id": 5, "name": "sos", "color": "#29C9D6" },
-    { "id": 6, "name": "Alkohol", "color": "#2943D6" },
-    { "id": 7, "name": "Inne", "color": "#E13BCB" }
+    { "id": 6, "name": "alkohol", "color": "#2943D6" },
+    { "id": 7, "name": "inne", "color": "#E13BCB" }
   ],
   "tags": [
     { "id": 1, "name": "meksykańskie" },

@@ -1,9 +1,10 @@
 import BaseBlock from "components/BaseBlock";
 import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
-import TagChip from "components/chips/TagChip";
+import TagChip from "pages/recipes/search/TagChip";
 import "./styles.less";
 import CategoryIndicator from "./CategoryIndicator";
 import { RecipeGetDto } from "api/GET/DTOs";
+import SmallTagChip from "./SmallTagChip";
 
 interface RecipeListItemProps {
   readonly recipe: RecipeGetDto;
@@ -18,7 +19,7 @@ const RecipeListItem = ({ recipe }: RecipeListItemProps) => {
         <p>{recipe.description}</p>
         <div className="tag-list-info">
           {recipe.tags.map(tag => (
-            <TagChip key={tag.id} disableShadow name={tag.name} />
+            <SmallTagChip key={tag.id} tag={tag} />
           ))}
         </div>
         <CategoryIndicator categoryColor={recipe.category.color} categoryName={recipe.category.name} />
