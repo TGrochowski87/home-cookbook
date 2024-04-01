@@ -15,4 +15,26 @@ export interface RecipeGetDto {
   readonly description: string;
   readonly category: CategoryGetDto;
   readonly tags: TagGetDto[];
+  readonly imageSrc?: string;
+}
+
+export interface RecipeDetailsGetDto extends RecipeGetDto {
+  readonly ingredients: IngredientGetDto[];
+  readonly text: string;
+}
+
+export interface IngredientGetDto {
+  readonly id: number;
+  readonly amount: Amount;
+}
+
+export type Amount = ConcreteAmount | ImpreciseAmount;
+
+export interface ConcreteAmount {
+  readonly value: number;
+  readonly unit: string;
+}
+
+export interface ImpreciseAmount {
+  readonly value: string;
 }

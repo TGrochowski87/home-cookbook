@@ -1,7 +1,7 @@
 import axios from "axios";
-import { CategoryGetDto, RecipeGetDto, TagGetDto } from "./DTOs";
+import { CategoryGetDto, RecipeDetailsGetDto, RecipeGetDto, TagGetDto } from "./DTOs";
 
-const baseUrl = "http://192.168.1.135:3000";
+const baseUrl = "http://192.168.1.134:3000";
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {
   const url = `${baseUrl}/categories`;
@@ -18,5 +18,11 @@ export const getTags = async (): Promise<TagGetDto[]> => {
 export const getRecipes = async (): Promise<RecipeGetDto[]> => {
   const url = `${baseUrl}/recipes`;
   const response = await axios.get<RecipeGetDto[]>(url);
+  return response.data;
+};
+
+export const getRecipe = async (id: number): Promise<RecipeDetailsGetDto> => {
+  const url = `${baseUrl}/recipes/${id}`;
+  const response = await axios.get<RecipeDetailsGetDto>(url);
   return response.data;
 };

@@ -6,29 +6,27 @@ import { useEffect, useRef, useState } from "react";
 import api from "api/api";
 import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
-import { Form, useSubmit } from "react-router-dom";
+import { Form, useLoaderData, useSubmit } from "react-router-dom";
+
+interface LoaderResponse {
+  readonly recipes: RecipeGetDto[];
+  readonly categories: CategoryGetDto[];
+  readonly tags: TagGetDto[];
+}
+
+export async function loader(): Promise<LoaderResponse> {
+  const categories = await api.getCategories();
+  const tags = await api.getTags();
+  const recipes = await api.getRecipes();
+  return { recipes, categories, tags };
+}
 
 const RecipeListPage = () => {
-  const [categories, setCategories] = useState<CategoryGetDto[]>([]);
-  const [tags, setTags] = useState<TagGetDto[]>([]);
-  const [recipes, setRecipes] = useState<RecipeGetDto[]>([]);
+  const { recipes, categories, tags } = useLoaderData() as LoaderResponse;
 
   const searchTimeoutId = useRef<number>();
   const submit = useSubmit();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const categories = await api.getCategories();
-      const tags = await api.getTags();
-      const recipes = await api.getRecipes();
-
-      setCategories(categories);
-      setTags(tags);
-      setRecipes(recipes);
-    };
-
-    fetchData();
-  }, []);
   return (
     <div className="recipe-list-page page-layout">
       <Form
@@ -36,7 +34,7 @@ const RecipeListPage = () => {
         onChange={event => {
           clearTimeout(searchTimeoutId.current);
           searchTimeoutId.current = setTimeout(() => {
-            submit(event.target.form);
+            submit(event.target.form, { replace: true });
           }, 1000);
         }}>
         <SearchBar />
