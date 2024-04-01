@@ -2,7 +2,7 @@ import SearchBar from "./search/SearchBar";
 import CategoryChip from "pages/recipes/search/CategoryChip";
 import TagChip from "pages/recipes/search/TagChip";
 import "./styles.less";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import api from "api/api";
 import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
@@ -28,7 +28,7 @@ const RecipeListPage = () => {
   const submit = useSubmit();
 
   return (
-    <div className="recipe-list-page page-layout">
+    <div className="recipe-list-page page-layout-column">
       <Form
         className="search-section"
         onChange={event => {

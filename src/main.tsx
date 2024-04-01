@@ -1,13 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import {
-  LoaderFunction,
-  Navigate,
-  Route,
-  RouterProvider,
-  createBrowserRouter,
-  createRoutesFromElements,
-} from "react-router-dom";
+import { Navigate, Route, RouterProvider, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
 import MainPageLayout from "pages/MainPageLayout.tsx";
 import App from "./App";
 import RecipesPage, { loader as recipesPageLoader } from "pages/recipes/RecipesPage";

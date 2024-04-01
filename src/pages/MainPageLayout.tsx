@@ -4,7 +4,7 @@ import "./styles.less";
 
 const MainPageLayout = () => {
   return (
-    <div className="main-page page-layout">
+    <div className="main-page page-layout-column">
       <PageSwitch />
       <Outlet />
     </div>
