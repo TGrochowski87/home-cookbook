@@ -34,6 +34,12 @@
         { "id": 4, "name": "tanie" },
         { "id": 6, "name": "ostre" },
         { "id": 7, "name": "łagodne" }
+      ],
+      "ingredients": [
+        { "id": 1, "name": "pierś z kurczaka", "amount": { "value": 300, "unit": "g" } },
+        { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+        { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+        { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
       ]
     },
     {

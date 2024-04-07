@@ -5,6 +5,7 @@ interface CategoryChipProps {
   readonly category: CategoryGetDto;
 }
 
+// TODO: Consider Radix
 const CategoryChip = ({ category }: CategoryChipProps) => {
   return (
     <>

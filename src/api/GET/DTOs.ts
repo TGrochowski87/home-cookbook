@@ -25,6 +25,7 @@ export interface RecipeDetailsGetDto extends RecipeGetDto {
 
 export interface IngredientGetDto {
   readonly id: number;
+  readonly name: string;
   readonly amount: Amount;
 }
 

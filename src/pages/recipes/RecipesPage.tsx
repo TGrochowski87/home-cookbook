@@ -1,6 +1,6 @@
 import SearchBar from "./search/SearchBar";
 import CategoryChip from "pages/recipes/search/CategoryChip";
-import TagChip from "pages/recipes/search/TagChip";
+import TagChipCheckbox from "pages/recipes/search/TagChipCheckbox";
 import "./styles.less";
 import { useRef } from "react";
 import api from "api/api";
@@ -45,7 +45,7 @@ const RecipeListPage = () => {
         </div>
         <div className="tag-list">
           {tags.map(tag => (
-            <TagChip key={tag.id} tag={tag} />
+            <TagChipCheckbox key={tag.id} tag={tag} />
           ))}
         </div>
       </Form>

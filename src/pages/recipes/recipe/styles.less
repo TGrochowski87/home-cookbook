@@ -54,39 +54,26 @@
     &::-webkit-scrollbar {
       display: none;
     }
-
-    .small-tag-chip {
-      align-self: flex-start;
-      padding: 1px 4px;
-      white-space: nowrap;
-
-      font-size: 1em;
-      font-weight: 600;
-      letter-spacing: 0px;
-
-      background: #colors[primary]; // TODO: Probably remove;
-    }
   }
 
   .category-indicator-interaction-space {
     position: absolute;
-    top: -8px;
     right: 0;
-    display: inline;
-    width: 40px;
-    height: 40px;
+    padding: 8px 16px;
     z-index: 2;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .category-indicator {
     --pseudo-element-width: 8px;
 
     background: var(--color);
-    position: absolute;
-    right: calc(var(--pseudo-element-width) + 4px);
+    position: relative;
     max-width: 0px;
     height: 16px;
-    margin: 4px;
     padding: 1px 0;
 
     font-weight: 600;

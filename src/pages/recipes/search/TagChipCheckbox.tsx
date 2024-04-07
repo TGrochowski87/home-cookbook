@@ -5,15 +5,16 @@ interface TagChipProps {
   readonly tag: TagGetDto;
 }
 
-const TagChip = ({ tag }: TagChipProps) => {
+// TODO: Consider Radix
+const TagChipCheckbox = ({ tag }: TagChipProps) => {
   return (
     <>
       <input type="checkbox" name="tags" value={tag.name} id={tag.name} />
-      <label className="tag-chip block floating" htmlFor={tag.name}>
+      <label className="tag-chip-checkbox block floating" htmlFor={tag.name}>
         {tag.name}
       </label>
     </>
   );
 };
 
-export default TagChip;
+export default TagChipCheckbox;
