@@ -12,18 +12,17 @@
   background: #colors[primary];
 }
 
-.ingredients-list {
+.titled-section {
   width: 100%;
+
+  h2 {
+    letter-spacing: 2px;
+  }
 
   .divider {
     width: 100%;
     height: 2px;
     background: #colors[primary];
-  }
-
-  ol {
-    margin-top: 4px;
-    padding-left: 24px;
   }
 }
 
@@ -58,7 +57,7 @@
   padding: 0;
 
   background-color: transparent;
-  border: 2px solid #519d55;
+  border: 2px solid #colors[primary-non-gradient];
   border-radius: 4px;
   font-size: 2rem;
 
@@ -71,4 +70,10 @@
     border-radius: 2px;
     background: #colors[primary];
   }
+}
+
+.button-outlined {
+  background-color: transparent;
+  border: 2px solid #colors[primary-non-gradient];
+  border-radius: #numeric[border-radius];
 }
