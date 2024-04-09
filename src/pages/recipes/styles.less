@@ -17,20 +17,30 @@
     align-self: start;
   }
 
+  .add-button {
+    width: 56px;
+    height: 56px;
+
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    padding: 8px;
+
+    svg {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
   .shadow {
+    --color: #colors[background];
+
     position: fixed;
     bottom: 0;
     width: 100%;
     height: 48px;
     pointer-events: none;
-    background: linear-gradient(
-      0deg,
-      #colors[background],
-      25%,
-      #colors[background],
-      55%,
-      transparent 60%,
-      transparent 100%
-    );
+    background: linear-gradient(0deg, var(--color), 25%, var(--color), 55%, transparent 60%, transparent 100%);
   }
 }

@@ -6,7 +6,7 @@ import "./styles.less";
 import TagChip from "components/TagChip";
 import TitledSection from "components/TitledSection";
 import Ingredient from "components/Ingredient";
-import ButtonOutlined from "components/ButtonOutlined";
+import CustomButton from "components/CustomButton";
 
 export async function loader({ params }: any) {
   const recipe = await api.getRecipe(params.id);
@@ -53,8 +53,8 @@ const RecipePage = () => {
       </TitledSection>
 
       <Form className="bottom-button-space">
-        <ButtonOutlined>edytuj</ButtonOutlined>
-        <ButtonOutlined>stwórz wariant</ButtonOutlined>
+        <CustomButton>edytuj</CustomButton>
+        <CustomButton>stwórz wariant</CustomButton>
       </Form>
     </div>
   );

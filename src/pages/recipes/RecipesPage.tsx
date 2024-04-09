@@ -7,6 +7,7 @@ import api from "api/api";
 import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
 import { Form, useLoaderData, useSubmit } from "react-router-dom";
+import AddButton from "./AddButton";
 
 interface LoaderResponse {
   readonly recipes: RecipeGetDto[];
@@ -55,6 +56,7 @@ const RecipeListPage = () => {
         ))}
       </div>
       <div className="shadow"></div>
+      <AddButton />
     </div>
   );
 };
