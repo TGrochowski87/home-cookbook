@@ -6,7 +6,7 @@ import { useRef } from "react";
 import api from "api/api";
 import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
-import { Form, useLoaderData, useSubmit } from "react-router-dom";
+import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
 import AddButton from "./AddButton";
 
 interface LoaderResponse {
@@ -26,6 +26,7 @@ const RecipeListPage = () => {
   const { recipes, categories, tags } = useLoaderData() as LoaderResponse;
 
   const searchTimeoutId = useRef<number>();
+  const navigate = useNavigate();
   const submit = useSubmit();
 
   return (
@@ -56,7 +57,7 @@ const RecipeListPage = () => {
         ))}
       </div>
       <div className="shadow"></div>
-      <AddButton />
+      <AddButton onClick={() => navigate(`./new`, { relative: "path" })} />
     </div>
   );
 };
