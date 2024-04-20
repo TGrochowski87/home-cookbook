@@ -5,7 +5,7 @@ import "./styles.less";
 import { CategoryGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { useLoaderData } from "react-router-dom";
-import ThumbnailSelection from "./ThumbnailSelection";
+import Thumbnail from "./thumbnail/Thumbnail";
 
 interface LoaderResponse {
   readonly categories: CategoryGetDto[];
@@ -19,6 +19,7 @@ export async function loader(): Promise<LoaderResponse> {
 interface RecipeData {
   readonly name: string;
   readonly categoryId: number | undefined;
+  readonly image: Blob | undefined;
 }
 
 interface RecipeCreationPageProps {}
@@ -28,6 +29,7 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
   const [formData, setFormData] = useState<RecipeData>({
     name: "",
     categoryId: undefined,
+    image: undefined,
   });
 
   return (
@@ -43,7 +45,10 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
         value={formData.categoryId?.toString() ?? ""}
         setValue={(categoryId: string) => setFormData(prev => ({ ...prev, categoryId: +categoryId }))}
       />
-      <ThumbnailSelection />
+      <Thumbnail
+        image={formData.image}
+        setImage={(image: Blob | undefined) => setFormData(prev => ({ ...prev, image: image }))}
+      />
     </div>
   );
 };
