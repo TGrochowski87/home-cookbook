@@ -6,7 +6,7 @@ import App from "./App";
 import RecipesPage, { loader as recipesPageLoader } from "pages/recipes/RecipesPage";
 import ShoppingPage from "pages/shopping/ShoppingPage";
 import RecipePage, { loader as recipePageLoader } from "pages/recipe/RecipePage";
-import RecipeCreationPage from "pages/recipe-creation/RecipeCreationPage";
+import RecipeCreationPage, { loader as recipeCreationPageLoader } from "pages/recipe-creation/RecipeCreationPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,7 +17,7 @@ const router = createBrowserRouter(
         <Route path="/shopping" element={<ShoppingPage />} />
       </Route>
       <Route path="/recipes/:id" element={<RecipePage />} loader={recipePageLoader} />
-      <Route path="/recipes/new" element={<RecipeCreationPage />} />
+      <Route path="/recipes/new" element={<RecipeCreationPage />} loader={recipeCreationPageLoader} />
     </Route>
   )
 );

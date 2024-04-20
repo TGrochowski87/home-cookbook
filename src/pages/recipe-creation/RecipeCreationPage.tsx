@@ -1,19 +1,32 @@
 import CustomInput from "components/CustomInput";
-import "./styles.less";
 import { useState } from "react";
-import CustomSelect from "components/CustomSelect";
+import CategorySelect from "pages/recipe-creation/select/CategorySelect";
+import "./styles.less";
+import { CategoryGetDto } from "api/GET/DTOs";
+import api from "api/api";
+import { useLoaderData } from "react-router-dom";
+
+interface LoaderResponse {
+  readonly categories: CategoryGetDto[];
+}
+
+export async function loader(): Promise<LoaderResponse> {
+  const categories = await api.getCategories();
+  return { categories };
+}
 
 interface RecipeData {
   readonly name: string;
-  readonly category: string;
+  readonly categoryId: number | undefined;
 }
 
 interface RecipeCreationPageProps {}
 
 const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
+  const { categories } = useLoaderData() as LoaderResponse;
   const [formData, setFormData] = useState<RecipeData>({
     name: "",
-    category: "",
+    categoryId: undefined,
   });
 
   return (
@@ -21,9 +34,14 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
       <h1>Nowy przepis</h1>
       <CustomInput
         value={formData.name}
+        placeholder="Nazwa przepisu..."
         onChange={event => setFormData(prev => ({ ...prev, name: event.target.value }))}
       />
-      <CustomSelect />
+      <CategorySelect
+        categories={categories}
+        value={formData.categoryId?.toString() ?? ""}
+        setValue={(categoryId: string) => setFormData(prev => ({ ...prev, categoryId: +categoryId }))}
+      />
     </div>
   );
 };
