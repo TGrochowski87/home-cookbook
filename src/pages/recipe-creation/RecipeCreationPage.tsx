@@ -5,6 +5,7 @@ import "./styles.less";
 import { CategoryGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { useLoaderData } from "react-router-dom";
+import ThumbnailSelection from "./ThumbnailSelection";
 
 interface LoaderResponse {
   readonly categories: CategoryGetDto[];
@@ -42,6 +43,7 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
         value={formData.categoryId?.toString() ?? ""}
         setValue={(categoryId: string) => setFormData(prev => ({ ...prev, categoryId: +categoryId }))}
       />
+      <ThumbnailSelection />
     </div>
   );
 };

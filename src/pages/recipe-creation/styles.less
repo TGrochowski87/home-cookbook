@@ -110,3 +110,37 @@
   border-radius: 50px 50px 0 0;
   // border-bottom: none;
 }
+
+.thumbnail-dropzone {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  align-self: center;
+  border-radius: #numeric[big-border-radius];
+  border: 3px solid #colors[primary-non-gradient];
+  overflow: hidden;
+
+  .input-space {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      width: 48px;
+      height: 48px;
+      color: #colors[primary-non-gradient];
+    }
+  }
+
+  img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    object-fit: cover;
+    filter: brightness(0.4);
+    z-index: -1;
+  }
+}
