@@ -19,7 +19,17 @@ const CategorySelect = ({ categories, value, setValue }: CustomSelectProps) => {
         </Select.Icon>
       </Select.Trigger>
       <Select.Portal>
-        <Select.Content position="popper" className="select-content floating">
+        <Select.Content
+          ref={ref => {
+            // Workaround for https://github.com/radix-ui/primitives/issues/1658
+            if (ref) {
+              ref.ontouchstart = event => {
+                event.preventDefault();
+              };
+            }
+          }}
+          position="popper"
+          className="select-content floating">
           <Select.ScrollUpButton className="select-scroll-button">
             <ChevronUpIcon />
           </Select.ScrollUpButton>
