@@ -1,13 +1,13 @@
 interface ContentWidthInputProps
   extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
-  minWidth?: string;
+  readonly minWidth?: string;
 }
 
-const WidthAdjustingInput = (props: ContentWidthInputProps) => {
+const WidthAdjustingInput = ({ minWidth, ...other }: ContentWidthInputProps) => {
   return (
     <span className="input-sizing-wrapper">
-      <p style={{ minWidth: props.minWidth }}>{props.value}</p>
-      <input {...props} />
+      <p style={{ minWidth: minWidth }}>{other.value}</p>
+      <input {...other} />
     </span>
   );
 };

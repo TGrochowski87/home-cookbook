@@ -35,15 +35,15 @@
     display: none;
   }
 
-  button[role="checkbox"][data-state="checked"] + .tag-chip-checkbox {
+  button[role="checkbox"][data-state="checked"] + .tag-chip-interactive {
     background: #colors[primary];
   }
 
-  input[type="checkbox"]:checked + .tag-chip-checkbox {
+  input[type="checkbox"]:checked + .tag-chip-interactive {
     background: #colors[primary];
   }
 
-  .new-tag {
+  .tag-creation {
     border: none;
     outline: 2px solid #colors[primary-non-gradient];
     background-color: #colors[secondary];
@@ -59,12 +59,32 @@
     }
   }
 
-  input.new-tag {
+  input.tag-creation {
     position: absolute;
     top: 0;
 
     border-radius: #numeric[border-radius];
     padding-block: 1px;
     width: 100%;
+  }
+}
+
+.new-tag-popover-content {
+  background-color: whitesmoke;
+  border-radius: #numeric[border-radius];
+  padding: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  font-size: 0.8em;
+
+  .delete-tag-button {
+    background-color: transparent;
+  }
+
+  .popover-arrow {
+    fill: whitesmoke;
   }
 }

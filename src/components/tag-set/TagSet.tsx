@@ -5,6 +5,7 @@ import TagChip from "./TagChip";
 import TagChipCheckbox from "./TagChipCheckbox";
 import CreateTagButton from "./CreateTagButton";
 import TagSize from "./TagSize";
+import NewTag from "./NewTag";
 
 interface TagSetProps {
   readonly tags: readonly TagGetDto[];
@@ -53,8 +54,22 @@ const TagSet = ({
       )}
       {tagCreationEnabled && (
         <>
-          {}
-          <CreateTagButton size={tagSize} onCreate={(name: string) => setNewTags(prev => [...prev, name])} />
+          {newTags.map(tag => (
+            <NewTag
+              key={tag}
+              tagName={tag}
+              size={tagSize}
+              onDelete={() => setNewTags(prev => prev.filter(t => t != tag))}
+            />
+          ))}
+          <CreateTagButton
+            size={tagSize}
+            onCreate={(name: string) => {
+              if (newTags.includes(name) === false) {
+                setNewTags(prev => [...prev, name]);
+              }
+            }}
+          />
         </>
       )}
     </div>

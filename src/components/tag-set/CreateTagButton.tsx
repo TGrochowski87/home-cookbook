@@ -15,7 +15,7 @@ const CreateTagButton = ({ onCreate, size }: NewTagProps) => {
 
   return isInInputMode ? (
     <WidthAdjustingInput
-      className="floating tag-chip-interactive new-tag"
+      className="floating tag-chip-interactive tag-creation"
       minWidth="16ch"
       autoFocus
       maxLength={20}
@@ -26,13 +26,13 @@ const CreateTagButton = ({ onCreate, size }: NewTagProps) => {
       onBlur={() => {
         setIsInInputMode(false);
         if (input) {
-          onCreate(input);
+          onCreate(input.trim());
         }
         setInput("");
       }}
     />
   ) : (
-    <Button className={`tag-chip tag-chip-interactive new-tag ${size}`} onClick={() => setIsInInputMode(true)}>
+    <Button className={`tag-chip tag-chip-interactive tag-creation ${size}`} onClick={() => setIsInInputMode(true)}>
       nowy tag <PlusIcon width="16px" height="16px" thickness={2} />
     </Button>
   );
