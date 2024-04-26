@@ -2,20 +2,23 @@ import Button from "components/Button";
 import WidthAdjustingInput from "components/WidthAdjustingInput";
 import PlusIcon from "components/PlusIcon";
 import { useState } from "react";
+import TagSize from "./TagSize";
 
 interface NewTagProps {
   readonly onCreate: (name: string) => void;
+  readonly size: TagSize;
 }
 
-const CreateTagButton = ({ onCreate }: NewTagProps) => {
+const CreateTagButton = ({ onCreate, size }: NewTagProps) => {
   const [isInInputMode, setIsInInputMode] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
 
   return isInInputMode ? (
     <WidthAdjustingInput
-      className="floating tag-chip-checkbox new-tag"
+      className="floating tag-chip-interactive new-tag"
       minWidth="16ch"
       autoFocus
+      maxLength={20}
       value={input}
       onChange={event => {
         setInput(event.target.value);
@@ -29,7 +32,7 @@ const CreateTagButton = ({ onCreate }: NewTagProps) => {
       }}
     />
   ) : (
-    <Button className="new-tag" onClick={() => setIsInInputMode(true)}>
+    <Button className={`tag-chip tag-chip-interactive new-tag ${size}`} onClick={() => setIsInInputMode(true)}>
       nowy tag <PlusIcon width="16px" height="16px" thickness={2} />
     </Button>
   );

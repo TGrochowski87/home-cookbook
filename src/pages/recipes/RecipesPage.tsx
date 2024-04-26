@@ -47,7 +47,7 @@ const RecipeListPage = () => {
           ))}
         </div>
 
-        <TagSet tags={tags} smallTags selection={{ disabled: false }} />
+        <TagSet tags={tags} tagSize="big" selection={{ disabled: false }} />
       </Form>
       <div className="recipe-list">
         {recipes.map(recipe => (

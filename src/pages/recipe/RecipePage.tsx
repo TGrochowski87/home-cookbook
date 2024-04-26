@@ -30,7 +30,7 @@ const RecipePage = () => {
         <img src={BurgerPlaceHolder} />
       </div>
 
-      <TagSet tags={recipe.tags} />
+      <TagSet tags={recipe.tags} tagSize="small" />
 
       <TitledSection title="Składniki">
         <ol>

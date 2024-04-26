@@ -1,15 +1,17 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { TagGetDto } from "api/GET/DTOs";
-import "../styles.less";
+import "./styles.less";
+import TagSize from "./TagSize";
 
 interface TagChipProps {
   readonly tag: TagGetDto;
+  readonly size: TagSize;
   readonly checked: boolean;
   readonly onCheckedChange: (checked: boolean) => void;
   readonly disableShadow?: boolean;
 }
 
-const TagChipCheckbox = ({ tag, checked, onCheckedChange, disableShadow }: TagChipProps) => {
+const TagChipCheckbox = ({ tag, size, checked, onCheckedChange, disableShadow }: TagChipProps) => {
   return (
     <>
       <Checkbox.Root
@@ -19,7 +21,9 @@ const TagChipCheckbox = ({ tag, checked, onCheckedChange, disableShadow }: TagCh
         checked={checked}
         onCheckedChange={checked => onCheckedChange(!!checked)}
       />
-      <label className={`tag-chip tag-chip-checkbox block ${disableShadow ? "" : "floating"}`} htmlFor={tag.name}>
+      <label
+        className={`tag-chip tag-chip-interactive block ${disableShadow ? "" : "floating"} ${size}`}
+        htmlFor={tag.name}>
         {tag.name}
       </label>
     </>

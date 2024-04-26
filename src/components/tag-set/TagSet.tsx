@@ -1,12 +1,14 @@
 import { TagGetDto } from "api/GET/DTOs";
-import "../styles.less";
+import "./styles.less";
 import { useState } from "react";
 import TagChip from "./TagChip";
 import TagChipCheckbox from "./TagChipCheckbox";
 import CreateTagButton from "./CreateTagButton";
+import TagSize from "./TagSize";
 
 interface TagSetProps {
   readonly tags: readonly TagGetDto[];
+  readonly tagSize: TagSize;
   readonly align?: "start" | "center" | "end";
   readonly disableShadow?: boolean;
   readonly selection?: {
@@ -18,6 +20,7 @@ interface TagSetProps {
 
 const TagSet = ({
   tags,
+  tagSize,
   disableShadow,
   selection = { disabled: true },
   tagCreationEnabled = false,
@@ -30,11 +33,12 @@ const TagSet = ({
     <div className="tag-set" style={{ justifyContent: align }}>
       {tags.map(tag =>
         selection.disabled ? (
-          <TagChip key={tag.id} tagName={tag.name} disableShadow={disableShadow} />
+          <TagChip key={tag.id} tagName={tag.name} size={tagSize} disableShadow={disableShadow} />
         ) : (
           <TagChipCheckbox
             key={tag.id}
             tag={tag}
+            size={tagSize}
             disableShadow={disableShadow}
             checked={selectedTags.includes(tag.id)}
             onCheckedChange={(checked: boolean) => {
@@ -47,13 +51,10 @@ const TagSet = ({
           />
         )
       )}
-      {newTags.map(newTag => (
-        <TagChip tagName={newTag} />
-      ))}
       {tagCreationEnabled && (
         <>
           {}
-          <CreateTagButton onCreate={(name: string) => setNewTags(prev => [...prev, name])} />
+          <CreateTagButton size={tagSize} onCreate={(name: string) => setNewTags(prev => [...prev, name])} />
         </>
       )}
     </div>

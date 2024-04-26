@@ -61,6 +61,7 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
       <TitledSection title="Tagi">
         <TagSet
           tags={tags}
+          tagSize="big"
           tagCreationEnabled
           selection={{
             disabled: false,
