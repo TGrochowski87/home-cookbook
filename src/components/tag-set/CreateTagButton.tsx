@@ -1,4 +1,5 @@
 import Button from "components/Button";
+import WidthAdjustingInput from "components/WidthAdjustingInput";
 import PlusIcon from "components/PlusIcon";
 import { useState } from "react";
 
@@ -11,24 +12,21 @@ const CreateTagButton = ({ onCreate }: NewTagProps) => {
   const [input, setInput] = useState<string>("");
 
   return isInInputMode ? (
-    <span className="input-sizing-wrapper">
-      <p>{input}</p>
-      <input
-        className="floating tag-chip-checkbox new-tag"
-        autoFocus
-        value={input}
-        onChange={event => {
-          setInput(event.target.value);
-        }}
-        onBlur={() => {
-          setIsInInputMode(false);
-          if (input) {
-            onCreate(input);
-          }
-          setInput("");
-        }}
-      />
-    </span>
+    <WidthAdjustingInput
+      className="floating tag-chip-checkbox new-tag"
+      autoFocus
+      value={input}
+      onChange={event => {
+        setInput(event.target.value);
+      }}
+      onBlur={() => {
+        setIsInInputMode(false);
+        if (input) {
+          onCreate(input);
+        }
+        setInput("");
+      }}
+    />
   ) : (
     <Button className="new-tag" onClick={() => setIsInInputMode(true)}>
       nowy tag <PlusIcon width="16px" height="16px" thickness={2} />
