@@ -30,7 +30,7 @@ const RecipeListPage = () => {
   const submit = useSubmit();
 
   return (
-    <div className="recipe-list-page page-layout-column">
+    <div className="recipe-list-page">
       <Form
         className="search-section"
         onChange={event => {

@@ -39,7 +39,7 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
   });
 
   return (
-    <div className="page-layout-column recipe-creation-page">
+    <div className="page recipe-creation-page">
       <h1>Nowy przepis</h1>
       <Input
         value={formData.name}

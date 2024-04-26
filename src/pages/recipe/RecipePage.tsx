@@ -17,7 +17,7 @@ const RecipePage = () => {
   const recipe = useLoaderData() as RecipeDetailsGetDto;
 
   return (
-    <div className="page-layout-column recipe-page">
+    <div className="page recipe-page">
       <div>
         <h1>{recipe.title}</h1>
         {/* @ts-ignore */}
