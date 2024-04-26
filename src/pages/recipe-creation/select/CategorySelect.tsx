@@ -4,7 +4,7 @@ import SelectItem from "./SelectItem";
 import { CategoryGetDto } from "api/GET/DTOs";
 
 interface CustomSelectProps {
-  readonly categories: CategoryGetDto[];
+  readonly categories: readonly CategoryGetDto[];
   readonly value: string;
   readonly setValue: (categoryId: string) => void;
 }
@@ -35,7 +35,9 @@ const CategorySelect = ({ categories, value, setValue }: CustomSelectProps) => {
           </Select.ScrollUpButton>
           <Select.Viewport className="select-viewport">
             {categories.map(category => (
-              <SelectItem value={category.id.toString()}>{category.name}</SelectItem>
+              <SelectItem key={category.id} value={category.id.toString()}>
+                {category.name}
+              </SelectItem>
             ))}
           </Select.Viewport>
           <Select.ScrollDownButton className="select-scroll-button">

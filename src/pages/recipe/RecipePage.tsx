@@ -3,10 +3,10 @@ import api from "api/api";
 import { Form, useLoaderData } from "react-router-dom";
 import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
 import "./styles.less";
-import TagChip from "components/TagChip";
 import TitledSection from "components/TitledSection";
 import Ingredient from "components/Ingredient";
-import CustomButton from "components/CustomButton";
+import Button from "components/Button";
+import TagSet from "components/tag-set/TagSet";
 
 export async function loader({ params }: any) {
   const recipe = await api.getRecipe(params.id);
@@ -30,11 +30,7 @@ const RecipePage = () => {
         <img src={BurgerPlaceHolder} />
       </div>
 
-      <div className="tag-list-info">
-        {recipe.tags.map(tag => (
-          <TagChip key={tag.id} tag={tag} />
-        ))}
-      </div>
+      <TagSet tags={recipe.tags} />
 
       <TitledSection title="Składniki">
         <ol>
@@ -53,8 +49,8 @@ const RecipePage = () => {
       </TitledSection>
 
       <Form className="bottom-button-space">
-        <CustomButton>edytuj</CustomButton>
-        <CustomButton>stwórz wariant</CustomButton>
+        <Button>edytuj</Button>
+        <Button>stwórz wariant</Button>
       </Form>
     </div>
   );

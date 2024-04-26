@@ -1,6 +1,5 @@
 import SearchBar from "./search/SearchBar";
 import CategoryChip from "pages/recipes/search/CategoryChip";
-import TagChipCheckbox from "pages/recipes/search/TagChipCheckbox";
 import "./styles.less";
 import { useRef } from "react";
 import api from "api/api";
@@ -8,10 +7,11 @@ import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
 import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
 import AddButton from "./AddButton";
+import TagSet from "components/tag-set/TagSet";
 
 interface LoaderResponse {
-  readonly recipes: RecipeGetDto[];
-  readonly categories: CategoryGetDto[];
+  readonly recipes: readonly RecipeGetDto[];
+  readonly categories: readonly CategoryGetDto[];
   readonly tags: TagGetDto[];
 }
 
@@ -40,16 +40,14 @@ const RecipeListPage = () => {
           }, 1000);
         }}>
         <SearchBar />
+
         <div className="category-list">
           {categories.map(category => (
             <CategoryChip key={category.id} category={category} />
           ))}
         </div>
-        <div className="tag-list">
-          {tags.map(tag => (
-            <TagChipCheckbox key={tag.id} tag={tag} />
-          ))}
-        </div>
+
+        <TagSet tags={tags} smallTags selection={{ disabled: false }} />
       </Form>
       <div className="recipe-list">
         {recipes.map(recipe => (
