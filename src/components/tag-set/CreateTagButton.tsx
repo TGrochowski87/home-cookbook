@@ -14,6 +14,7 @@ const CreateTagButton = ({ onCreate }: NewTagProps) => {
   return isInInputMode ? (
     <WidthAdjustingInput
       className="floating tag-chip-checkbox new-tag"
+      minWidth="16ch"
       autoFocus
       value={input}
       onChange={event => {
