@@ -1,6 +1,6 @@
 import { Editor } from "@tiptap/react";
 import { Heading1, Heading2, Heading3, Heading4 } from "lucide-react";
-import { ReactNode, useEffect } from "react";
+import { ReactNode } from "react";
 import SelectToggle from "./SelectToggle";
 
 const headingIcons: Record<string, ReactNode> = {
