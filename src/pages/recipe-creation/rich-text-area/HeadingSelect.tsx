@@ -17,26 +17,6 @@ interface HeadingSelectProps {
 }
 
 const HeadingSelect = ({ headingLevel, setHeadingLevel, editor }: HeadingSelectProps) => {
-  /**
-   * This is the only option I found to call focus() after editor's blur event.
-   * Also, it would be ideal to move this to parent, but for some reason it causes
-   * "Internal React error: Expected static flag was missing".
-   */
-  useEffect(() => {
-    const resetFocus = () => {
-      if (document.activeElement?.className === "toolbar-select-trigger") {
-        editor?.commands.focus();
-        editor?.view.focus();
-      }
-    };
-
-    document.addEventListener("selectionchange", resetFocus);
-
-    return () => {
-      document.removeEventListener("selectionchange", resetFocus);
-    };
-  }, []);
-
   return (
     <SelectToggle
       editor={editor}

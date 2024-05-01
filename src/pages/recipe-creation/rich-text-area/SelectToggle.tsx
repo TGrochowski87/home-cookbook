@@ -1,8 +1,9 @@
 import * as RadixToolbar from "@radix-ui/react-Toolbar";
 import * as Select from "@radix-ui/react-select";
 import { Editor } from "@tiptap/react";
+import useMobileCheck from "hooks/useMobileCheck";
 import { ChevronDown } from "lucide-react";
-import { PropsWithChildren, ReactNode } from "react";
+import { PropsWithChildren, ReactNode, useState } from "react";
 
 interface SelectToggleProps extends PropsWithChildren {
   readonly editor: Editor | null;
@@ -26,6 +27,10 @@ const SelectToggle = ({
   setSelectedOption,
   children,
 }: SelectToggleProps) => {
+  const isMobile = useMobileCheck();
+  const [open, setOpen] = useState<boolean>(false);
+  const [justOpened, setJustOpened] = useState<boolean>(false);
+
   return (
     <span className="toolbar-select toolbar-toggle">
       <RadixToolbar.ToggleItem value={toggleValue} aria-label={ariaLabel}>
@@ -34,15 +39,25 @@ const SelectToggle = ({
 
       <Select.Root
         value={selectedOption}
-        onOpenChange={() => {
-          // This covers a scenario, when we select an already selected option.
-          editor?.commands.focus();
-          editor?.view.focus();
+        open={open}
+        onOpenChange={(open: boolean) => {
+          /**
+           * For some reason, only on mobile, select gets immediately closed after clicking on the trigger
+           * while having textarea focused. This is a workaround to prevent it.
+           */
+          if (isMobile && justOpened) {
+            setJustOpened(false);
+            return;
+          }
+          setOpen(open);
+
+          if (open === false) {
+            editor?.commands.focus();
+          }
         }}
         onValueChange={(value: string) => {
           setSelectedOption(value);
           editor?.commands.focus();
-          editor?.view.focus();
         }}>
         <Select.Trigger className="toolbar-select-trigger">
           <Select.Icon>
@@ -65,7 +80,15 @@ const SelectToggle = ({
             align="center">
             <Select.Viewport className="toolbar-select-viewport">
               {options.map(option => (
-                <Select.Item className="toolbar-select-item" key={option} value={option}>
+                <Select.Item
+                  onFocus={event => {
+                    if (event.relatedTarget?.classList.contains("rich-text-area-editor")) {
+                      setJustOpened(true);
+                    }
+                  }}
+                  className="toolbar-select-item"
+                  key={option}
+                  value={option}>
                   {renderOption(option)}
                 </Select.Item>
               ))}

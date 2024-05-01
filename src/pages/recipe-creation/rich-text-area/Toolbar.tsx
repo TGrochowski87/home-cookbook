@@ -165,9 +165,7 @@ const Toolbar = ({ editor }: ToolbarProps) => {
         aria-label="Lists"
         value={singleTogglesArray.find(t => isModifierActive(t)) ?? ""}
         onValueChange={(value: string) => {
-          console.log(value);
           const toToggle = value === "" ? singleTogglesArray.find(t => isModifierActive(t)) : value;
-          console.log(toToggle);
           invokeToggleAction(toToggle as SingleToggle);
         }}>
         <RadixToolbar.ToggleItem className="toolbar-toggle" value="bulletList" aria-label="Bullet list">

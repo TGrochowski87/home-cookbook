@@ -16,6 +16,7 @@ import History from "@tiptap/extension-history";
 import Toolbar from "./Toolbar";
 import "./styles.less";
 import CustomHeading from "./CustomHeading";
+import { useEffect } from "react";
 
 interface RichTextAreaProps {
   readonly value: string;
@@ -58,6 +59,12 @@ const RichTextArea = ({ value, onChange }: RichTextAreaProps) => {
       },
     },
   });
+
+  useEffect(() => {
+    if (document.activeElement?.classList.contains("toolbar-select-trigger")) {
+      editor?.commands.focus();
+    }
+  }, [document.activeElement]);
 
   return (
     <div className="rich-text-area">

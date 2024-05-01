@@ -11,6 +11,7 @@ export default defineConfig({
       api: "/src/api",
       components: "/src/components",
       models: "/src/models",
+      hooks: "/src/hooks",
     },
   },
 });
