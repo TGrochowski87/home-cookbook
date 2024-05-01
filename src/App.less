@@ -12,14 +12,36 @@ body,
   height: 100%;
 }
 
+body {
+  font-family: "Roboto Mono", sans-serif;
+  font-weight: 500;
+}
+
+button,
+input,
+a,
+textarea,
+select {
+  font: inherit;
+  letter-spacing: inherit;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
-
-  font-family: "Roboto Mono", sans-serif;
-  letter-spacing: 2px;
-  font-weight: 500;
 }
+
+// Debug
+
+// Can add more asterisks for nesting to give outline to fewer elements.
+// * {
+//   outline: 2px solid orangered;
+// }
+
+// Translucent background color also shows nesting of elements
+// * {
+//   background-color:rgba(150, 150, 0, 0.25)
+// }
 
 // Common classes
 

@@ -1,0 +1,73 @@
+@import "../../../variables.less";
+
+.thumbnail-space {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  p {
+    color: rgb(211, 0, 0);
+    font-weight: normal;
+    letter-spacing: 0;
+    white-space: pre-line;
+    font-size: 0.7rem;
+  }
+
+  .thumbnail-dropzone {
+    position: relative;
+    width: 240px;
+    height: 240px;
+    align-self: center;
+    border-radius: #numeric[big-border-radius];
+    border: 3px solid #colors[primary-non-gradient];
+    overflow: hidden;
+
+    .input-space {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        width: 48px;
+        height: 48px;
+        color: #colors[primary-non-gradient];
+      }
+    }
+
+    .discard-button {
+      padding: 0;
+      border: none;
+
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      right: 4px;
+      top: 4px;
+      border-radius: 50px;
+      cursor: pointer;
+
+      svg {
+        color: rgb(211, 0, 0);
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+
+    img.placeholder {
+      filter: brightness(0.4);
+    }
+  }
+}

@@ -1,0 +1,170 @@
+@import "../../../variables.less";
+
+.rich-text-area {
+  .toolbar-root {
+    display: flex;
+    border-radius: 4px 4px #numeric[big-border-radius] #numeric[big-border-radius];
+    border: 2px solid #colors[primary-non-gradient];
+
+    position: relative;
+    z-index: 1;
+
+    padding: 6px 8px;
+    margin-top: 2px;
+
+    .toolbar-toggle {
+      position: relative;
+      isolation: isolate;
+      height: 24px;
+      margin-left: 4px;
+
+      border-radius: #numeric[border-radius];
+
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+
+      svg {
+        flex-shrink: 0;
+      }
+    }
+
+    button.toolbar-toggle {
+      width: 24px;
+    }
+
+    button.toolbar-toggle,
+    .toolbar-toggle > button {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      // pointer-events: none;
+    }
+
+    .toolbar-toggle:first-child {
+      margin-left: 0;
+    }
+
+    .toolbar-toggle:hover::before {
+      content: "";
+      position: absolute;
+      width: 12px;
+      z-index: -1;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%);
+      box-shadow: 0 0 6px 12px fade(#colors[primary-non-gradient], 60%);
+    }
+
+    button.toolbar-toggle:hover::before {
+      width: 0px;
+    }
+
+    .toolbar-toggle[data-state="on"],
+    .toolbar-toggle:has(button[data-state="on"]) {
+      background-color: fade(#colors[primary-non-gradient], 60%);
+    }
+
+    .toolbar-separator {
+      width: 1px;
+      background-color: #colors[primary-non-gradient];
+      margin: 0 8px;
+    }
+
+    .toolbar-select {
+      position: relative;
+
+      .color-select-current {
+        position: absolute;
+        left: 2px;
+        bottom: 0px;
+        width: 24px;
+        height: 3px;
+      }
+
+      .toolbar-select-trigger {
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+
+        position: relative;
+        right: 5px;
+      }
+    }
+  }
+
+  .rich-text-area-editor {
+    font-weight: initial;
+    border: 2px solid #colors[primary-non-gradient];
+    border-radius: #numeric[big-border-radius] #numeric[big-border-radius] 4px 4px;
+    min-height: 20ch;
+    padding: 4px;
+
+    p,
+    h1,
+    h2,
+    h3,
+    h4 {
+      letter-spacing: initial;
+      // font-weight: normal;
+      // letter-spacing: 0px;
+      // margin: 0;
+    }
+
+    .heading-1 {
+      font-size: 1.8em;
+      color: #80cd87;
+    }
+    .heading-2 {
+      color: #5cb969;
+    }
+    .heading-3 {
+      color: #219d37;
+    }
+    .heading-4 {
+      color: #377b3d;
+    }
+
+    ul[data-type="taskList"] {
+      list-style: none;
+      // padding: 0;
+
+      li {
+        position: relative;
+        display: flex;
+
+        > label {
+          position: absolute;
+          left: -1.5rem;
+          // margin-right: 0.5rem;
+        }
+      }
+    }
+  }
+}
+
+.toolbar-select-content {
+  background-color: #colors[popup];
+  border-radius: #numeric[border-radius];
+  padding: 4px;
+
+  .toolbar-select-viewport {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+  }
+
+  .toolbar-select-item {
+    cursor: pointer;
+
+    .toolbar-select-option {
+      border-radius: #numeric[border-radius];
+      border: 1px solid grey;
+      width: 20px;
+      height: 20px;
+      user-select: none;
+      pointer-events: none;
+    }
+  }
+}

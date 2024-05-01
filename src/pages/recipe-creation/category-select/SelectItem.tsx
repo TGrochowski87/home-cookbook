@@ -8,9 +8,9 @@ interface SelectItemProps extends PropsWithChildren {
 
 const SelectItem = ({ value, children }: SelectItemProps) => {
   return (
-    <Select.Item className="select-item" value={value}>
+    <Select.Item className="category-select-item" value={value}>
       <Select.ItemText>{children}</Select.ItemText>
-      <Select.ItemIndicator className="select-item-indicator">
+      <Select.ItemIndicator className="category-select-item-indicator">
         <CheckIcon />
       </Select.ItemIndicator>
     </Select.Item>

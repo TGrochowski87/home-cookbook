@@ -3,7 +3,7 @@
 .recipe-creation-page {
   font-size: 0.8rem;
 
-  .select-trigger {
+  .category-select-trigger {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -18,21 +18,21 @@
     }
   }
 
-  .select-trigger[data-placeholder] {
+  .category-select-trigger[data-placeholder] {
     color: grey;
   }
 }
 
-.select-content {
+.category-select-content {
   background-color: #colors[secondary];
   border: 2px solid #colors[primary-non-gradient];
   border-radius: #numeric[border-radius];
   overflow: hidden;
 
-  .select-viewport {
+  .category-select-viewport {
     padding: 4px;
 
-    .select-item {
+    .category-select-item {
       position: relative;
       display: flex;
       align-items: center;
@@ -44,7 +44,7 @@
       cursor: pointer;
       user-select: none;
 
-      .select-item-indicator {
+      .category-select-item-indicator {
         position: absolute;
         right: 8px;
 
@@ -56,7 +56,7 @@
       }
     }
 
-    .select-item[data-highlighted] {
+    .category-select-item[data-highlighted] {
       outline: none;
       background: #colors[primary];
       color: whitesmoke;
@@ -67,7 +67,7 @@
     }
   }
 
-  .select-scroll-button {
+  .category-select-scroll-button {
     align-self: center;
     position: absolute;
 
@@ -90,86 +90,14 @@
   }
 }
 
-.select-scroll-button:first-of-type {
+.category-select-scroll-button:first-of-type {
   top: 0;
   bottom: auto;
   border-radius: 0 0 50px 50px;
 }
 
-.select-scroll-button:last-of-type {
+.category-select-scroll-button:last-of-type {
   top: auto;
   bottom: 0;
   border-radius: 50px 50px 0 0;
-}
-
-.thumbnail-space {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-
-  p {
-    color: rgb(211, 0, 0);
-    font-weight: normal;
-    letter-spacing: 0;
-    white-space: pre-line;
-    font-size: 0.7rem;
-  }
-
-  .thumbnail-dropzone {
-    position: relative;
-    width: 240px;
-    height: 240px;
-    align-self: center;
-    border-radius: #numeric[big-border-radius];
-    border: 3px solid #colors[primary-non-gradient];
-    overflow: hidden;
-
-    .input-space {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      svg {
-        width: 48px;
-        height: 48px;
-        color: #colors[primary-non-gradient];
-      }
-    }
-
-    .discard-button {
-      padding: 0;
-      border: none;
-
-      width: 32px;
-      height: 32px;
-      position: absolute;
-      right: 4px;
-      top: 4px;
-      border-radius: 50px;
-      cursor: pointer;
-
-      svg {
-        color: rgb(211, 0, 0);
-        width: 100%;
-        height: 100%;
-      }
-    }
-
-    img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    img.placeholder {
-      filter: brightness(0.4);
-    }
-  }
 }

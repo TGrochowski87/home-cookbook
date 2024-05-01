@@ -1,5 +1,6 @@
 import { UploadIcon } from "@radix-ui/react-icons";
 import Dropzone, { FileRejection } from "react-dropzone";
+import "./styles.less";
 
 import { ErrorCode as FileUploadError } from "react-dropzone";
 

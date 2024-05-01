@@ -3,6 +3,7 @@ import ThumbnailSelection from "./ThumbnailSelection";
 import { useState } from "react";
 import { ErrorCode as FileUploadError } from "react-dropzone";
 import { CrossCircledIcon } from "@radix-ui/react-icons";
+import "./styles.less";
 
 const errorMessages: Record<FileUploadError, string> = {
   "file-invalid-type": "Nieobsługiwany format pliku.",

@@ -1,4 +1,5 @@
 import * as Select from "@radix-ui/react-select";
+// TODO: Remove @radix-ui/react-icons from the project
 import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import SelectItem from "./SelectItem";
 import { CategoryGetDto } from "api/GET/DTOs";
@@ -12,12 +13,13 @@ interface CustomSelectProps {
 const CategorySelect = ({ categories, value, setValue }: CustomSelectProps) => {
   return (
     <Select.Root value={value} onValueChange={(newValue: string) => setValue(newValue)}>
-      <Select.Trigger className="input select-trigger floating" aria-label="Food">
+      <Select.Trigger className="input category-select-trigger floating" aria-label="Food">
         <Select.Value placeholder="Kategoria..." />
-        <Select.Icon className="select-icon">
+        <Select.Icon className="category-select-icon">
           <ChevronDownIcon />
         </Select.Icon>
       </Select.Trigger>
+
       <Select.Portal>
         <Select.Content
           ref={ref => {
@@ -28,19 +30,19 @@ const CategorySelect = ({ categories, value, setValue }: CustomSelectProps) => {
               };
             }
           }}
-          position="popper"
-          className="select-content floating">
-          <Select.ScrollUpButton className="select-scroll-button">
+          className="category-select-content floating"
+          position="popper">
+          <Select.ScrollUpButton className="category-select-scroll-button">
             <ChevronUpIcon />
           </Select.ScrollUpButton>
-          <Select.Viewport className="select-viewport">
+          <Select.Viewport className="category-select-viewport">
             {categories.map(category => (
               <SelectItem key={category.id} value={category.id.toString()}>
                 {category.name}
               </SelectItem>
             ))}
           </Select.Viewport>
-          <Select.ScrollDownButton className="select-scroll-button">
+          <Select.ScrollDownButton className="category-select-scroll-button">
             <ChevronDownIcon />
           </Select.ScrollDownButton>
         </Select.Content>
