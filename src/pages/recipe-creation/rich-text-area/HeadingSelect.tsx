@@ -26,6 +26,7 @@ const HeadingSelect = ({ headingLevel, setHeadingLevel, editor }: HeadingSelectP
     const resetFocus = () => {
       if (document.activeElement?.className === "toolbar-select-trigger") {
         editor?.commands.focus();
+        editor?.view.focus();
       }
     };
 

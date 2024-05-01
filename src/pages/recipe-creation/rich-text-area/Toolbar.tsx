@@ -32,24 +32,44 @@ const highlightColors: readonly string[] = [
 ];
 
 const toggleActions: Record<MultiToggle | SingleToggle, (editor: Editor, ...params: any) => void> = {
-  bold: editor => editor.chain().focus().toggleBold().run(),
-  italic: editor => editor.chain().focus().toggleItalic().run(),
-  underline: editor => editor.chain().focus().toggleUnderline().run(),
-  strike: editor => editor.chain().focus().toggleStrike().run(),
-  highlight: (editor, color: string) => editor.chain().focus().toggleHighlight({ color: color }).run(),
-  heading: (editor, level: number) =>
+  bold: editor => {
+    editor.view.focus();
+    editor.chain().focus().toggleBold().run();
+  },
+  italic: editor => {
+    editor.view.focus();
+    editor.chain().focus().toggleItalic().run();
+  },
+  underline: editor => {
+    editor.view.focus();
+    editor.chain().focus().toggleUnderline().run();
+  },
+  strike: editor => {
+    editor.view.focus();
+    editor.chain().focus().toggleStrike().run();
+  },
+  highlight: (editor, color: string) => {
+    editor.view.focus();
+    editor.chain().focus().toggleHighlight({ color: color }).run();
+  },
+  heading: (editor, level: number) => {
+    editor.view.focus();
     editor
       .chain()
       .focus()
       .toggleHeading({ level: level as Level })
-      .run(),
+      .run();
+  },
   bulletList: editor => {
+    editor.view.focus();
     editor.chain().focus().toggleBulletList().run();
   },
   orderedList: editor => {
+    editor.view.focus();
     editor.chain().focus().toggleOrderedList().run();
   },
   taskList: editor => {
+    editor.view.focus();
     editor.chain().focus().toggleTaskList().run();
   },
 };

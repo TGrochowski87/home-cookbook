@@ -37,10 +37,12 @@ const SelectToggle = ({
         onOpenChange={() => {
           // This covers a scenario, when we select an already selected option.
           editor?.commands.focus();
+          editor?.view.focus();
         }}
         onValueChange={(value: string) => {
           setSelectedOption(value);
           editor?.commands.focus();
+          editor?.view.focus();
         }}>
         <Select.Trigger className="toolbar-select-trigger">
           <Select.Icon>
