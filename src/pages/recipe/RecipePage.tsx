@@ -4,9 +4,9 @@ import { Form, useLoaderData } from "react-router-dom";
 import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
 import "./styles.less";
 import TitledSection from "components/TitledSection";
-import Ingredient from "components/Ingredient";
 import Button from "components/Button";
 import TagSet from "components/tag-set/TagSet";
+import IngredientListRead from "components/ingredient-list/IngredientListRead";
 
 export async function loader({ params }: any) {
   const recipe = await api.getRecipe(params.id);
@@ -33,14 +33,7 @@ const RecipePage = () => {
       <TagSet tags={recipe.tags} tagSize="small" />
 
       <TitledSection title="Składniki">
-        <ol>
-          {recipe.ingredients.map(i => (
-            <Ingredient ingredient={i} />
-          ))}
-        </ol>
-        <Form className="add-to-shopping-list-button-space">
-          <button type="submit">Dodaj niezaznaczone do listy zakupów</button>
-        </Form>
+        <IngredientListRead ingredients={recipe.ingredients} />
       </TitledSection>
 
       <TitledSection title="Treść">

@@ -24,27 +24,6 @@
   }
 }
 
-.ingredient {
-  .ingredient-data {
-    display: grid;
-    grid-template-columns: 1fr 6ch 5ch 24px;
-    margin-bottom: 8px;
-
-    * + * {
-      justify-self: center;
-    }
-
-    .unitless-value {
-      grid-column: 2 / 4;
-    }
-  }
-
-  &::marker {
-    color: rgb(26, 163, 26);
-    font-weight: 600;
-  }
-}
-
 .checkbox-root {
   width: 16px;
   height: 16px;
@@ -92,6 +71,5 @@
   border-radius: #numeric[border-radius];
   height: 40px;
   padding: 8px 12px;
-  letter-spacing: 2px;
   font-weight: 600;
 }

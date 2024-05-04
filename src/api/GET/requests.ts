@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CategoryGetDto, RecipeDetailsGetDto, RecipeGetDto, TagGetDto } from "./DTOs";
 
-const baseUrl = "http://192.168.0.164:3000";
+const baseUrl = "http://192.168.1.138:3000";
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {
   const url = `${baseUrl}/categories`;

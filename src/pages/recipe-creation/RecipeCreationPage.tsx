@@ -9,6 +9,8 @@ import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
 import TagSet from "components/tag-set/TagSet";
 import RichTextArea from "./rich-text-area/RichTextArea";
+import IngredientListEdit from "components/ingredient-list/IngredientListEdit";
+import Ingredient from "models/Ingredient";
 
 interface LoaderResponse {
   readonly categories: readonly CategoryGetDto[];
@@ -26,6 +28,7 @@ interface RecipeData {
   readonly categoryId: number | undefined;
   readonly image: Blob | undefined;
   readonly tags: ReadonlyArray<number | string>;
+  readonly ingredients: ReadonlyArray<Ingredient>;
   readonly description: string;
 }
 
@@ -38,8 +41,22 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
     categoryId: undefined,
     image: undefined,
     tags: [],
+    ingredients: [
+      { key: 1, name: "pierś z kurczaka", amount: { value: 300, unit: "g" } },
+      { key: 2, name: "mleko", amount: { value: "500", unit: "ml" } },
+      { key: 3, name: "przyprawa do kurczaka", amount: { value: "trochę" } },
+      { key: 4, name: "soplica pigwowa", amount: { value: "1", unit: "L" } },
+    ],
     description: "test test test test test test test",
   });
+
+  const addIngredient = (ingredient: Ingredient): void => {
+    setFormData(prev => ({ ...prev, ingredients: [...prev.ingredients, ingredient] }));
+  };
+
+  const removeIngredient = (name: string): void => {
+    setFormData(prev => ({ ...prev, ingredients: prev.ingredients.filter(i => i.name !== name) }));
+  };
 
   return (
     <div className="page recipe-creation-page">
@@ -70,6 +87,14 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
             disabled: false,
             onSelectionChange: (selectedTagIds: number[]) => setFormData(prev => ({ ...prev, tags: selectedTagIds })),
           }}
+        />
+      </TitledSection>
+
+      <TitledSection title="Składniki">
+        <IngredientListEdit
+          ingredients={formData.ingredients}
+          addIngredient={addIngredient}
+          removeIngredient={removeIngredient}
         />
       </TitledSection>
 
