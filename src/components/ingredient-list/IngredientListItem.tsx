@@ -16,7 +16,7 @@ interface IngredientListItemProps {
 
 const IngredientListItem = ({ ingredient, action }: IngredientListItemProps) => {
   const displayAmount = (amount: Amount): JSX.Element => {
-    if ("unit" in amount) {
+    if (amount.unit) {
       return (
         <>
           <p>{amount.value}</p>

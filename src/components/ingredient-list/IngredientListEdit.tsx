@@ -2,8 +2,7 @@ import Ingredient from "models/Ingredient";
 import IngredientList from "./IngredientList";
 import { Form } from "react-router-dom";
 import Input from "components/Input";
-import { useState } from "react";
-import { ConcreteAmount, ImpreciseAmount } from "api/GET/DTOs";
+import { useForm } from "react-hook-form";
 
 interface IngredientListEditProps {
   readonly ingredients: readonly Ingredient[];
@@ -20,13 +19,19 @@ interface FormData {
 }
 
 const IngredientListEdit = ({ ingredients, addIngredient, removeIngredient }: IngredientListEditProps) => {
-  const [newIngredientData, setNewIngredientData] = useState<FormData>({
-    name: "",
-    amount: {
-      value: "",
-      unit: "",
-    },
-  });
+  const { register, handleSubmit, reset, watch } = useForm<FormData>();
+
+  const onSubmit = (data: FormData) => {
+    console.log(data);
+    const newIngredient: Ingredient = {
+      key: data.name,
+      name: data.name,
+      amount: { value: data.amount.value, unit: data.amount.unit === "" ? null : data.amount.unit },
+    };
+    addIngredient(newIngredient);
+
+    reset();
+  };
 
   return (
     <>
@@ -39,49 +44,41 @@ const IngredientListEdit = ({ ingredients, addIngredient, removeIngredient }: In
       />
       <Form
         className="new-ingredient"
-        onSubmit={event => {
-          console.log("XD");
-        }}
-        // onBlur={event => {
-        //   if (event.relatedTarget?.tagName !== "INPUT") {
-        //     const name = newIngredientData.name.trim();
-        //     const value = newIngredientData.amount.value.trim();
-
-        //     if (name !== "" && value !== "") {
-        //       const amount =
-        //         newIngredientData.amount.unit === ""
-        //           ? ({ value: value } as ImpreciseAmount)
-        //           : ({ value: +value, unit: newIngredientData.amount.unit } as ConcreteAmount);
-        //       addIngredient({ key: name, name: name, amount: amount });
-        //       setNewIngredientData({ name: "", amount: { value: "", unit: "" } });
-        //     }
-        //   }
-        // }}
-      >
+        onSubmit={handleSubmit(onSubmit, errors => {
+          console.log("?");
+          console.log(errors);
+        })}>
         <Input
-          required
+          {...register("name", {
+            required: true,
+            maxLength: 50,
+            setValueAs: (value: string) => value.trim(),
+          })}
+          className={`${watch("name")?.length > 0 ? "" : "empty-input"}`}
           maxLength={50}
           placeholder="Nazwa"
-          value={newIngredientData.name}
-          onChange={event => setNewIngredientData(prev => ({ ...prev, name: event.target.value }))}
         />
         <Input
-          required
+          {...register("amount.value", {
+            required: true,
+            maxLength: 10,
+            setValueAs: (value: string) => value.trim(),
+          })}
+          className={`${watch("amount.value")?.length > 0 ? "" : "empty-input"}`}
           maxLength={10}
           placeholder="Ilość"
-          value={newIngredientData.amount.value}
-          onChange={event =>
-            setNewIngredientData(prev => ({ ...prev, amount: { ...prev.amount, value: event.target.value } }))
-          }
         />
         <Input
+          {...register("amount.unit", {
+            required: false,
+            maxLength: 8,
+            setValueAs: (value: string) => value.trim(),
+          })}
+          className={`${watch("amount.unit")?.length > 0 ? "" : "empty-input"}`}
           maxLength={8}
           placeholder="Jednostka"
-          value={newIngredientData.amount.unit}
-          onChange={event =>
-            setNewIngredientData(prev => ({ ...prev, amount: { ...prev.amount, unit: event.target.value } }))
-          }
         />
+        {/* This enables submitting by enter/send */}
         <input type="submit" hidden />
       </Form>
     </>

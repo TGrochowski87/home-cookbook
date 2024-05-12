@@ -29,13 +29,7 @@ export interface IngredientGetDto {
   readonly amount: Amount;
 }
 
-export type Amount = ConcreteAmount | ImpreciseAmount;
-
-export interface ConcreteAmount {
-  readonly value: number;
-  readonly unit: string;
-}
-
-export interface ImpreciseAmount {
+export interface Amount {
   readonly value: string;
+  readonly unit: string | null;
 }

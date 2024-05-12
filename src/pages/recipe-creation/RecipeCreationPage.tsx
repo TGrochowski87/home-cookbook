@@ -42,15 +42,18 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
     image: undefined,
     tags: [],
     ingredients: [
-      { key: 1, name: "pierś z kurczaka", amount: { value: 300, unit: "g" } },
+      { key: 1, name: "pierś z kurczaka", amount: { value: "300", unit: "g" } },
       { key: 2, name: "mleko", amount: { value: "500", unit: "ml" } },
-      { key: 3, name: "przyprawa do kurczaka", amount: { value: "trochę" } },
+      { key: 3, name: "przyprawa do kurczaka", amount: { value: "trochę", unit: null } },
       { key: 4, name: "soplica pigwowa", amount: { value: "1", unit: "L" } },
     ],
-    description: "test test test test test test test",
+    description: "",
   });
 
   const addIngredient = (ingredient: Ingredient): void => {
+    if (formData.ingredients.find(i => i.name === ingredient.name)) {
+      return;
+    }
     setFormData(prev => ({ ...prev, ingredients: [...prev.ingredients, ingredient] }));
   };
 
