@@ -11,6 +11,7 @@ import TagSet from "components/tag-set/TagSet";
 import RichTextArea from "./rich-text-area/RichTextArea";
 import IngredientListEdit from "components/ingredient-list/IngredientListEdit";
 import Ingredient from "models/Ingredient";
+import { useAlerts } from "components/alert/AlertStack";
 
 interface LoaderResponse {
   readonly categories: readonly CategoryGetDto[];
@@ -36,6 +37,7 @@ interface RecipeCreationPageProps {}
 
 const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
   const { categories, tags } = useLoaderData() as LoaderResponse;
+  const { displayMessage } = useAlerts();
   const [formData, setFormData] = useState<RecipeData>({
     name: "",
     categoryId: undefined,
@@ -52,6 +54,7 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
 
   const addIngredient = (ingredient: Ingredient): void => {
     if (formData.ingredients.find(i => i.name === ingredient.name)) {
+      displayMessage({ type: "error", message: "Ten składnik jest już na liście.", fadeOutAfter: 10000 });
       return;
     }
     setFormData(prev => ({ ...prev, ingredients: [...prev.ingredients, ingredient] }));

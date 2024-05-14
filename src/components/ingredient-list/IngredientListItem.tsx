@@ -2,7 +2,7 @@ import { Amount } from "api/GET/DTOs";
 import "./styles.less";
 import Checkbox from "../Checkbox";
 import Ingredient from "models/Ingredient";
-import PlusIcon from "components/PlusIcon";
+import PlusIcon from "components/icons/PlusIcon";
 
 export interface IngredientItemAction {
   readonly type: "check" | "remove";

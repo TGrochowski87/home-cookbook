@@ -8,6 +8,7 @@ import ShoppingPage from "pages/shopping/ShoppingPage";
 import RecipePage, { loader as recipePageLoader } from "pages/recipe/RecipePage";
 import RecipeCreationPage, { loader as recipeCreationPageLoader } from "pages/recipe-creation/RecipeCreationPage";
 import * as Tooltip from "@radix-ui/react-tooltip";
+import { AlertStackContextProvider } from "components/alert/AlertStack";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,7 +27,9 @@ const router = createBrowserRouter(
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Tooltip.Provider>
-      <RouterProvider router={router} />
+      <AlertStackContextProvider>
+        <RouterProvider router={router} />
+      </AlertStackContextProvider>
     </Tooltip.Provider>
   </React.StrictMode>
 );

@@ -14,6 +14,7 @@
     text-transform: lowercase;
 
     background: #colors[primary];
+    color: #colors[text-high-contrast];
   }
 
   .tag-chip.small {
@@ -27,8 +28,13 @@
   }
 
   .tag-chip-interactive {
-    background: #colors[secondary];
+    background: #colors[interactive-inactive];
+    color: #colors[text];
     cursor: pointer;
+  }
+
+  .tag-chip-interactive:hover {
+    background: #colors[interactive-hover];
   }
 
   button[role="checkbox"] {
@@ -37,16 +43,18 @@
 
   button[role="checkbox"][data-state="checked"] + .tag-chip-interactive {
     background: #colors[primary];
+    color: #colors[text-high-contrast];
   }
 
   input[type="checkbox"]:checked + .tag-chip-interactive {
     background: #colors[primary];
+    color: #colors[text-high-contrast];
   }
 
   .tag-creation {
     border: none;
-    outline: 2px solid #colors[primary-non-gradient];
-    background-color: #colors[secondary];
+    outline: 2px solid #colors[primary];
+    background-color: #colors[interactive-inactive];
 
     display: flex;
     flex-direction: row;
@@ -55,7 +63,7 @@
 
     svg {
       margin-left: 6px;
-      fill: #colors[primary-non-gradient];
+      fill: #colors[primary];
     }
   }
 
@@ -76,6 +84,7 @@
 .new-tag-popover-content {
   background-color: #colors[popup];
   border-radius: #numeric[border-radius];
+  border: 2px solid var(--sage-8);
   padding: 8px;
 
   display: flex;
@@ -90,6 +99,6 @@
   }
 
   .popover-arrow {
-    fill: #colors[popup];
+    fill: var(--sage-8);
   }
 }

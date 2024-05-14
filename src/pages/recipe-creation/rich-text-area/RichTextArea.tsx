@@ -51,6 +51,7 @@ const RichTextArea = ({ value, onChange }: RichTextAreaProps) => {
     ],
     content: value,
     onUpdate({ editor }) {
+      console.log(editor.getText());
       onChange(editor.getText());
     },
     editorProps: {

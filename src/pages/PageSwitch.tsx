@@ -12,7 +12,7 @@ const PageSwitch = () => {
 
   return (
     <Switch.Root
-      className="page-switch floating"
+      className="page-switch floating light"
       checked={page === "shopping"}
       onCheckedChange={() => setPage(prev => (prev === "recipes" ? "shopping" : "recipes"))}>
       <div className="labels">

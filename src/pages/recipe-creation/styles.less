@@ -10,7 +10,7 @@
     align-items: center;
 
     svg {
-      color: #colors[primary-non-gradient];
+      color: #colors[primary];
       width: 36px;
       height: 36px;
     }
@@ -22,8 +22,8 @@
 }
 
 .category-select-content {
-  background-color: #colors[secondary];
-  border: 2px solid #colors[primary-non-gradient];
+  background-color: #colors[interactive-inactive];
+  border: 2px solid #colors[primary];
   border-radius: #numeric[border-radius];
   overflow: hidden;
 
@@ -34,6 +34,8 @@
       position: relative;
       display: flex;
       align-items: center;
+
+      color: #colors[text];
 
       margin-block: 4px;
       padding: 4px 40px 4px 20px;
@@ -47,7 +49,7 @@
         right: 8px;
 
         svg {
-          color: #colors[primary-non-gradient];
+          color: #colors[primary];
           width: 24px;
           height: 24px;
         }
@@ -57,10 +59,10 @@
     .category-select-item[data-highlighted] {
       outline: none;
       background: #colors[primary];
-      color: whitesmoke;
+      color: #colors[text-high-contrast];
 
       svg {
-        color: whitesmoke;
+        color: #colors[text-high-contrast];
       }
     }
   }
@@ -69,8 +71,8 @@
     align-self: center;
     position: absolute;
 
-    color: #colors[secondary];
-    background-color: #colors[primary-non-gradient];
+    color: #colors[interactive-inactive];
+    background-color: #colors[primary];
 
     width: 64px;
     height: 32px;
@@ -79,7 +81,7 @@
     align-items: center;
     justify-content: center;
 
-    border: 2px solid #colors[primary-non-gradient];
+    border: 2px solid #colors[primary];
 
     svg {
       width: 24px;

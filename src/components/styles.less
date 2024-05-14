@@ -1,7 +1,14 @@
 @import "../variables.less";
 
+// Alert colors
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-alpha.css";
+@import "@radix-ui/colors/red-dark-alpha.css";
+@import "@radix-ui/colors/red-dark.css";
+
 .input-sizing-wrapper {
   position: relative;
+  min-height: 1rem;
 
   p {
     padding-inline: 10px;
@@ -33,7 +40,7 @@
   padding: 0;
 
   background-color: transparent;
-  border: 2px solid #colors[primary-non-gradient];
+  border: 2px solid #colors[primary];
   border-radius: 4px;
   font-size: 2rem;
 
@@ -50,7 +57,7 @@
 
 .button-outlined {
   background-color: #colors[popup];
-  border: 2px solid #colors[primary-non-gradient];
+  border: 2px solid #colors[primary];
   border-radius: #numeric[border-radius];
   font-weight: 700;
   letter-spacing: 2px;
@@ -66,10 +73,50 @@
 }
 
 .input {
-  background-color: #colors[secondary];
-  border: 2px solid #colors[primary-non-gradient];
+  color: #colors[text-high-contrast];
+  background-color: #colors[interactive-inactive];
+  border: 2px solid #colors[primary];
   border-radius: #numeric[border-radius];
   height: 40px;
   padding: 8px 12px;
   font-weight: 600;
+}
+
+.alert-stack-container {
+  position: fixed;
+  z-index: 999;
+  isolation: isolate;
+  padding: 8px;
+  inset-inline: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  font-weight: normal;
+  font-size: 0.8rem;
+
+  .alert {
+    position: relative;
+    display: grid;
+    grid-template-columns: min-content 1fr;
+    column-gap: 12px;
+    border-radius: #numeric[border-radius];
+    padding: 12px;
+    color: var(--red-11);
+    text-wrap: pretty;
+
+    svg {
+      color: var(--red-9);
+      display: inline-block;
+    }
+
+    p {
+      align-self: center;
+    }
+  }
+
+  .alert.error {
+    background-color: var(--red-3);
+    border: 2px solid var(--red-6);
+  }
 }

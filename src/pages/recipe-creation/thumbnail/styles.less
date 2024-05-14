@@ -5,6 +5,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  isolation: isolate;
 
   p {
     color: rgb(211, 0, 0);
@@ -20,7 +21,7 @@
     height: 240px;
     align-self: center;
     border-radius: #numeric[big-border-radius];
-    border: 3px solid #colors[primary-non-gradient];
+    border: 3px solid #colors[primary];
     overflow: hidden;
 
     .input-space {
@@ -33,7 +34,7 @@
       svg {
         width: 48px;
         height: 48px;
-        color: #colors[primary-non-gradient];
+        color: #colors[primary];
       }
     }
 

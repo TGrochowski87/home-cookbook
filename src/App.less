@@ -1,20 +1,21 @@
 @import "./variables.less";
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
-:root {
+.app {
   background-color: #colors[background];
+  color: #colors[text];
+  min-height: 100dvh;
 }
 
-:root,
-body,
-#root,
-.app {
-  height: 100%;
+:root {
+  // accent-color: var(--grass-8);
+  caret-color: var(--grass-9);
 }
 
 body {
   font-family: "Roboto Mono", sans-serif;
   font-weight: 500;
+  color: #colors[text];
 }
 
 button,
@@ -24,6 +25,7 @@ textarea,
 select {
   font: inherit;
   letter-spacing: inherit;
+  color: inherit;
 }
 
 * {
@@ -61,7 +63,7 @@ select {
 }
 
 .block {
-  background-color: #colors[secondary];
+  background-color: #colors[interactive-inactive];
   border-radius: #numeric[border-radius];
   border: 1px solid #00000005;
 }

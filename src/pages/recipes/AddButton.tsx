@@ -1,5 +1,5 @@
 import Button from "components/Button";
-import PlusIcon from "components/PlusIcon";
+import PlusIcon from "components/icons/PlusIcon";
 
 interface AddButtonProps {
   readonly onClick: () => void;

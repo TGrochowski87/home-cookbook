@@ -4,7 +4,7 @@
   .toolbar-root {
     display: flex;
     border-radius: 4px 4px #numeric[big-border-radius] #numeric[big-border-radius];
-    border: 2px solid #colors[primary-non-gradient];
+    border: 2px solid #colors[primary];
 
     position: relative;
     z-index: 1;
@@ -53,7 +53,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%);
-      box-shadow: 0 0 6px 12px fade(#colors[primary-non-gradient], 60%);
+      box-shadow: 0 0 6px 12px rgba(var(--grass-9), 0.6);
     }
 
     button.toolbar-toggle:hover::before {
@@ -62,12 +62,12 @@
 
     .toolbar-toggle[data-state="on"],
     .toolbar-toggle:has(button[data-state="on"]) {
-      background-color: fade(#colors[primary-non-gradient], 60%);
+      background-color: rgba(var(--grass-9), 0.6);
     }
 
     .toolbar-separator {
       width: 1px;
-      background-color: #colors[primary-non-gradient];
+      background-color: #colors[primary];
       margin: 0 8px;
     }
 
@@ -96,7 +96,7 @@
 
   .rich-text-area-editor {
     font-weight: initial;
-    border: 2px solid #colors[primary-non-gradient];
+    border: 2px solid #colors[primary];
     border-radius: #numeric[big-border-radius] #numeric[big-border-radius] 4px 4px;
     min-height: 20ch;
     padding: 4px;
@@ -109,6 +109,7 @@
     h4 {
       letter-spacing: initial;
       font-weight: normal;
+      color: #colors[text-high-contrast];
     }
 
     .heading-1 {

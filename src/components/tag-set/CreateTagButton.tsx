@@ -1,6 +1,6 @@
 import Button from "components/Button";
 import WidthAdjustingInput from "components/WidthAdjustingInput";
-import PlusIcon from "components/PlusIcon";
+import PlusIcon from "components/icons/PlusIcon";
 import { useState } from "react";
 import TagSize from "./TagSize";
 
@@ -9,6 +9,7 @@ interface NewTagProps {
   readonly size: TagSize;
 }
 
+// TODO: Use useForm, so it can be submitted on enter/send
 const CreateTagButton = ({ onCreate, size }: NewTagProps) => {
   const [isInInputMode, setIsInInputMode] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
