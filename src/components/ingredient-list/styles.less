@@ -27,11 +27,16 @@
 
 .ingredient-data {
   display: grid;
-  grid-template-columns: 1fr 6ch 5ch 24px;
+  grid-template-columns: 1fr minmax(6ch, auto) minmax(5ch, auto) 24px;
+  column-gap: 1ch;
   margin-bottom: 8px;
 
   * + * {
     justify-self: center;
+  }
+
+  p {
+    word-break: break-all;
   }
 
   p:first-child {
