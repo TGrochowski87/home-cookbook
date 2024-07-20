@@ -1,5 +1,4 @@
 import Input from "components/Input";
-import { useState } from "react";
 import CategorySelect from "pages/recipe-creation/category-select/CategorySelect";
 import "./styles.less";
 import { CategoryGetDto, TagGetDto } from "api/GET/DTOs";
@@ -11,7 +10,8 @@ import TagSet from "components/tag-set/TagSet";
 import RichTextArea from "./rich-text-area/RichTextArea";
 import IngredientListEdit from "components/ingredient-list/IngredientListEdit";
 import Ingredient from "models/Ingredient";
-import { useAlerts } from "components/alert/AlertStack";
+import Button from "components/Button";
+import { useForm, Controller } from "react-hook-form";
 
 interface LoaderResponse {
   readonly categories: readonly CategoryGetDto[];
@@ -19,8 +19,8 @@ interface LoaderResponse {
 }
 
 export async function loader(): Promise<LoaderResponse> {
-  const categories = await api.getCategories();
-  const tags = await api.getTags();
+  const categories = await api.get.getCategories();
+  const tags = await api.get.getTags();
   return { categories, tags };
 }
 
@@ -37,79 +37,129 @@ interface RecipeCreationPageProps {}
 
 const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
   const { categories, tags } = useLoaderData() as LoaderResponse;
-  const { displayMessage } = useAlerts();
-  const [formData, setFormData] = useState<RecipeData>({
-    name: "",
-    categoryId: undefined,
-    image: undefined,
-    tags: [],
-    ingredients: [
-      { key: 1, name: "pierś z kurczaka", amount: { value: "300", unit: "g" } },
-      { key: 2, name: "mleko", amount: { value: "500", unit: "ml" } },
-      { key: 3, name: "przyprawa do kurczaka", amount: { value: "trochę", unit: null } },
-      { key: 4, name: "soplica pigwowa", amount: { value: "1", unit: "L" } },
-    ],
-    description: "",
+  const { register, handleSubmit, formState, control, setFocus, getValues, trigger } = useForm<RecipeData>({
+    defaultValues: {
+      name: "",
+      categoryId: undefined,
+      image: undefined,
+      tags: [],
+      ingredients: [],
+      description: "",
+    },
   });
 
-  const addIngredient = (ingredient: Ingredient): void => {
-    if (formData.ingredients.find(i => i.name === ingredient.name)) {
-      displayMessage({ type: "error", message: "Ten składnik jest już na liście.", fadeOutAfter: 10000 });
-      return;
-    }
-    setFormData(prev => ({ ...prev, ingredients: [...prev.ingredients, ingredient] }));
-  };
-
-  const removeIngredient = (name: string): void => {
-    setFormData(prev => ({ ...prev, ingredients: prev.ingredients.filter(i => i.name !== name) }));
+  const onSubmit = (data: RecipeData) => {
+    console.log(data);
   };
 
   return (
     <div className="page recipe-creation-page">
       <h1>Nowy przepis</h1>
-      <Input
-        value={formData.name}
-        placeholder="Nazwa przepisu..."
-        onChange={event => setFormData(prev => ({ ...prev, name: event.target.value }))}
-      />
+      {/* Cannot be form, because this would cause form nesting. */}
+      <div className="main-form">
+        <div className="input-with-error">
+          <Input
+            {...register("name", {
+              required: "Nazwa przepisu jest wymagana",
+              maxLength: 50,
+              setValueAs: (value: string) => value.trim(),
+            })}
+            maxLength={50}
+            placeholder="Nazwa przepisu..."
+          />
+          {formState.errors.name && <p className="under-input-error-message">{formState.errors.name.message}</p>}
+        </div>
 
-      <CategorySelect
-        categories={categories}
-        value={formData.categoryId?.toString() ?? ""}
-        setValue={(categoryId: string) => setFormData(prev => ({ ...prev, categoryId: +categoryId }))}
-      />
-
-      <Thumbnail
-        image={formData.image}
-        setImage={(image: Blob | undefined) => setFormData(prev => ({ ...prev, image: image }))}
-      />
-
-      <TitledSection title="Tagi">
-        <TagSet
-          tags={tags}
-          tagSize="big"
-          tagCreationEnabled
-          selection={{
-            disabled: false,
-            onSelectionChange: (selectedTagIds: number[]) => setFormData(prev => ({ ...prev, tags: selectedTagIds })),
-          }}
+        <Controller
+          control={control}
+          name="categoryId"
+          rules={{ required: "Kategoria jest wymagana" }}
+          render={({ field: { value, onChange, ref } }) => (
+            <div className="input-with-error">
+              <CategorySelect
+                ref={ref}
+                categories={categories}
+                value={value?.toString() ?? ""}
+                setValue={(categoryId: string) => onChange(+categoryId)}
+              />
+              {formState.errors.categoryId && (
+                <p className="under-input-error-message">{formState.errors.categoryId.message}</p>
+              )}
+            </div>
+          )}
         />
-      </TitledSection>
 
-      <TitledSection title="Składniki">
-        <IngredientListEdit
-          ingredients={formData.ingredients}
-          addIngredient={addIngredient}
-          removeIngredient={removeIngredient}
+        <Controller
+          control={control}
+          name="image"
+          render={({ field: { value, onChange } }) => (
+            <Thumbnail image={value} setImage={(image: Blob | undefined) => onChange(image)} />
+          )}
         />
-      </TitledSection>
 
-      <TitledSection title="Treść">
-        <RichTextArea
-          value={formData.description}
-          onChange={(value: string) => setFormData(prev => ({ ...prev, description: value }))}
-        />
-      </TitledSection>
+        <TitledSection title="Tagi">
+          <Controller
+            control={control}
+            name="tags"
+            render={({ field: { onChange } }) => (
+              <TagSet
+                tags={tags}
+                tagSize="big"
+                tagCreationEnabled
+                selection={{
+                  disabled: false,
+                  onSelectionChange: (selectedTagIds: number[]) => onChange(selectedTagIds),
+                }}
+              />
+            )}
+          />
+        </TitledSection>
+
+        <TitledSection title="Składniki">
+          <Controller
+            control={control}
+            name="ingredients"
+            render={({ field: { value, onChange } }) => (
+              <IngredientListEdit
+                ingredients={value}
+                setIngredients={(ingredients: Ingredient[]) => onChange(ingredients)}
+              />
+            )}
+          />
+        </TitledSection>
+
+        <TitledSection title="Treść">
+          <Controller
+            control={control}
+            name="description"
+            render={({ field: { value, onChange } }) => <RichTextArea value={value} onChange={onChange} />}
+          />
+        </TitledSection>
+
+        <Button
+          // onClick={async () => {
+          //   const val = getValues();
+          //   var isValid = await trigger(undefined, { shouldFocus: true });
+          //   console.log(isValid);
+          //   if (isValid) {
+          //     onSubmit(val);
+          //   } else {
+          //     console.log(formState.errors);
+          //     // if (formState.error.name?.type !== "required" && formState.errors.categoryId?.type === "required") {
+          //     //   setFocus("categoryId");
+          //     // }
+          //   }
+          // }}
+          onClick={handleSubmit(onSubmit, error => {
+            console.log(error);
+            if (error.name?.type !== "required" && error.categoryId?.type === "required") {
+              setFocus("categoryId");
+            }
+          })}
+          className="save-button">
+          zapisz
+        </Button>
+      </div>
     </div>
   );
 };

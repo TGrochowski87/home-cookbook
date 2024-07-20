@@ -20,7 +20,7 @@ const ThumbnailSelection = ({ setImage, setFileUploadErrors }: ThumbnailSelectio
         const errorCodes = fileRejections.map(fr => fr.errors.map(e => e.code as FileUploadError)).flat();
         setFileUploadErrors(errorCodes);
       }}
-      maxSize={5242880} /// 5MB
+      maxSize={3145728} /// 3MB
       maxFiles={1}
       multiple={false}
       accept={{

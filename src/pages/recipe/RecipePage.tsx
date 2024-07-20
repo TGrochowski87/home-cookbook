@@ -9,7 +9,7 @@ import TagSet from "components/tag-set/TagSet";
 import IngredientListRead from "components/ingredient-list/IngredientListRead";
 
 export async function loader({ params }: any) {
-  const recipe = await api.getRecipe(params.id);
+  const recipe = await api.get.getRecipe(params.id);
   return recipe;
 }
 

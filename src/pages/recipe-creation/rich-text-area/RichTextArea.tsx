@@ -30,12 +30,7 @@ const RichTextArea = ({ value, onChange }: RichTextAreaProps) => {
     extensions: [
       Document,
       Text,
-      Paragraph.configure({
-        HTMLAttributes: {
-          // oncontextmenu: "event.preventDefault()",
-          // oncontextmenu: "console.log(event)",
-        },
-      }),
+      Paragraph,
       Bold,
       Italic,
       Underline,
@@ -51,7 +46,6 @@ const RichTextArea = ({ value, onChange }: RichTextAreaProps) => {
     ],
     content: value,
     onUpdate({ editor }) {
-      console.log(editor.getText());
       onChange(editor.getText());
     },
     editorProps: {

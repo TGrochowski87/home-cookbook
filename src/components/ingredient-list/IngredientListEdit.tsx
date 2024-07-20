@@ -3,11 +3,11 @@ import IngredientList from "./IngredientList";
 import { Form } from "react-router-dom";
 import Input from "components/Input";
 import { useForm } from "react-hook-form";
+import { useAlerts } from "components/alert/AlertStack";
 
 interface IngredientListEditProps {
   readonly ingredients: readonly Ingredient[];
-  readonly addIngredient: (ingredient: Ingredient) => void;
-  readonly removeIngredient: (name: string) => void;
+  readonly setIngredients: (ingredients: Ingredient[]) => void;
 }
 
 interface FormData {
@@ -18,19 +18,28 @@ interface FormData {
   };
 }
 
-const IngredientListEdit = ({ ingredients, addIngredient, removeIngredient }: IngredientListEditProps) => {
+const IngredientListEdit = ({ ingredients, setIngredients }: IngredientListEditProps) => {
   const { register, handleSubmit, reset, watch } = useForm<FormData>();
+  const { displayMessage } = useAlerts();
 
   const onSubmit = (data: FormData) => {
-    console.log(data);
     const newIngredient: Ingredient = {
       key: data.name,
       name: data.name,
       amount: { value: data.amount.value, unit: data.amount.unit === "" ? null : data.amount.unit },
     };
-    addIngredient(newIngredient);
 
+    if (ingredients.find(i => i.name === newIngredient.name)) {
+      displayMessage({ type: "error", message: "Ten składnik jest już na liście.", fadeOutAfter: 10000 });
+      return;
+    }
+
+    setIngredients([...ingredients, newIngredient]);
     reset();
+  };
+
+  const removeIngredient = (name: string): void => {
+    setIngredients(ingredients.filter(i => i.name !== name));
   };
 
   return (
@@ -45,8 +54,7 @@ const IngredientListEdit = ({ ingredients, addIngredient, removeIngredient }: In
       <Form
         className="new-ingredient"
         onSubmit={handleSubmit(onSubmit, errors => {
-          console.log("?");
-          console.log(errors);
+          console.error(errors);
         })}>
         <Input
           {...register("name", {

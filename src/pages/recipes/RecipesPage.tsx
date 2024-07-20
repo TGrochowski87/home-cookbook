@@ -16,9 +16,9 @@ interface LoaderResponse {
 }
 
 export async function loader(): Promise<LoaderResponse> {
-  const categories = await api.getCategories();
-  const tags = await api.getTags();
-  const recipes = await api.getRecipes();
+  const categories = await api.get.getCategories();
+  const tags = await api.get.getTags();
+  const recipes = await api.get.getRecipes();
   return { recipes, categories, tags };
 }
 
@@ -35,7 +35,7 @@ const RecipeListPage = () => {
         className="search-section"
         onChange={event => {
           clearTimeout(searchTimeoutId.current);
-          searchTimeoutId.current = setTimeout(() => {
+          searchTimeoutId.current = window.setTimeout(() => {
             submit(event.target.form, { replace: true });
           }, 1000);
         }}>

@@ -16,10 +16,7 @@ interface ButtonProps extends PropsWithChildren {
 
 const Button = ({ onClick, children, disableShadow, className, type = "outlined" }: ButtonProps) => {
   return (
-    <button
-      className={`${typesStyles[type]} ${disableShadow ? "" : "floating"} ${className}`}
-      type="button"
-      onClick={onClick}>
+    <button className={`${typesStyles[type]} ${disableShadow ? "" : "floating"} ${className}`} onClick={onClick}>
       {children}
     </button>
   );

@@ -22,7 +22,6 @@ export const AlertStackContextProvider = ({ children }: PropsWithChildren) => {
   const displayMessage = (data: AlertData) => {
     const currentKey = nextKey;
     setNextKey(prev => ++prev);
-    console.log(currentKey);
     setAlertStack(prev => ({ ...prev, [currentKey]: data }));
 
     setTimeout(() => {

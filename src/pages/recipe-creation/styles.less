@@ -1,7 +1,15 @@
 @import "../../variables.less";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
 
 .recipe-creation-page {
   font-size: 0.8rem;
+
+  .main-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
 
   .category-select-trigger {
     display: flex;
@@ -18,6 +26,22 @@
 
   .category-select-trigger[data-placeholder] {
     color: grey;
+  }
+
+  .save-button {
+    padding: 8px;
+  }
+
+  .input-with-error {
+    > * {
+      width: 100%;
+    }
+
+    .under-input-error-message {
+      margin-top: 0.2rem;
+      font-size: 0.7rem;
+      color: var(--red-11);
+    }
   }
 }
 
