@@ -2,7 +2,8 @@ import { Outlet } from "react-router-dom";
 import "./App.less";
 import { useEffect, useState } from "react";
 import { Palette } from "lucide-react";
-// import "@radix-ui/colors";
+
+// TODO: Tests
 
 function App() {
   // TODO: Likely temporary. Remove later.
@@ -14,18 +15,6 @@ function App() {
     body[0].classList.remove("dark");
     body[0].classList.add(theme);
   }, [theme]);
-
-  useEffect(() => {
-    const test = (event: UIEvent) => {
-      console.log(navigator.virtualKeyboard);
-    };
-
-    window.addEventListener("resize", test);
-
-    return () => {
-      window.removeEventListener("resize", test);
-    };
-  }, []);
 
   return (
     <div className="app">
