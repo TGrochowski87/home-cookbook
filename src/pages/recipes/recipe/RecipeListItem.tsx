@@ -14,10 +14,11 @@ const RecipeListItem = ({ recipe }: RecipeListItemProps) => {
 
   return (
     <article
-      className="recipe-list-item block floating"
+      className="recipe-list-item block floating interactive-element"
       onClick={() => navigate(`./${recipe.id}`, { relative: "path" })}>
       <img src={BurgerPlaceHolder} />
-      <h1>{recipe.title}</h1>
+      <h2>{recipe.title}</h2>
+      {/* TODO: Should this recipe.description really be here? */}
       <p>{recipe.description}</p>
       <TagSet tags={recipe.tags} tagSize="small" disableShadow align="start" />
       <CategoryIndicator categoryColor={recipe.category.color} categoryName={recipe.category.name} />

@@ -2,7 +2,6 @@
 
 .recipe-list-item {
   position: relative;
-  background: #colors[interactive-inactive];
   width: 100%;
   height: 96px;
   flex-shrink: 0;
@@ -14,11 +13,6 @@
 
   font-size: 0.6rem;
 
-  cursor: pointer;
-  &:hover {
-    background: #colors[interactive-hover];
-  }
-
   img {
     height: 100%;
     grid-column: 1;
@@ -29,7 +23,9 @@
     margin-right: 4px;
   }
 
-  h1 {
+  h2 {
+    letter-spacing: 1px;
+
     grid-column: 2;
     grid-row: 1;
   }

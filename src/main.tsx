@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import { AlertStackContextProvider } from "components/alert/AlertStack";
-import router from "router";
+import router from "./router";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
