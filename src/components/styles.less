@@ -3,8 +3,13 @@
 // Alert colors
 @import "@radix-ui/colors/red.css";
 @import "@radix-ui/colors/red-alpha.css";
-@import "@radix-ui/colors/red-dark-alpha.css";
 @import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/red-dark-alpha.css";
+
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/green-alpha.css";
+@import "@radix-ui/colors/green-dark.css";
+@import "@radix-ui/colors/green-dark-alpha.css";
 
 .input-sizing-wrapper {
   position: relative;
@@ -102,11 +107,9 @@
     column-gap: 12px;
     border-radius: #numeric[border-radius];
     padding: 12px;
-    color: var(--red-11);
     text-wrap: pretty;
 
     svg {
-      color: var(--red-9);
       display: inline-block;
     }
 
@@ -116,7 +119,21 @@
   }
 
   .alert.error {
+    color: var(--red-11);
     background-color: var(--red-3);
     border: 2px solid var(--red-6);
+
+    svg {
+      color: var(--red-9);
+    }
+  }
+  .alert.success {
+    color: var(--green-11);
+    background-color: var(--green-3);
+    border: 2px solid var(--green-6);
+
+    svg {
+      color: var(--green-9);
+    }
   }
 }

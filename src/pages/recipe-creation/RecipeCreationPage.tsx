@@ -3,7 +3,7 @@ import CategorySelect from "pages/recipe-creation/category-select/CategorySelect
 import "./styles.less";
 import { CategoryGetDto, TagGetDto } from "api/GET/DTOs";
 import api from "api/api";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
 import TagSet from "components/tag-set/TagSet";
@@ -12,6 +12,9 @@ import IngredientListEdit from "components/ingredient-list/IngredientListEdit";
 import Ingredient from "models/Ingredient";
 import Button from "components/Button";
 import { useForm, Controller } from "react-hook-form";
+import { RecipeCreateDto } from "api/POST/DTOs";
+import axios, { AxiosError } from "axios";
+import { useAlerts } from "components/alert/AlertStack";
 
 interface LoaderResponse {
   readonly categories: readonly CategoryGetDto[];
@@ -37,7 +40,9 @@ interface RecipeCreationPageProps {}
 
 const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
   const { categories, tags } = useLoaderData() as LoaderResponse;
-  const { register, handleSubmit, formState, control, setFocus, getValues, trigger } = useForm<RecipeData>({
+  const navigate = useNavigate();
+  const { displayMessage } = useAlerts();
+  const { register, handleSubmit, formState, control, setFocus, reset } = useForm<RecipeData>({
     defaultValues: {
       name: "",
       categoryId: undefined,
@@ -48,8 +53,39 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
     },
   });
 
-  const onSubmit = (data: RecipeData) => {
+  const onSubmit = async (data: RecipeData): Promise<void> => {
     console.log(data);
+
+    const dto: RecipeCreateDto = {
+      name: data.name,
+      categoryId: data.categoryId!,
+      image: data.image,
+      tags: data.tags,
+      ingredients: data.ingredients,
+      description: data.description,
+    };
+
+    // TODO: Consider some helper for handling different status codes.
+    try {
+      // await api.post.createRecipe(dto);
+      displayMessage({ type: "success", message: "Przepis został utworzony.", fadeOutAfter: 5000 });
+      reset();
+      navigate("/recipes");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+
+        if (axiosError.request || (axiosError.response && axiosError.response?.status >= 500)) {
+          displayMessage({ type: "error", message: "Wystąpił nieoczekiwany błąd.", fadeOutAfter: 5000 });
+          return;
+        }
+
+        if (axiosError.response?.status === 400) {
+          displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
+          return;
+        }
+      }
+    }
   };
 
   return (
