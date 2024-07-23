@@ -33,3 +33,9 @@ export const getShoppingLists = async (): Promise<ShoppingListGetDto[]> => {
   const response = await axios.get<ShoppingListGetDto[]>(url);
   return response.data;
 };
+
+export const getShoppingList = async (id: number): Promise<ShoppingListGetDto> => {
+  const url = `${baseUrl}/shopping-lists/${id}`;
+  const response = await axios.get<ShoppingListGetDto>(url);
+  return response.data;
+};

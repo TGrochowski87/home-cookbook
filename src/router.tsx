@@ -4,7 +4,7 @@ import App from "./App";
 import RecipesPage, { loader as recipesPageLoader } from "pages/recipes/RecipesPage";
 import RecipePage, { loader as recipePageLoader } from "pages/recipe/RecipePage";
 import RecipeCreationPage, { loader as recipeCreationPageLoader } from "pages/recipe-creation/RecipeCreationPage";
-import ShoppingListPage from "pages/shopping-list/ShoppingListPage";
+import ShoppingListPage, { loader as shoppingListPageLoader } from "pages/shopping-list/ShoppingListPage";
 import ShoppingPage, { loader as shoppingPageLoader } from "pages/shopping-lists/ShoppingPage";
 
 // TODO: global error boundry
@@ -18,7 +18,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/recipes/:id" element={<RecipePage />} loader={recipePageLoader} />
       <Route path="/recipes/new" element={<RecipeCreationPage />} loader={recipeCreationPageLoader} />
-      <Route path="/shopping-lists/:id" element={<ShoppingListPage />} />
+      <Route path="/shopping-lists/:id" element={<ShoppingListPage />} loader={shoppingListPageLoader} />
     </Route>
   )
 );
