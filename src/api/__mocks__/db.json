@@ -106,5 +106,167 @@
         { "id": 7, "name": "łagodne" }
       ]
     }
+  ],
+  "shopping-lists": [
+    {
+      "id": 1,
+      "name": "21.07.2024 - biedra",
+      "creationDate": "2024-07-21T00:00:00.000Z",
+      "updateDate": "2024-07-21T00:00:00.000Z",
+      "sublists": [
+        {
+          "id": 1,
+          "name": "inne rzeczy",
+          "recipeId": null,
+          "count": 1,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Burger z halloumi",
+          "recipeId": 1,
+          "count": 2,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "21.07.2024 - biedra",
+      "creationDate": "2024-07-21T00:00:00.000Z",
+      "updateDate": "2024-07-21T00:00:00.000Z",
+      "sublists": [
+        {
+          "id": 1,
+          "name": "inne rzeczy",
+          "recipeId": null,
+          "count": 1,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Burger z halloumi",
+          "recipeId": 1,
+          "count": 2,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "21.07.2024 - biedra",
+      "creationDate": "2024-07-21T00:00:00.000Z",
+      "updateDate": "2024-07-21T00:00:00.000Z",
+      "sublists": [
+        {
+          "id": 1,
+          "name": "inne rzeczy",
+          "recipeId": null,
+          "count": 1,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Burger z halloumi",
+          "recipeId": 1,
+          "count": 2,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "21.07.2024 - biedra",
+      "creationDate": "2024-07-21T00:00:00.000Z",
+      "updateDate": "2024-07-21T00:00:00.000Z",
+      "sublists": [
+        {
+          "id": 1,
+          "name": "inne rzeczy",
+          "recipeId": null,
+          "count": 1,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Burger z halloumi",
+          "recipeId": 1,
+          "count": 2,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "21.07.2024 - biedra",
+      "creationDate": "2024-07-21T00:00:00.000Z",
+      "updateDate": "2024-07-21T00:00:00.000Z",
+      "sublists": [
+        {
+          "id": 1,
+          "name": "inne rzeczy",
+          "recipeId": null,
+          "count": 1,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        },
+        {
+          "id": 2,
+          "name": "Burger z halloumi",
+          "recipeId": 1,
+          "count": 2,
+          "items": [
+            { "id": 1, "name": "pierś z kurczaka", "amount": { "value": "300", "unit": "g" } },
+            { "id": 2, "name": "mleko", "amount": { "value": "500", "unit": "ml" } },
+            { "id": 3, "name": "przyprawa do kurczaka", "amount": { "value": "trochę" } },
+            { "id": 4, "name": "soplica pigwowa", "amount": { "value": "1", "unit": "L" } }
+          ]
+        }
+      ]
+    }
   ]
 }

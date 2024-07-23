@@ -1,6 +1,8 @@
 import axios from "axios";
-import { CategoryGetDto, RecipeDetailsGetDto, RecipeGetDto, TagGetDto } from "./DTOs";
+import { CategoryGetDto, RecipeDetailsGetDto, RecipeGetDto, ShoppingListGetDto, TagGetDto } from "./DTOs";
 import { baseUrl } from "api/api";
+
+// TODO: Extends on real API
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {
   const url = `${baseUrl}/categories`;
@@ -23,5 +25,11 @@ export const getRecipes = async (): Promise<RecipeGetDto[]> => {
 export const getRecipe = async (id: number): Promise<RecipeDetailsGetDto> => {
   const url = `${baseUrl}/recipes/${id}`;
   const response = await axios.get<RecipeDetailsGetDto>(url);
+  return response.data;
+};
+
+export const getShoppingLists = async (): Promise<ShoppingListGetDto[]> => {
+  const url = `${baseUrl}/shopping-lists`;
+  const response = await axios.get<ShoppingListGetDto[]>(url);
   return response.data;
 };

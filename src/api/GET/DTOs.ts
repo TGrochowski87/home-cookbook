@@ -14,12 +14,12 @@ export interface RecipeGetDto {
   readonly title: string;
   readonly description: string;
   readonly category: CategoryGetDto;
-  readonly tags: TagGetDto[];
+  readonly tags: readonly TagGetDto[];
   readonly imageSrc?: string;
 }
 
 export interface RecipeDetailsGetDto extends RecipeGetDto {
-  readonly ingredients: IngredientGetDto[];
+  readonly ingredients: readonly IngredientGetDto[];
   readonly text: string;
 }
 
@@ -32,4 +32,24 @@ export interface IngredientGetDto {
 export interface Amount {
   readonly value: string;
   readonly unit: string | null;
+}
+
+export interface ShoppingListGetDto {
+  readonly id: number;
+  readonly name: string;
+  readonly creationDate: string;
+  readonly updateDate: string;
+  readonly sublists?: readonly ShoppingListSublistGetDto[];
+}
+
+export interface ShoppingListSublistGetDto {
+  readonly id: number;
+  readonly name: string;
+  readonly recipeId?: number;
+  readonly count: number;
+  readonly items: readonly ShoppingItemGetDto[];
+}
+
+export interface ShoppingItemGetDto extends IngredientGetDto {
+  readonly checked: boolean;
 }
