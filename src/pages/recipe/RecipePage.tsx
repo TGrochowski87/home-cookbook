@@ -6,7 +6,7 @@ import "./styles.less";
 import TitledSection from "components/TitledSection";
 import Button from "components/Button";
 import TagSet from "components/tag-set/TagSet";
-import IngredientListRead from "components/ingredient-list/IngredientListRead";
+import IngredientListRead from "pages/recipe/IngredientListRead";
 
 export async function loader({ params }: any) {
   const recipe = await api.get.getRecipe(params.id);

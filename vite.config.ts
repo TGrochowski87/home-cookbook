@@ -13,6 +13,7 @@ export default defineConfig({
       models: "/src/models",
       hooks: "/src/hooks",
       utilities: "/src/utilities",
+      mapper: "/src/mapper",
     },
   },
 });

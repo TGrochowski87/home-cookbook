@@ -1,0 +1,94 @@
+@import "../../variables.less";
+
+.quantifiable-items-list {
+  position: relative;
+  padding-left: 24px;
+
+  &:has(.left-side-action) {
+    padding-left: 48px;
+  }
+
+  .quantifiable-list-item {
+    &::marker {
+      color: rgb(26, 163, 26);
+      font-weight: 600;
+    }
+
+    .left-side-action {
+      position: absolute;
+      left: 0;
+      transform: rotate(45deg);
+
+      svg {
+        fill: #colors[delete-button];
+      }
+    }
+
+    .quantifiable-data {
+      display: flex;
+      column-gap: 1ch;
+      margin-bottom: 8px;
+      align-items: center;
+
+      :not(p:first-of-type) {
+        flex-shrink: 0;
+      }
+
+      p {
+        word-break: keep-all;
+      }
+
+      p:first-child {
+        flex-grow: 1;
+      }
+
+      p + p {
+        text-align: center;
+      }
+
+      span {
+        width: 24px;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+.new-quantifiable-item {
+  display: grid;
+  grid-template-columns: 1fr 10ch 8ch;
+  gap: 8px;
+
+  input {
+    width: 100%;
+    height: 28px;
+    padding: 4px 8px;
+    text-transform: lowercase;
+  }
+
+  // ================= DISABLING ARROWS ON NUMBER INPUT
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+  // ================= DISABLING ARROWS ON NUMBER INPUT
+
+  input:first-child {
+    width: 90%;
+  }
+
+  .empty-input {
+    text-transform: none;
+  }
+
+  .empty-input:last-child {
+    font-size: 0.6em;
+  }
+}

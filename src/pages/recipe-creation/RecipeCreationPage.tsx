@@ -8,13 +8,13 @@ import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
 import TagSet from "components/tag-set/TagSet";
 import RichTextArea from "./rich-text-area/RichTextArea";
-import IngredientListEdit from "components/ingredient-list/IngredientListEdit";
-import Ingredient from "models/Ingredient";
 import Button from "components/Button";
 import { useForm, Controller } from "react-hook-form";
 import { RecipeCreateDto } from "api/POST/DTOs";
 import axios, { AxiosError } from "axios";
 import { useAlerts } from "components/alert/AlertStack";
+import EditableQuantifiableItemsList from "components/quantifiable-items-list/EditableQuantifiableItemsList";
+import QuantifiableItemData from "models/QuantifiableItemData";
 
 interface LoaderResponse {
   readonly categories: readonly CategoryGetDto[];
@@ -32,7 +32,7 @@ interface RecipeData {
   readonly categoryId: number | undefined;
   readonly image: Blob | undefined;
   readonly tags: ReadonlyArray<number | string>;
-  readonly ingredients: ReadonlyArray<Ingredient>;
+  readonly ingredients: ReadonlyArray<QuantifiableItemData>;
   readonly description: string;
 }
 
@@ -156,9 +156,15 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
             control={control}
             name="ingredients"
             render={({ field: { value, onChange } }) => (
-              <IngredientListEdit
-                ingredients={value}
-                setIngredients={(ingredients: Ingredient[]) => onChange(ingredients)}
+              <EditableQuantifiableItemsList
+                items={value.map(i => ({ ...i, checked: false }))}
+                setItems={(items: readonly QuantifiableItemData[]) => onChange(items)}
+                rightSideAction={{
+                  type: "remove",
+                  callback: (item: QuantifiableItemData) => {
+                    onChange(value.filter(i => i.key !== item.key));
+                  },
+                }}
               />
             )}
           />
@@ -173,19 +179,6 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
         </TitledSection>
 
         <Button
-          // onClick={async () => {
-          //   const val = getValues();
-          //   var isValid = await trigger(undefined, { shouldFocus: true });
-          //   console.log(isValid);
-          //   if (isValid) {
-          //     onSubmit(val);
-          //   } else {
-          //     console.log(formState.errors);
-          //     // if (formState.error.name?.type !== "required" && formState.errors.categoryId?.type === "required") {
-          //     //   setFocus("categoryId");
-          //     // }
-          //   }
-          // }}
           onClick={handleSubmit(onSubmit, error => {
             console.log(error);
             if (error.name?.type !== "required" && error.categoryId?.type === "required") {

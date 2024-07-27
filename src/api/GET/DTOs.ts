@@ -23,11 +23,11 @@ export interface RecipeDetailsGetDto extends RecipeGetDto {
   readonly text: string;
 }
 
-export interface IngredientGetDto {
+export type IngredientGetDto = {
   readonly id: number;
   readonly name: string;
   readonly amount: Amount;
-}
+};
 
 export interface Amount {
   readonly value: string;

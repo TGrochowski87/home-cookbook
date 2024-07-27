@@ -1,10 +1,12 @@
 import * as RadixCheckbox from "@radix-ui/react-checkbox";
 
-interface CheckboxProps {}
+interface CheckboxProps {
+  readonly checked: boolean;
+}
 
-const Checkbox = ({}: CheckboxProps) => {
+const Checkbox = ({ checked }: CheckboxProps) => {
   return (
-    <RadixCheckbox.Root className="checkbox-root">
+    <RadixCheckbox.Root checked={checked} className="checkbox-root">
       <RadixCheckbox.Indicator className="indicator" />
     </RadixCheckbox.Root>
   );

@@ -1,14 +1,10 @@
-import Ingredient from "models/Ingredient";
-import IngredientList from "./IngredientList";
-import { Form } from "react-router-dom";
-import Input from "components/Input";
-import { useForm } from "react-hook-form";
 import { useAlerts } from "components/alert/AlertStack";
-
-interface IngredientListEditProps {
-  readonly ingredients: readonly Ingredient[];
-  readonly setIngredients: (ingredients: Ingredient[]) => void;
-}
+import { useForm } from "react-hook-form";
+import { Form } from "react-router-dom";
+import QuantifiableItemData from "../../models/QuantifiableItemData";
+import QuantifiableItemsList from "./QuantifiableItemsList";
+import Input from "components/Input";
+import ActionData from "../../models/ActionData";
 
 interface FormData {
   readonly name: string;
@@ -18,41 +14,44 @@ interface FormData {
   };
 }
 
-const IngredientListEdit = ({ ingredients, setIngredients }: IngredientListEditProps) => {
+interface EditableQuantifiableItemsListProps {
+  readonly items: readonly QuantifiableItemData[];
+  readonly setItems: (items: readonly QuantifiableItemData[]) => void;
+  readonly rightSideAction?: ActionData;
+  readonly leftSideAction?: ActionData;
+}
+
+const EditableQuantifiableItemsList = ({
+  items,
+  setItems,
+  leftSideAction,
+  rightSideAction,
+}: EditableQuantifiableItemsListProps) => {
   const { register, handleSubmit, reset, watch } = useForm<FormData>();
   const { displayMessage } = useAlerts();
 
   const onSubmit = (data: FormData) => {
-    const newIngredient: Ingredient = {
+    const newItem: QuantifiableItemData = {
       key: data.name,
       name: data.name,
       amount: { value: data.amount.value, unit: data.amount.unit === "" ? null : data.amount.unit },
+      checked: false,
     };
 
-    if (ingredients.find(i => i.name === newIngredient.name)) {
-      displayMessage({ type: "error", message: "Ten składnik jest już na liście.", fadeOutAfter: 10000 });
+    if (items.find(i => i.name === newItem.name)) {
+      displayMessage({ type: "error", message: "Ten przedmiot jest już na liście.", fadeOutAfter: 10000 });
       return;
     }
 
-    setIngredients([...ingredients, newIngredient]);
+    setItems([...items, newItem]);
     reset();
-  };
-
-  const removeIngredient = (name: string): void => {
-    setIngredients(ingredients.filter(i => i.name !== name));
   };
 
   return (
     <>
-      <IngredientList
-        ingredients={ingredients}
-        itemAction={{
-          type: "remove",
-          callback: removeIngredient,
-        }}
-      />
+      <QuantifiableItemsList items={items} leftSideAction={leftSideAction} rightSideAction={rightSideAction} />
       <Form
-        className="new-ingredient"
+        className="new-quantifiable-item"
         onSubmit={handleSubmit(onSubmit, errors => {
           console.error(errors);
         })}>
@@ -93,4 +92,4 @@ const IngredientListEdit = ({ ingredients, setIngredients }: IngredientListEditP
   );
 };
 
-export default IngredientListEdit;
+export default EditableQuantifiableItemsList;

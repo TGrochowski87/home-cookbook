@@ -1,5 +1,4 @@
-@import "@radix-ui/colors/red.css";
-@import "@radix-ui/colors/red-dark.css";
+@import "../../variables.less";
 
 .sublist-title {
   display: flex;
@@ -9,12 +8,21 @@
     margin-right: auto;
   }
 
+  > h2 {
+    margin-inline: 4px;
+  }
+
   a {
     display: flex;
     align-items: center;
   }
 
-  .delete-icon {
-    color: var(--red-9);
+  svg {
+    &:first-of-type {
+      color: #colors[primary];
+    }
+    &:last-of-type {
+      color: #colors[delete-button];
+    }
   }
 }

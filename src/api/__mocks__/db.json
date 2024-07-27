@@ -116,7 +116,7 @@
       "sublists": [
         {
           "id": 1,
-          "name": "inne rzeczy",
+          "name": null,
           "recipeId": null,
           "count": 1,
           "items": [
@@ -148,7 +148,7 @@
       "sublists": [
         {
           "id": 1,
-          "name": "inne rzeczy",
+          "name": null,
           "recipeId": null,
           "count": 1,
           "items": [
@@ -180,7 +180,7 @@
       "sublists": [
         {
           "id": 1,
-          "name": "inne rzeczy",
+          "name": null,
           "recipeId": null,
           "count": 1,
           "items": [
@@ -212,7 +212,7 @@
       "sublists": [
         {
           "id": 1,
-          "name": "inne rzeczy",
+          "name": null,
           "recipeId": null,
           "count": 1,
           "items": [
@@ -244,7 +244,7 @@
       "sublists": [
         {
           "id": 1,
-          "name": "inne rzeczy",
+          "name": null,
           "recipeId": null,
           "count": 1,
           "items": [
