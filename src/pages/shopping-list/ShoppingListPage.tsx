@@ -2,15 +2,15 @@ import { ShoppingListGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import TitledSection from "components/TitledSection";
 import { useLoaderData } from "react-router-dom";
-import formatDate from "utilities/formatDate";
 import SublistTitle from "./SublistTitle";
-import "./styles.less";
 import QuantifiableItemsList from "components/quantifiable-items-list/QuantifiableItemsList";
 import QuantifiableItemData from "models/QuantifiableItemData";
 import { useState } from "react";
 import EditableQuantifiableItemsList from "components/quantifiable-items-list/EditableQuantifiableItemsList";
 import { ShoppingList, ShoppingListSublist } from "models/ShoppingList";
 import mapper from "mapper";
+import InfoModal from "./InfoModal";
+import "./styles.less";
 
 export async function loader({ params }: any) {
   const shoppingList = await api.get.getShoppingList(params.id);
@@ -64,12 +64,10 @@ const ShoppingListPage = () => {
 
   return (
     <div className="page shopping-list-page">
-      <h1>{shoppingList.name}</h1>
-
-      <div className="dates-row">
-        <p>{`Utworzono: ${formatDate(shoppingList.creationDate)}`}</p>
-        <p>{`Zaktualizowano: ${formatDate(shoppingList.updateDate)}`}</p>
-      </div>
+      <span className="header">
+        <h1>{shoppingList.name}</h1>
+        <InfoModal shoppingListInfo={shoppingList} />
+      </span>
 
       {shoppingList
         .sublists!.filter(sublist => sublist.recipeId)

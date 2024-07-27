@@ -1,12 +1,12 @@
 import QuantifiableItemData from "models/QuantifiableItemData";
 
-export interface ShoppingList {
+export type ShoppingList = {
   readonly id: number;
   readonly name: string;
   readonly creationDate: string;
   readonly updateDate: string;
   readonly sublists?: readonly ShoppingListSublist[];
-}
+};
 
 export interface ShoppingListSublist {
   readonly id: number;

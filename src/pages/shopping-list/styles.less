@@ -1,28 +1,81 @@
 @import "../../variables.less";
+@import "@radix-ui/colors/black-alpha.css";
 
-.sublist-title {
-  display: flex;
-  align-items: center;
+.shopping-list-page {
+  .header {
+    > * {
+      display: inline;
+    }
 
-  > *:first-child {
-    margin-right: auto;
+    h1 {
+      margin-right: 4px;
+    }
   }
 
-  > h2 {
-    margin-inline: 4px;
-  }
-
-  a {
+  .sublist-title {
     display: flex;
     align-items: center;
-  }
 
-  svg {
-    &:first-of-type {
-      color: #colors[primary];
+    > *:first-child {
+      margin-right: auto;
     }
-    &:last-of-type {
-      color: #colors[delete-button];
+
+    > h2 {
+      margin-inline: 4px;
     }
+
+    a {
+      display: flex;
+      align-items: center;
+    }
+
+    svg {
+      &:first-of-type {
+        color: #colors[primary];
+      }
+      &:last-of-type {
+        color: #colors[delete-button];
+      }
+    }
+  }
+}
+
+// Info Modal
+.info-modal-overlay {
+  background-color: var(--black-a9);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.info-modal-content {
+  background-color: white;
+  border-radius: #numeric[big-border-radius];
+  border: 2px solid #colors[primary];
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: clamp(300px, 90vw, 500px);
+  padding: 8px 16px;
+
+  font-size: 0.8em;
+
+  .info-modal-title {
+    svg {
+      // vertical-align: middle;
+      margin-left: 4px;
+    }
+  }
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
