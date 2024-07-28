@@ -66,7 +66,7 @@ const ShoppingListPage = () => {
     <div className="page shopping-list-page">
       <span className="header">
         <h1>{shoppingList.name}</h1>
-        <InfoModal shoppingListInfo={shoppingList} />
+        <InfoModal shoppingListInfo={shoppingList} renameHandler={name => setShoppingList({ ...shoppingList, name })} />
       </span>
 
       {shoppingList

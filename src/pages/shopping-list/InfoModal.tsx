@@ -1,14 +1,22 @@
 import * as Dialog from "@radix-ui/react-dialog";
+import Input from "components/Input";
 import { Info, Pencil, X } from "lucide-react";
 import { ShoppingList } from "models/ShoppingList";
+import { useState } from "react";
 import formatDate from "utilities/formatDate";
 
 interface InfoModalProps {
   readonly shoppingListInfo: Omit<ShoppingList, "sublists">;
+  readonly renameHandler: (newName: string) => void;
 }
 
-const InfoModal = ({ shoppingListInfo }: InfoModalProps) => {
+const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
+  const [renameActive, setRenameActive] = useState<boolean>(false);
+  const [input, setInput] = useState<string>(shoppingListInfo.name);
+
   const timeUntilDeletion: number = calculateTimeUntilDeletion(shoppingListInfo.creationDate);
+
+  // TODO: handle rename and update date
 
   return (
     <Dialog.Root>
@@ -18,9 +26,27 @@ const InfoModal = ({ shoppingListInfo }: InfoModalProps) => {
       <Dialog.Portal>
         <Dialog.Overlay className="info-modal-overlay" />
         <Dialog.Content className="info-modal-content" onOpenAutoFocus={e => e.preventDefault()}>
-          <Dialog.Title className="info-modal-title">
-            {shoppingListInfo.name}
-            <Pencil width="0.9em" height="0.9em" />
+          <Dialog.Title>
+            {renameActive ? (
+              <Input
+                className="rename-input"
+                disableShadow
+                autoFocus
+                onBlur={() => {
+                  renameHandler(input);
+                  setRenameActive(false);
+                }}
+                value={input}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
+              />
+            ) : (
+              <>
+                {shoppingListInfo.name}
+                <button className="rename-button" onClick={() => setRenameActive(true)}>
+                  <Pencil />
+                </button>
+              </>
+            )}
           </Dialog.Title>
           {/* Description added just to silence the warning. This is currently a private app without a need for accessibility. */}
           <Dialog.Description></Dialog.Description>
