@@ -1,6 +1,5 @@
 import { ShoppingListGetDto } from "api/GET/DTOs";
 import { useNavigate } from "react-router-dom";
-import formatDate from "utilities/formatDate";
 
 interface ShoppingListProps {
   readonly listData: ShoppingListGetDto;
@@ -15,8 +14,8 @@ const ShoppingList = ({ listData }: ShoppingListProps) => {
       onClick={() => navigate(`/shopping-lists/${listData.id}`)}>
       <h2>{listData.name}</h2>
       <div className="dates-row">
-        <p>{`Utworzono: ${formatDate(listData.creationDate)}`}</p>
-        <p>{`Zaktualizowano: ${formatDate(listData.updateDate)}`}</p>
+        <p>{`Utworzono: ${new Date(listData.creationDate).toLocaleDateString("pl-PL")}`}</p>
+        <p>{`Zaktualizowano: ${new Date(listData.updateDate).toLocaleDateString("pl-PL")}`}</p>
       </div>
     </article>
   );

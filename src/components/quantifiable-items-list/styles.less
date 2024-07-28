@@ -3,6 +3,11 @@
 @import "@radix-ui/colors/sage.css";
 @import "@radix-ui/colors/sage-dark.css";
 
+@import "@radix-ui/colors/grass.css";
+@import "@radix-ui/colors/grass-dark.css";
+@import "@radix-ui/colors/grass-alpha.css";
+@import "@radix-ui/colors/grass-dark-alpha.css";
+
 .quantifiable-items-list {
   position: relative;
   padding-left: 24px;
@@ -41,7 +46,7 @@
     .quantifiable-data {
       display: flex;
       column-gap: 1ch;
-      margin-bottom: 8px;
+      padding-block: 4px;
       align-items: center;
 
       :not(p:first-of-type) {
@@ -66,12 +71,35 @@
       text-decoration: line-through;
     }
   }
+
+  .quantifiable-list-item:nth-of-type(even) {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--grass-a3) 10%,
+      var(--grass-a3) 90%,
+      transparent 100%,
+      transparent
+    );
+  }
+
+  .quantifiable-list-item.highlighted {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--grass-a5) 10%,
+      var(--grass-a5) 90%,
+      transparent 100%,
+      transparent
+    );
+  }
 }
 
 .new-quantifiable-item {
   display: grid;
   grid-template-columns: 1fr 10ch 8ch;
   gap: 8px;
+  margin-top: 4px;
 
   input {
     width: 100%;
