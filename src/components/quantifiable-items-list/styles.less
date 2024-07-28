@@ -1,5 +1,8 @@
 @import "../../variables.less";
 
+@import "@radix-ui/colors/sage.css";
+@import "@radix-ui/colors/sage-dark.css";
+
 .quantifiable-items-list {
   position: relative;
   padding-left: 24px;
@@ -9,7 +12,14 @@
   }
 
   .action-button {
-    background-color: pink;
+    width: 24px;
+    aspect-ratio: 1/1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
   }
 
   .quantifiable-list-item {
@@ -49,11 +59,11 @@
       p + p {
         text-align: center;
       }
+    }
 
-      span {
-        width: 24px;
-        cursor: pointer;
-      }
+    .quantifiable-data.checked {
+      color: var(--sage-7);
+      text-decoration: line-through;
     }
   }
 }
@@ -67,7 +77,6 @@
     width: 100%;
     height: 28px;
     padding: 4px 8px;
-    text-transform: lowercase;
   }
 
   // ================= DISABLING ARROWS ON NUMBER INPUT

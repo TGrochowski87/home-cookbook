@@ -63,6 +63,7 @@ const EditableQuantifiableItemsList = ({
           })}
           className={`${watch("name")?.length > 0 ? "" : "empty-input"}`}
           maxLength={50}
+          autoCapitalize="none"
           placeholder="Nazwa"
         />
         <Input
@@ -73,6 +74,7 @@ const EditableQuantifiableItemsList = ({
           })}
           className={`${watch("amount.value")?.length > 0 ? "" : "empty-input"}`}
           maxLength={10}
+          autoCapitalize="none"
           placeholder="Ilość"
         />
         <Input
@@ -83,6 +85,7 @@ const EditableQuantifiableItemsList = ({
           })}
           className={`${watch("amount.unit")?.length > 0 ? "" : "empty-input"}`}
           maxLength={8}
+          autoCapitalize="none"
           placeholder="Jednostka"
         />
         {/* This enables submitting by enter/send */}

@@ -26,7 +26,7 @@ const QuantifiableItem = ({ data, leftSideAction, rightSideAction }: Quantifiabl
   return (
     <li className="quantifiable-list-item">
       {leftSideAction && <Action item={data} action={leftSideAction} isLeftSide />}
-      <div className="quantifiable-data">
+      <div className={`quantifiable-data ${data.checked ? "checked" : ""}`}>
         <p>{data.name}</p>
         {displayAmount(data.amount)}
         {rightSideAction && <Action item={data} action={rightSideAction} />}
