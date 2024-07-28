@@ -1,4 +1,5 @@
 @import "./variables.less";
+@import "./common.less";
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
 .app {
@@ -44,44 +45,3 @@ select {
 // * {
 //   background-color:rgba(150, 150, 0, 0.25)
 // }
-
-// Common classes
-
-.page {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-
-  width: 100%;
-  min-height: fit-content;
-  padding: 16px;
-  font-size: 0.8rem;
-
-  h1 {
-    letter-spacing: 1px;
-    font-size: 1.8em;
-  }
-}
-
-.block {
-  background-color: #colors[interactive-inactive];
-  border-radius: #numeric[border-radius];
-  border: 1px solid #00000005;
-}
-
-.block.big-rounding {
-  border-radius: #numeric[big-border-radius];
-}
-
-.floating {
-  box-shadow: 0 3px 5px 1px rgba(0, 0, 0, 0.25);
-}
-
-.interactive-element {
-  background: #colors[interactive-inactive];
-
-  cursor: pointer;
-  &:hover {
-    background: #colors[interactive-hover];
-  }
-}

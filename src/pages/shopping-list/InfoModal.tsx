@@ -1,5 +1,5 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { Info, Pencil } from "lucide-react";
+import { Info, Pencil, X } from "lucide-react";
 import { ShoppingList } from "models/ShoppingList";
 import formatDate from "utilities/formatDate";
 
@@ -22,11 +22,25 @@ const InfoModal = ({ shoppingListInfo }: InfoModalProps) => {
             {shoppingListInfo.name}
             <Pencil width="0.9em" height="0.9em" />
           </Dialog.Title>
+          {/* Description added just to silence the warning. This is currently a private app without a need for accessibility. */}
           <Dialog.Description></Dialog.Description>
-          <p>{`Utworzono: ${formatDate(shoppingListInfo.creationDate)}`}</p>
-          <p>{`Zaktualizowano: ${formatDate(shoppingListInfo.updateDate)}`}</p>
-          <p>Automatyczne usunięcie nastąpi za:</p>
-          <p>{millisecondsToTime(timeUntilDeletion)}</p>
+          <Dialog.Close asChild>
+            <button className="close-button smooth-color-hover">
+              <X />
+            </button>
+          </Dialog.Close>
+          <div className="info-space">
+            <div className="date-info-row">
+              <p>utworzono:</p>
+              <p>{formatDate(shoppingListInfo.creationDate)}</p>
+            </div>
+            <div className="date-info-row">
+              <p>zaktualizowano:</p>
+              <p>{formatDate(shoppingListInfo.updateDate)}</p>
+            </div>
+            <p>automatyczne usunięcie nastąpi za:</p>
+            <p>{millisecondsToTime(timeUntilDeletion)}</p>
+          </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

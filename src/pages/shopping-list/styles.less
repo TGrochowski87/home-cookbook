@@ -1,5 +1,8 @@
 @import "../../variables.less";
+@import "../../common.less";
 @import "@radix-ui/colors/black-alpha.css";
+@import "@radix-ui/colors/grass-alpha.css";
+@import "@radix-ui/colors/grass-dark-alpha.css";
 
 .shopping-list-page {
   .header {
@@ -59,7 +62,7 @@
   transform: translate(-50%, -50%);
 
   width: clamp(300px, 90vw, 500px);
-  padding: 8px 16px;
+  padding: 12px 16px 20px 16px;
 
   font-size: 0.8em;
 
@@ -68,6 +71,45 @@
       // vertical-align: middle;
       margin-left: 4px;
     }
+  }
+
+  .info-space {
+    margin-top: 16px;
+    width: 270px;
+    .date-info-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .date-info-row:last-of-type {
+      margin-bottom: 16px;
+    }
+  }
+
+  .close-button {
+    border: unset;
+    background-color: unset;
+    padding: unset;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 100%;
+    height: 24px;
+    width: 24px;
+    color: var(--violet-11);
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .smooth-color-hover();
   }
 }
 
