@@ -19,7 +19,7 @@ const RecipePage = () => {
   return (
     <div className="page recipe-page">
       <div>
-        <h1>{recipe.title}</h1>
+        <h1>{recipe.name}</h1>
         {/* @ts-ignore */}
         <div style={{ "--color": recipe.category.color }} className="category-indicator">
           <h3>{recipe.category.name}</h3>

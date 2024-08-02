@@ -17,7 +17,7 @@ const RecipeListItem = ({ recipe }: RecipeListItemProps) => {
       className="recipe-list-item block floating interactive-element"
       onClick={() => navigate(`./${recipe.id}`, { relative: "path" })}>
       <img src={BurgerPlaceHolder} />
-      <h2>{recipe.title}</h2>
+      <h2>{recipe.name}</h2>
       {/* TODO: Should this recipe.description really be here? */}
       <p>{recipe.description}</p>
       <TagSet tags={recipe.tags} tagSize="small" disableShadow align="start" />

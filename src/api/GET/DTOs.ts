@@ -11,8 +11,7 @@ export interface CategoryGetDto {
 
 export interface RecipeGetDto {
   readonly id: number;
-  readonly title: string; // TODO: Devise a proper character limit
-  readonly description: string;
+  readonly name: string; // TODO: Devise a proper character limit
   readonly category: CategoryGetDto;
   readonly tags: readonly TagGetDto[];
   readonly imageSrc?: string;
@@ -20,7 +19,7 @@ export interface RecipeGetDto {
 
 export interface RecipeDetailsGetDto extends RecipeGetDto {
   readonly ingredients: readonly IngredientGetDto[];
-  readonly text: string;
+  readonly description: string;
 }
 
 export type IngredientGetDto = {
