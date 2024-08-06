@@ -30,11 +30,10 @@ CREATE TABLE shopping_lists (
   updateDate timestamp NOT NULL
 );
 
-CREATE TABLE sublists (
+CREATE TABLE shopping_sublists (
   id SERIAL PRIMARY KEY,
   shopping_list_id int,
   list_id int,
-  name varchar(100),
   recipe_id int,
   count int NOT NULL,
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE,
@@ -53,9 +52,9 @@ CREATE TABLE recipes (
 );
 
 CREATE TABLE recipes_tags (
-  id SERIAL PRIMARY KEY,
   recipe_id int,
   tag_id int,
+  PRIMARY KEY (recipe_id, tag_id),
   CONSTRAINT fk_recipe FOREIGN KEY (recipe_id) REFERENCES recipes (id) ON DELETE CASCADE,
   CONSTRAINT fk_tag FOREIGN KEY (tag_id) REFERENCES tags (id) ON DELETE CASCADE
 );
