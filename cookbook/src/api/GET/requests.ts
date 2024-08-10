@@ -6,7 +6,7 @@ import { baseUrl } from "api/api";
 // TODO: Cancellation token
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {
-  const url = `${baseUrl}/categories`;
+  const url = `http://localhost:5212/categories`;
   const response = await axios.get<CategoryGetDto[]>(url);
   return response.data;
 };

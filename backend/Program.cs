@@ -9,6 +9,17 @@ builder.Services.AddSwaggerGen(options =>
     options.SupportNonNullableReferenceTypes();
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("dev", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .AllowCredentials();
+    });
+});
+
 builder.Services
     .AddDbContext<CookbookContext>()
     .AddScopedSingleImplementationServices();
@@ -21,6 +32,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors("dev");
+}
 
 app.AddAllEndpoints().Run();
