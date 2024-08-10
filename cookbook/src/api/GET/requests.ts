@@ -3,6 +3,7 @@ import { CategoryGetDto, RecipeDetailsGetDto, RecipeGetDto, ShoppingListGetDto, 
 import { baseUrl } from "api/api";
 
 // TODO: Extends on real API
+// TODO: Cancellation token
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {
   const url = `${baseUrl}/categories`;

@@ -19,7 +19,7 @@ const RecipeListItem = ({ recipe }: RecipeListItemProps) => {
       <img src={BurgerPlaceHolder} />
       <h2>{recipe.name}</h2>
       {/* TODO: Should this recipe.description really be here? */}
-      <p>{recipe.description}</p>
+      {/* <p>{recipe.description}</p> */}
       <TagSet tags={recipe.tags} tagSize="small" disableShadow align="start" />
       <CategoryIndicator categoryColor={recipe.category.color} categoryName={recipe.category.name} />
     </article>
