@@ -2,6 +2,6 @@
 
 internal class RecipeService(IRecipeRepository recipeRepository) : IRecipeService
 {
-  public async Task<List<Recipe>> GetAll() 
+  public async Task<List<Recipe>> GetAll()
     => await recipeRepository.GetAll();
 }

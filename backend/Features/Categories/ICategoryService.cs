@@ -2,5 +2,5 @@
 
 internal interface ICategoryService
 {
-    Task<List<Category>> GetAll();
+  Task<List<Category>> GetAll();
 }

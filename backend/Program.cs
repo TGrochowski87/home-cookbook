@@ -5,43 +5,43 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.AddSimpleConsole(options =>
 {
-    options.TimestampFormat = "[HH:mm:ss] ";
+  options.TimestampFormat = "[HH:mm:ss] ";
 });
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SupportNonNullableReferenceTypes();
+  options.SupportNonNullableReferenceTypes();
 });
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("dev", policy =>
-    {
-        policy.WithOrigins("http://localhost:5173")
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials();
-    });
+  options.AddPolicy("dev", policy =>
+  {
+    policy.WithOrigins("http://localhost:5173")
+      .AllowAnyMethod()
+      .AllowAnyHeader()
+      .AllowCredentials();
+  });
 });
 
 builder.Services
-    .AddDbContext<CookbookContext>()
-    .AddScopedSingleImplementationServices();
+  .AddDbContext<CookbookContext>()
+  .AddScopedSingleImplementationServices();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 // app.UseHttpsRedirection();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseCors("dev");
+  app.UseCors("dev");
 }
 
 app.AddAllEndpoints().Run();

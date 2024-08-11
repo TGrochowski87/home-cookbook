@@ -12,7 +12,7 @@ public class RecipesEndpoints : IEndpointsDefinition
       .Produces<List<RecipeGetDto>>()
       .WithTags("Recipes");
   }
-  
+
   private static async Task<IResult> GetAllRecipes([FromServices] IRecipeService recipeService)
   {
     var recipes = await recipeService.GetAll();

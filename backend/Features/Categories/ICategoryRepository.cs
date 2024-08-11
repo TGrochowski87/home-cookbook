@@ -2,5 +2,5 @@
 
 internal interface ICategoryRepository
 {
-    Task<List<Category>> GetAll();
+  Task<List<Category>> GetAll();
 }

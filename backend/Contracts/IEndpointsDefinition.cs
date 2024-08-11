@@ -2,5 +2,5 @@
 
 public interface IEndpointsDefinition
 {
-    void MapEndpoints(WebApplication app);
+  void MapEndpoints(WebApplication app);
 }

@@ -6,9 +6,9 @@ namespace Cookbook.Features.Categories;
 
 internal class CategoryRepository(CookbookContext context) : ICategoryRepository
 {
-    public async Task<List<Category>> GetAll()
-    {
-        var entities = await context.Categories.ToListAsync();
-        return RepositoryModelMapper.Map(entities);
-    }
+  public async Task<List<Category>> GetAll()
+  {
+    var entities = await context.Categories.ToListAsync();
+    return RepositoryModelMapper.Map(entities);
+  }
 }
