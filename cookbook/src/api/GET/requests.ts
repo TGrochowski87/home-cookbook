@@ -18,7 +18,7 @@ export const getTags = async (): Promise<TagGetDto[]> => {
 };
 
 export const getRecipes = async (): Promise<RecipeGetDto[]> => {
-  const url = `${baseUrl}/recipes`;
+  const url = `http://localhost:5212/recipes`;
   const response = await axios.get<RecipeGetDto[]>(url);
   return response.data;
 };

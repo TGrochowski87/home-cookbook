@@ -1,4 +1,5 @@
 ﻿using Cookbook.Features.Tags;
+using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cookbook.Contracts.Tags;
@@ -15,7 +16,7 @@ public class TagsEndpoints : IEndpointsDefinition
   private static async Task<IResult> GetAllTags([FromServices] ITagService tagService)
   {
     var tags = await tagService.GetAll();
-    var tagDtos = tags.Select(t => new TagGetDto(t.Id, t.Name));
+    var tagDtos = EndpointModelMapper.Map(tags);
     return Results.Ok(tagDtos);
   }
 }
