@@ -18,7 +18,7 @@ internal partial class CookbookContext : DbContext
     public virtual DbSet<List> Lists { get; set; }
 
     public virtual DbSet<QuantifiableItem> QuantifiableItems { get; set; }
-    
+
     public virtual DbSet<Recipe> Recipes { get; set; }
 
     public virtual DbSet<ShoppingList> ShoppingLists { get; set; }
@@ -79,7 +79,6 @@ internal partial class CookbookContext : DbContext
 
             entity.HasOne(d => d.List).WithMany(p => p.QuantifiableItems)
                 .HasForeignKey(d => d.ListId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_list");
         });
 
@@ -102,12 +101,10 @@ internal partial class CookbookContext : DbContext
 
             entity.HasOne(d => d.Category).WithMany(p => p.Recipes)
                 .HasForeignKey(d => d.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_category");
 
             entity.HasOne(d => d.List).WithMany(p => p.Recipes)
                 .HasForeignKey(d => d.ListId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_list");
 
             entity.HasMany(d => d.Tags).WithMany(p => p.Recipes)
@@ -160,12 +157,15 @@ internal partial class CookbookContext : DbContext
 
             entity.HasOne(d => d.List).WithMany(p => p.ShoppingSublists)
                 .HasForeignKey(d => d.ListId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_list");
+
+            entity.HasOne(d => d.Recipe).WithMany(p => p.ShoppingSublists)
+                .HasForeignKey(d => d.RecipeId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("fk_recipe");
 
             entity.HasOne(d => d.ShoppingList).WithMany(p => p.ShoppingSublists)
                 .HasForeignKey(d => d.ShoppingListId)
-                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("fk_shopping_list");
         });
 
