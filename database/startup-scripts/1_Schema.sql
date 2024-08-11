@@ -15,7 +15,7 @@ CREATE TABLE lists (
 
 CREATE TABLE quantifiable_items (
   id SERIAL PRIMARY KEY,
-  list_id int,
+  list_id int NOT NULL,
   name varchar(100) NOT NULL,
   value varchar(20) NOT NULL,
   unit varchar(10),
@@ -30,25 +30,26 @@ CREATE TABLE shopping_lists (
   updateDate timestamp NOT NULL
 );
 
-CREATE TABLE shopping_sublists (
-  id SERIAL PRIMARY KEY,
-  shopping_list_id int,
-  list_id int,
-  recipe_id int,
-  count int NOT NULL,
-  CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE,
-  CONSTRAINT fk_shopping_list FOREIGN KEY (shopping_list_id) REFERENCES shopping_lists (id) ON DELETE CASCADE
-);
-
 CREATE TABLE recipes (
   id SERIAL PRIMARY KEY,
-  category_id int,
-  list_id int,
+  category_id int NOT NULL,
+  list_id int NOT NULL,
   name varchar(100) NOT NULL,
   description text,
   image_src varchar(2048),
   CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE,
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE
+);
+
+CREATE TABLE shopping_sublists (
+  id SERIAL PRIMARY KEY,
+  shopping_list_id int NOT NULL,
+  list_id int NOT NULL,
+  recipe_id int,
+  count int NOT NULL,
+  CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE,
+  CONSTRAINT fk_shopping_list FOREIGN KEY (shopping_list_id) REFERENCES shopping_lists (id) ON DELETE CASCADE,
+  CONSTRAINT fk_recipe FOREIGN KEY (recipe_id) REFERENCES recipes (id) ON DELETE CASCADE
 );
 
 CREATE TABLE recipes_tags (
