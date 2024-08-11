@@ -8,7 +8,8 @@ public class CategoriesEndpoints : IEndpointsDefinition
   public void MapEndpoints(WebApplication app)
   {
     app.MapGet("/categories", GetAllCategories)
-      .Produces<List<CategoryGetDto>>();
+      .Produces<List<CategoryGetDto>>()
+      .WithTags("Categories");
   }
 
   private static async Task<IResult> GetAllCategories([FromServices] ICategoryService categoryService)

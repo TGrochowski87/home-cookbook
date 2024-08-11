@@ -23,7 +23,6 @@
       <Folder Include="DataAccess\" />
       <Folder Include="Features\Recipes\Models\" />
       <Folder Include="Features\ShoppingLists\Models\" />
-      <Folder Include="Features\Tags\Models\" />
     </ItemGroup>
 
 </Project>

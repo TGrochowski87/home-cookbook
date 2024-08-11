@@ -12,7 +12,7 @@ export const getCategories = async (): Promise<CategoryGetDto[]> => {
 };
 
 export const getTags = async (): Promise<TagGetDto[]> => {
-  const url = `${baseUrl}/tags`;
+  const url = `http://localhost:5212/tags`;
   const response = await axios.get<TagGetDto[]>(url);
   return response.data;
 };
