@@ -38,7 +38,10 @@ export interface ShoppingListGetDto {
   readonly name: string;
   readonly creationDate: string;
   readonly updateDate: string;
-  readonly sublists?: readonly ShoppingListSublistGetDto[];
+}
+
+export interface ShoppingListDetailsGetDto extends ShoppingListGetDto {
+  readonly sublists: readonly ShoppingListSublistGetDto[];
 }
 
 export interface ShoppingListSublistGetDto {

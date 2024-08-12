@@ -1,5 +1,12 @@
 import axios from "axios";
-import { CategoryGetDto, RecipeDetailsGetDto, RecipeGetDto, ShoppingListGetDto, TagGetDto } from "./DTOs";
+import {
+  CategoryGetDto,
+  RecipeDetailsGetDto,
+  RecipeGetDto,
+  ShoppingListDetailsGetDto,
+  ShoppingListGetDto,
+  TagGetDto,
+} from "./DTOs";
 import { baseUrl } from "api/api";
 
 // TODO: Extends on real API
@@ -30,13 +37,13 @@ export const getRecipe = async (id: number): Promise<RecipeDetailsGetDto> => {
 };
 
 export const getShoppingLists = async (): Promise<ShoppingListGetDto[]> => {
-  const url = `${baseUrl}/shopping-lists`;
+  const url = `http://localhost:5212/shopping-lists`;
   const response = await axios.get<ShoppingListGetDto[]>(url);
   return response.data;
 };
 
-export const getShoppingList = async (id: number): Promise<ShoppingListGetDto> => {
+export const getShoppingList = async (id: number): Promise<ShoppingListDetailsGetDto> => {
   const url = `${baseUrl}/shopping-lists/${id}`;
-  const response = await axios.get<ShoppingListGetDto>(url);
+  const response = await axios.get<ShoppingListDetailsGetDto>(url);
   return response.data;
 };
