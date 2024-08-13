@@ -36,10 +36,8 @@ const RecipePage = () => {
         <IngredientListRead ingredients={recipe.ingredients} />
       </TitledSection>
 
-      <TitledSection title="Treść">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus imperdiet scelerisque rutrum. Praesent feugiat
-        mi eget varius suscipit. Etiam in nulla eros.
-      </TitledSection>
+      {/* use TipTap */}
+      <TitledSection title="Treść">{recipe.description}</TitledSection>
 
       <Form className="bottom-button-space">
         <Button>edytuj</Button>
