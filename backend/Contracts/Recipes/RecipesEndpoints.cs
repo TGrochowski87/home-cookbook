@@ -2,7 +2,7 @@
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;
-using IResult = Microsoft.AspNetCore.Http.IResult;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Cookbook.Contracts.Recipes;
 
@@ -11,26 +11,24 @@ public class RecipesEndpoints : IEndpointsDefinition
   public void MapEndpoints(WebApplication app)
   {
     app.MapGet("/recipes", GetAllRecipes)
-      .Produces<List<RecipeGetDto>>()
       .WithTags("Recipes");
     
     app.MapGet("/recipes/{id}", GetRecipeById)
-      .Produces<RecipeGetDto>()
       .WithTags("Recipes");
   }
 
-  private static async Task<IResult> GetAllRecipes([FromServices] IRecipeService recipeService)
+  private static async Task<Ok<List<RecipeGetDto>>> GetAllRecipes([FromServices] IRecipeService recipeService)
   {
     var recipes = await recipeService.GetAll();
     var recipeDtos = EndpointModelMapper.Map(recipes);
-    return Results.Ok(recipeDtos);
+    return TypedResults.Ok(recipeDtos);
   }
   
-  private static async Task<IResult> GetRecipeById([FromServices] IRecipeService recipeService, [FromRoute] int id)
+  private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound>> GetRecipeById([FromServices] IRecipeService recipeService, [FromRoute] int id)
   {
     var recipe = await recipeService.GetById(id);
-    return recipe.Match(
-      value => Results.Ok(EndpointModelMapper.Map(value)), 
-      () => Results.NotFound());
+    return recipe.Match<Results<Ok<RecipeDetailsGetDto>, NotFound>, RecipeDetails>(
+      value => TypedResults.Ok(EndpointModelMapper.Map(value)), 
+      () => TypedResults.NotFound());
   }
 }

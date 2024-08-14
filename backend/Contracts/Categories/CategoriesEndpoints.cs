@@ -1,5 +1,6 @@
 ﻿using Cookbook.Features.Categories;
 using Cookbook.Mappers;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cookbook.Contracts.Categories;
@@ -13,10 +14,10 @@ public class CategoriesEndpoints : IEndpointsDefinition
       .WithTags("Categories");
   }
 
-  private static async Task<IResult> GetAllCategories([FromServices] ICategoryService categoryService)
+  private static async Task<Ok<List<CategoryGetDto>>> GetAllCategories([FromServices] ICategoryService categoryService)
   {
     var categories = await categoryService.GetAll();
     var categoryDtos = EndpointModelMapper.Map(categories);
-    return Results.Ok(categoryDtos);
+    return TypedResults.Ok(categoryDtos);
   }
 }

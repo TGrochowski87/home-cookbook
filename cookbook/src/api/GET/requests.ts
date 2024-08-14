@@ -43,7 +43,7 @@ export const getShoppingLists = async (): Promise<ShoppingListGetDto[]> => {
 };
 
 export const getShoppingList = async (id: number): Promise<ShoppingListDetailsGetDto> => {
-  const url = `${baseUrl}/shopping-lists/${id}`;
+  const url = `http://192.168.0.164:5212/shopping-lists/${id}`;
   const response = await axios.get<ShoppingListDetailsGetDto>(url);
   return response.data;
 };
