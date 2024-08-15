@@ -19,6 +19,8 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       .Include(sl => sl.ShoppingSublists)
       .ThenInclude(sub => sub.List)
       .ThenInclude(l => l.QuantifiableItems)
+      .Include(sl => sl.ShoppingSublists)
+      .ThenInclude(sub => sub.Recipe)
       .SingleOrDefaultAsync(sl => sl.Id == id);
     
     return entity != null ? RepositoryModelMapper.Map<ShoppingListDetails>(entity) : Maybe<ShoppingListDetails>.None;

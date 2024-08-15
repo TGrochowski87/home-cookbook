@@ -10,7 +10,7 @@ internal record RecipeDetails(
   string Name, 
   Category Category, 
   List<Tag> Tags, 
-  Maybe<string> ImageSrc, 
+  Maybe<string?> ImageSrc, 
   string Description, 
   List<QuantifiableItem> Ingredients) 
   : Recipe(Id, Name, Category, Tags, ImageSrc);

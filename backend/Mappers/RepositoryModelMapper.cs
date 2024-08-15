@@ -33,7 +33,7 @@ internal static class RepositoryModelMapper
     => entities.Select(Map).ToList();
 
   public static QuantifiableItem Map(DataAccess.QuantifiableItem entity)
-    => new(entity.Id, entity.Name, new Amount(entity.Value, entity.Unit ?? Maybe<string>.None), entity.Checked);
+    => new(entity.Id, entity.Name, new Amount(entity.Value, entity.Unit ?? Maybe<string?>.None), entity.Checked);
   
   public static List<QuantifiableItem> Map(IEnumerable<DataAccess.QuantifiableItem> entities)
     => entities.Select(Map).ToList();
@@ -44,15 +44,15 @@ internal static class RepositoryModelMapper
       entity.Name,
       Map(entity.Category),
       Map(entity.Tags),
-      entity.ImageSrc ?? Maybe<string>.None, 
+      entity.ImageSrc ?? Maybe<string?>.None, 
       entity.Description ?? "", 
       Map(entity.List.QuantifiableItems));
     
   public static ShoppingSublist Map(DataAccess.ShoppingSublist entity) 
     => new(
       entity.Id, 
-      entity.Recipe != null ? entity.Recipe.Name : "Manualnie dodane",
-      entity.Recipe != null ? entity.Recipe.Id : Maybe<int>.None,
+      entity.Recipe?.Name ?? "Manualnie dodane",
+      entity.Recipe?.Id ?? Maybe<int?>.None,
       entity.Count,
       Map(entity.List.QuantifiableItems));
   

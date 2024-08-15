@@ -4,4 +4,4 @@ using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.Recipes;
 
-internal record Recipe(int Id, string Name, Category Category, List<Tag> Tags, Maybe<string> ImageSrc);
+internal record Recipe(int Id, string Name, Category Category, List<Tag> Tags, Maybe<string?> ImageSrc);
