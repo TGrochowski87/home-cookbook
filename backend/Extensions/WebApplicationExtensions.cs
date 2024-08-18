@@ -1,4 +1,7 @@
 ﻿using Cookbook.Contracts;
+using Cookbook.DataAccess;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cookbook.Extensions;
 
@@ -22,6 +25,32 @@ public static class WebApplicationExtensions
     {
       definition.MapEndpoints(app);
     }
+
+    return app;
+  }
+
+  /// <summary>
+  /// TODO
+  /// </summary>
+  /// <param name="app"></param>
+  /// <returns></returns>
+  public static WebApplication UsePerRequestTransaction(this WebApplication app)
+  {
+    app.Use(async (context, next) =>
+    {
+      using var transaction = new CookbookTransaction(context.RequestServices.GetRequiredService<CookbookContext>());
+
+      await next(context);
+
+      if(context.Response.StatusCode >= 200 &&  context.Response.StatusCode < 300)
+      {
+        transaction.Commit();
+      }
+      else
+      {
+        transaction.Rollback();
+      }  
+    });
 
     return app;
   }

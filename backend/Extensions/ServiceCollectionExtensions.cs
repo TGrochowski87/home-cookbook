@@ -1,4 +1,6 @@
-﻿namespace Cookbook.Extensions;
+﻿using FluentValidation;
+
+namespace Cookbook.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -26,4 +28,19 @@ public static class ServiceCollectionExtensions
 
     return services;
   }
+
+  //public static IServiceCollection AddFluentValidators(this IServiceCollection services)
+  //{
+  //  var assembly = typeof(ServiceCollectionExtensions).Assembly;
+  //  var allTypes = assembly.GetTypes();
+  //  var genericValidatorTypes = allTypes.Where(t => t.IsAssignableTo(typeof(IValidator<>)));
+  //  var interfaces = genericValidatorTypes.Where(t => t.IsInterface);
+
+  //  foreach (var inter in interfaces)
+  //  {
+  //    var implementation = genericValidatorTypes.Where(t => t.IsGenericTypeDefinition &&
+  //    t.GetGenericTypeDefinition() == inter.GetGenericTypeDefinition());
+
+  //  }
+  //}
 }

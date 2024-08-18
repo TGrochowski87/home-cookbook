@@ -5,12 +5,12 @@ using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.Recipes;
 
-internal record RecipeDetails(
+internal record RecipeDetailsGet(
   int Id, 
   string Name, 
   Category Category, 
-  List<Tag> Tags, 
+  List<TagGet> Tags, 
   Maybe<string?> ImageSrc, 
   string Description, 
-  List<QuantifiableItem> Ingredients) 
-  : Recipe(Id, Name, Category, Tags, ImageSrc);
+  List<QuantifiableItemGet> Ingredients) 
+  : RecipeGet(Id, Name, Category, Tags, ImageSrc);

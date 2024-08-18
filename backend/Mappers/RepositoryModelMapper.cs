@@ -4,11 +4,11 @@ using Cookbook.Features.Recipes;
 using Cookbook.Features.ShoppingLists;
 using CSharpFunctionalExtensions;
 using Category = Cookbook.Features.Categories.Category;
-using QuantifiableItem = Cookbook.Features.Common.QuantifiableItem;
+using QuantifiableItemGet = Cookbook.Features.Common.QuantifiableItemGet;
 using Recipe = Cookbook.DataAccess.Recipe;
 using ShoppingList = Cookbook.Features.ShoppingLists.ShoppingList;
 using ShoppingSublist = Cookbook.Features.ShoppingLists.ShoppingSublist;
-using Tag = Cookbook.Features.Tags.Tag;
+using TagGet = Cookbook.Features.Tags.TagGet;
 
 namespace Cookbook.Mappers;
 
@@ -20,10 +20,10 @@ internal static class RepositoryModelMapper
   public static List<Category> Map(IEnumerable<DataAccess.Category> entities)
     => entities.Select(Map).ToList();
 
-  public static Tag Map(DataAccess.Tag entity)
+  public static TagGet Map(DataAccess.Tag entity)
     => new(entity.Id, entity.Name);
 
-  public static List<Tag> Map(IEnumerable<DataAccess.Tag> entities)
+  public static List<TagGet> Map(IEnumerable<DataAccess.Tag> entities)
     => entities.Select(Map).ToList();
 
   public static ShoppingList Map(DataAccess.ShoppingList entity)
@@ -32,13 +32,13 @@ internal static class RepositoryModelMapper
   public static List<ShoppingList> Map(IEnumerable<DataAccess.ShoppingList> entities)
     => entities.Select(Map).ToList();
 
-  public static QuantifiableItem Map(DataAccess.QuantifiableItem entity)
+  public static QuantifiableItemGet Map(DataAccess.QuantifiableItem entity)
     => new(entity.Id, entity.Name, new Amount(entity.Value, entity.Unit ?? Maybe<string?>.None), entity.Checked);
   
-  public static List<QuantifiableItem> Map(IEnumerable<DataAccess.QuantifiableItem> entities)
+  public static List<QuantifiableItemGet> Map(IEnumerable<DataAccess.QuantifiableItem> entities)
     => entities.Select(Map).ToList();
 
-  public static RecipeDetails Map(Recipe entity)
+  public static RecipeDetailsGet Map(Recipe entity)
     => new(
       entity.Id,
       entity.Name,
@@ -61,4 +61,15 @@ internal static class RepositoryModelMapper
 
   public static ShoppingListDetails Map<T>(DataAccess.ShoppingList entity) where T : ShoppingListDetails
     => new(entity.Id, entity.Name, entity.Creationdate, entity.Updatedate, Map(entity.ShoppingSublists));
+
+  public static QuantifiableItem Map(QuantifiableItemCreate domainModel) => new()
+  {
+    Name = domainModel.Name,
+    Value = domainModel.Amount.Value,
+    Unit = domainModel.Amount.Unit.GetValueOrDefault(),
+    Checked = false
+  };
+
+  public static List<QuantifiableItem> Map(IEnumerable<QuantifiableItemCreate> domainModels) 
+    => domainModels.Select(Map).ToList();
 }

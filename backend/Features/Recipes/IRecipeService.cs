@@ -1,10 +1,13 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Cookbook.Features.Recipes.Models;
+using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.Recipes;
 
 internal interface IRecipeService
 {
-  Task<List<Recipe>> GetAll();
+  Task<List<RecipeGet>> GetAll();
   
-  Task<Maybe<RecipeDetails>> GetById(int id);  
+  Task<Maybe<RecipeDetailsGet>> GetById(int id);
+
+  Task<Result<int, Error>> Create(RecipeCreate data);
 }

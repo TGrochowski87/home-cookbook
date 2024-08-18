@@ -1,12 +1,12 @@
 CREATE TABLE categories (
   id int PRIMARY KEY,
-  name varchar(100) NOT NULL,
+  name varchar(100) NOT NULL UNIQUE,
   color varchar(7) NOT NULL
 );
 
 CREATE TABLE tags (
   id SERIAL PRIMARY KEY,
-  name varchar(100) NOT NULL
+  name varchar(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE lists (
@@ -35,7 +35,7 @@ CREATE TABLE recipes (
   category_id int NOT NULL,
   list_id int NOT NULL,
   name varchar(100) NOT NULL,
-  description text,
+  description text NOT NULL,
   image_src varchar(2048),
   CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE,
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE

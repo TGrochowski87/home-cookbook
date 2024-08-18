@@ -1,5 +1,7 @@
 using Cookbook.DataAccess;
 using Cookbook.Extensions;
+using FluentValidation;
+using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,9 +27,12 @@ builder.Services.AddCors(options =>
   });
 });
 
+// TODO: Add caching
 builder.Services
   .AddDbContext<CookbookContext>()
-  .AddScopedSingleImplementationServices();
+  .AddScopedSingleImplementationServices()
+  .AddValidatorsFromAssembly(typeof(Program).Assembly)
+  .AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 
@@ -44,4 +49,6 @@ if (app.Environment.IsDevelopment())
   app.UseCors("dev");
 }
 
-app.AddAllEndpoints().Run();
+app.AddAllEndpoints()
+  .UsePerRequestTransaction()
+  .Run();

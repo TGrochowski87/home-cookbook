@@ -5,12 +5,15 @@ using Cookbook.Contracts.ShoppingLists;
 using Cookbook.Contracts.Tags;
 using Cookbook.Features.Common;
 using Cookbook.Features.Recipes;
+using Cookbook.Features.Recipes.Models;
 using Cookbook.Features.ShoppingLists;
+using Cookbook.Features.Tags.Models;
+using CSharpFunctionalExtensions;
 using Category = Cookbook.Features.Categories.Category;
-using QuantifiableItem = Cookbook.Features.Common.QuantifiableItem;
-using Recipe = Cookbook.Features.Recipes.Recipe;
+using QuantifiableItemGet = Cookbook.Features.Common.QuantifiableItemGet;
+using RecipeGet = Cookbook.Features.Recipes.RecipeGet;
 using ShoppingList = Cookbook.Features.ShoppingLists.ShoppingList;
-using Tag = Cookbook.Features.Tags.Tag;
+using TagGet = Cookbook.Features.Tags.TagGet;
 
 namespace Cookbook.Mappers;
 
@@ -22,13 +25,13 @@ internal static class EndpointModelMapper
   public static List<CategoryGetDto> Map(IEnumerable<Category> domainModels)
     => domainModels.Select(Map).ToList();
 
-  public static TagGetDto Map(Tag domainModel)
+  public static TagGetDto Map(TagGet domainModel)
     => new(domainModel.Id, domainModel.Name);
 
-  public static List<TagGetDto> Map(IEnumerable<Tag> domainModels)
+  public static List<TagGetDto> Map(IEnumerable<TagGet> domainModels)
     => domainModels.Select(Map).ToList();
 
-  public static RecipeGetDto Map(Recipe domainModel)
+  public static RecipeGetDto Map(RecipeGet domainModel)
     => new(
       domainModel.Id,
       domainModel.Name,
@@ -36,7 +39,7 @@ internal static class EndpointModelMapper
       Map(domainModel.Tags),
       domainModel.ImageSrc.GetValueOrDefault());
 
-  public static List<RecipeGetDto> Map(IEnumerable<Recipe> domainModels)
+  public static List<RecipeGetDto> Map(IEnumerable<RecipeGet> domainModels)
     => domainModels.Select(Map).ToList();
 
   public static ShoppingListGetDto Map(ShoppingList domainModel)
@@ -45,20 +48,20 @@ internal static class EndpointModelMapper
   public static List<ShoppingListGetDto> Map(IEnumerable<ShoppingList> domainModels)
     => domainModels.Select(Map).ToList();
 
-  public static AmountGetDto Map(Amount domainModel)
+  public static AmountDto Map(Amount domainModel)
     => new(domainModel.Value, domainModel.Unit.GetValueOrDefault());
 
-  public static QuantifiableItemGetDto Map(QuantifiableItem domainModel) 
+  public static QuantifiableItemGetDto Map(QuantifiableItemGet domainModel) 
     => new(
       domainModel.Id, 
       domainModel.Name,
     Map(domainModel.Amount), 
       domainModel.Checked);
   
-  public static List<QuantifiableItemGetDto> Map(IEnumerable<QuantifiableItem> domainModels) 
+  public static List<QuantifiableItemGetDto> Map(IEnumerable<QuantifiableItemGet> domainModels) 
     => domainModels.Select(Map).ToList();
 
-  public static RecipeDetailsGetDto Map(RecipeDetails domainModel)
+  public static RecipeDetailsGetDto Map(RecipeDetailsGet domainModel)
     => new(
       domainModel.Id,
       domainModel.Name,
@@ -74,6 +77,33 @@ internal static class EndpointModelMapper
   public static List<ShoppingSublistGetDto> Map(IEnumerable<ShoppingSublist> domainModels) 
     => domainModels.Select(Map).ToList();
 
-  public static ShoppingListDetailsGetDto Map(ShoppingListDetails domainModel) => new(domainModel.Id, domainModel.Name,
-    domainModel.CreationDate, domainModel.UpdateDate, Map(domainModel.Sublists));
+  public static ShoppingListDetailsGetDto Map(ShoppingListDetails domainModel) 
+    => new(
+      domainModel.Id, 
+      domainModel.Name, 
+      domainModel.CreationDate, 
+      domainModel.UpdateDate, 
+      Map(domainModel.Sublists));
+
+  public static Amount Map(AmountDto dto) => new(dto.Value, dto.Unit);
+
+  public static QuantifiableItemCreate Map(QuantifiableItemCreateDto dto) => new(dto.Name, Map(dto.Amount));
+
+  public static List<QuantifiableItemCreate> Map(IEnumerable<QuantifiableItemCreateDto> dtos) 
+    => dtos.Select(Map).ToList();
+
+  public static TagCreate Map(TagCreateDto dto) => new(dto.Name);
+
+  public static List<TagCreate> Map(IEnumerable<TagCreateDto> dtos) => dtos.Select(Map).ToList();
+
+  public static RecipeCreate Map(RecipeCreateDto dto)
+    => new(
+      dto.Name, 
+      dto.CategoryId, 
+      dto.TagIds, 
+      Map(dto.NewTags),
+      // Not sure why must I do it this explicitly. Maybe because of abstract type.
+      dto.Image == null ? Maybe<IFormFile>.None : Maybe<IFormFile>.From(dto.Image), 
+      dto.Description, 
+      Map(dto.Ingredients));
 }

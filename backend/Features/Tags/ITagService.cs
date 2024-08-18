@@ -1,6 +1,10 @@
-﻿namespace Cookbook.Features.Tags;
+﻿using Cookbook.Features.Tags.Models;
+
+namespace Cookbook.Features.Tags;
 
 internal interface ITagService
 {
-  Task<List<Tag>> GetAll();
+  Task<List<TagGet>> GetAll();
+
+  Task<int> Create(TagCreate data);
 }

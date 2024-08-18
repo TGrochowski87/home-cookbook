@@ -1,3 +1,3 @@
 ﻿namespace Cookbook.Contracts.Common;
 
-public record QuantifiableItemGetDto(int Id, string Name, AmountGetDto Amount, bool Checked);
+public record QuantifiableItemGetDto(int Id, string Name, AmountDto Amount, bool Checked);
