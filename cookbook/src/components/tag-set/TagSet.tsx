@@ -1,6 +1,6 @@
 import { TagGetDto } from "api/GET/DTOs";
 import "./styles.less";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TagChip from "./TagChip";
 import TagChipCheckbox from "./TagChipCheckbox";
 import CreateTagButton from "./CreateTagButton";
@@ -14,7 +14,7 @@ interface TagSetProps {
   readonly disableShadow?: boolean;
   readonly selection?: {
     readonly disabled?: boolean;
-    readonly onSelectionChange?: (selectedTagIds: number[]) => void;
+    readonly onSelectionChange?: (selectedTagIds: (number | string)[]) => void;
   };
   readonly tagCreationEnabled?: boolean;
 }
@@ -29,6 +29,12 @@ const TagSet = ({
 }: TagSetProps) => {
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   const [newTags, setNewTags] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (selection.onSelectionChange) {
+      selection.onSelectionChange([...selectedTags, ...newTags]);
+    }
+  }, [selectedTags, newTags]);
 
   return (
     <div className="tag-set" style={{ justifyContent: align }}>

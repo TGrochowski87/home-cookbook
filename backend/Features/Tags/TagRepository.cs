@@ -1,5 +1,4 @@
 ﻿using Cookbook.DataAccess;
-using Cookbook.Features.Tags.Models;
 using Cookbook.Mappers;
 using Microsoft.EntityFrameworkCore;
 

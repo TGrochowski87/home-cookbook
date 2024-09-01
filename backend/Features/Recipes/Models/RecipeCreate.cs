@@ -1,9 +1,8 @@
-﻿using Cookbook.Features.Categories;
-using Cookbook.Features.Common;
-using Cookbook.Features.Tags.Models;
+﻿using Cookbook.Features.Common;
+using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Features.Recipes.Models;
+namespace Cookbook.Features.Recipes;
 
 internal record RecipeCreate(
   string Name,

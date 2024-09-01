@@ -1,3 +1,9 @@
-﻿namespace Cookbook.Contracts.Tags;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public record TagCreateDto(string Name);
+namespace Cookbook.Contracts.Tags;
+
+public class TagCreateDto
+{
+  [FromForm(Name = "name")]
+  public required string Name { get; set; }
+}

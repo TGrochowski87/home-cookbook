@@ -4,9 +4,14 @@ export interface RecipeCreateDto {
   readonly name: string;
   readonly categoryId: number;
   readonly image?: Blob;
-  readonly tags: ReadonlyArray<number | string>;
+  readonly tagIds: ReadonlyArray<number>;
+  readonly newTags: ReadonlyArray<TagCreateDto>;
   readonly ingredients: ReadonlyArray<IngredientCreateDto>;
   readonly description: string;
 }
 
 export type IngredientCreateDto = Omit<IngredientGetDto, "id">;
+
+export interface TagCreateDto {
+  readonly name: string;
+}

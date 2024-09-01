@@ -1,5 +1,4 @@
 ﻿using Cookbook.Features.Images;
-using Cookbook.Features.Recipes.Models;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 
@@ -17,18 +16,15 @@ internal class RecipeService(IRecipeRepository recipeRepository, ITagService tag
 
     var recipeId = await recipeRepository.Create(data);
 
-    // TODO: Unexpected error handling. Transaction should be rolled back on failure.
-    if (data.Image.HasValue)
+    if (data.Image.HasValue == false)
     {
-      var imageName = await imageService.Save(data.Image.Value, $"recipe-{recipeId}");
-      var setImageSourceResult = await recipeRepository.SetImageSource(recipeId, imageName);
-      if(setImageSourceResult.HasValue)
-      {
-        return setImageSourceResult.Value;
-      }
+      return recipeId;
     }
 
-    return recipeId;
+    var imageName = await imageService.Save(data.Image.Value, $"recipe-{recipeId}");
+    var setImageSourceResult = await recipeRepository.SetImageSource(recipeId, imageName);
+
+    return setImageSourceResult.IsFailure ? setImageSourceResult.Error : recipeId;
   }
 
   public async Task<List<RecipeGet>> GetAll()

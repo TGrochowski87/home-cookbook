@@ -1,5 +1,4 @@
-﻿using Cookbook.Features.Recipes.Models;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.Recipes;
 

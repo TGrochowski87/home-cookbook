@@ -11,6 +11,7 @@ internal class ImageService : IImageService
   public ImageService()
   {
     _storageLocation = $"{Directory.GetCurrentDirectory()}/uploads/";
+    CreateFolderForImagesIfNotExists();
   }
 
   public async Task<string> Save(IFormFile image, string nameToBeSavedUnder)
@@ -46,5 +47,13 @@ internal class ImageService : IImageService
     }
 
     return File.OpenRead(fileFullPath);
+  }
+
+  private void CreateFolderForImagesIfNotExists()
+  {
+    if (Directory.Exists(_storageLocation) == false)
+    {
+      Directory.CreateDirectory(_storageLocation);
+    }
   }
 }

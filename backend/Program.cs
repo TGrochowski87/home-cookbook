@@ -29,6 +29,7 @@ builder.Services.AddCors(options =>
 
 // TODO: Add caching
 builder.Services
+  // .AddAntiforgery()
   .AddDbContext<CookbookContext>()
   .AddScopedSingleImplementationServices()
   .AddValidatorsFromAssembly(typeof(Program).Assembly)
@@ -48,6 +49,9 @@ if (app.Environment.IsDevelopment())
 {
   app.UseCors("dev");
 }
+
+// TODO
+// app.UseAntiforgery();
 
 app.AddAllEndpoints()
   .UsePerRequestTransaction()

@@ -1,3 +1,12 @@
-﻿namespace Cookbook.Contracts.Common;
+﻿using Microsoft.AspNetCore.Mvc;
 
-public record QuantifiableItemCreateDto(string Name, AmountDto Amount);
+namespace Cookbook.Contracts.Common;
+
+public class QuantifiableItemCreateDto
+{
+  [FromForm(Name = "name")]
+  public required string Name { get; set; }
+  
+  [FromForm(Name = "amount")]
+  public required AmountCreateDto Amount { get; set; }
+}

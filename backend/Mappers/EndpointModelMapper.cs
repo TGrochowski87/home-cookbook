@@ -5,9 +5,8 @@ using Cookbook.Contracts.ShoppingLists;
 using Cookbook.Contracts.Tags;
 using Cookbook.Features.Common;
 using Cookbook.Features.Recipes;
-using Cookbook.Features.Recipes.Models;
 using Cookbook.Features.ShoppingLists;
-using Cookbook.Features.Tags.Models;
+using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 using Category = Cookbook.Features.Categories.Category;
 using QuantifiableItemGet = Cookbook.Features.Common.QuantifiableItemGet;
@@ -86,6 +85,8 @@ internal static class EndpointModelMapper
       Map(domainModel.Sublists));
 
   public static Amount Map(AmountDto dto) => new(dto.Value, dto.Unit);
+  
+  public static Amount Map(AmountCreateDto dto) => new(dto.Value, dto.Unit);
 
   public static QuantifiableItemCreate Map(QuantifiableItemCreateDto dto) => new(dto.Name, Map(dto.Amount));
 
@@ -100,10 +101,9 @@ internal static class EndpointModelMapper
     => new(
       dto.Name, 
       dto.CategoryId, 
-      dto.TagIds, 
-      Map(dto.NewTags),
-      // Not sure why must I do it this explicitly. Maybe because of abstract type.
+      dto.TagIds ?? [], 
+      dto.NewTags != null ? Map(dto.NewTags) : [],
       dto.Image == null ? Maybe<IFormFile>.None : Maybe<IFormFile>.From(dto.Image), 
-      dto.Description, 
-      Map(dto.Ingredients));
+      dto.Description ?? "", 
+      dto.Ingredients != null ? Map(dto.Ingredients) : []);
 }

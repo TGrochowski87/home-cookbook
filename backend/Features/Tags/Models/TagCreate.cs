@@ -1,3 +1,3 @@
-﻿namespace Cookbook.Features.Tags.Models;
+﻿namespace Cookbook.Features.Tags;
 
 internal record TagCreate(string Name);

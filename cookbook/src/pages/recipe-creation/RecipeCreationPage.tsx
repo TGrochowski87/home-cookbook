@@ -36,9 +36,7 @@ interface RecipeData {
   readonly description: string;
 }
 
-interface RecipeCreationPageProps {}
-
-const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
+const RecipeCreationPage = () => {
   const { categories, tags } = useLoaderData() as LoaderResponse;
   const navigate = useNavigate();
   const { displayMessage } = useAlerts();
@@ -60,14 +58,15 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
       name: data.name,
       categoryId: data.categoryId!,
       image: data.image,
-      tags: data.tags,
+      tagIds: data.tags.filter(t => typeof t === "number") as number[],
+      newTags: data.tags.filter(t => typeof t === "string").map(tagName => ({ name: tagName as string })),
       ingredients: data.ingredients,
       description: data.description,
     };
 
     // TODO: Consider some helper for handling different status codes.
     try {
-      // await api.post.createRecipe(dto);
+      await api.post.createRecipe(dto);
       displayMessage({ type: "success", message: "Przepis został utworzony.", fadeOutAfter: 5000 });
       reset();
       navigate("/recipes");
@@ -144,7 +143,7 @@ const RecipeCreationPage = ({}: RecipeCreationPageProps) => {
                 tagCreationEnabled
                 selection={{
                   disabled: false,
-                  onSelectionChange: (selectedTagIds: number[]) => onChange(selectedTagIds),
+                  onSelectionChange: (selectedTagIds: (number | string)[]) => onChange(selectedTagIds),
                 }}
               />
             )}

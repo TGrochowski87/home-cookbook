@@ -1,5 +1,4 @@
 ﻿using Cookbook.DataAccess;
-using Cookbook.Features.Recipes.Models;
 using Cookbook.Mappers;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +15,10 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       QuantifiableItems = RepositoryModelMapper.Map(data.Ingredients)
     };
     context.Lists.Add(list);
+    await context.SaveChangesAsync();
 
-    var tags = data.TagIds.Select(id => new Tag {Id = id }).ToList();
+    // TODO: Is this efficient? Is this how it should be done?
+    var tags = context.Tags.Where(t => data.TagIds.Contains(t.Id)).ToList();
 
     // TODO: Possible to use mapper?
     var newRecipe = new Recipe
@@ -66,16 +67,16 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     return entity is not null ? RepositoryModelMapper.Map(entity) : Maybe<RecipeDetailsGet>.None;
   }
 
-  public async Task<Maybe<Error>> SetImageSource(int recipeId, string imageSrc)
+  public async Task<UnitResult<Error>> SetImageSource(int recipeId, string imageSrc)
   {
     var recipe = await context.Recipes.SingleOrDefaultAsync(r => r.Id == recipeId);
     if(recipe == null)
     {
-      return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje");
+      return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
     }
 
     recipe.ImageSrc = imageSrc;
     await context.SaveChangesAsync();
-    return Maybe<Error>.None;
+    return UnitResult.Success<Error>();
   }
 }

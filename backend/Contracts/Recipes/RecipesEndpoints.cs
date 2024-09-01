@@ -15,14 +15,15 @@ public class RecipesEndpoints : IEndpointsDefinition
     app.MapGet("/recipes", GetAllRecipes)
       .WithTags("Recipes");
     
-    app.MapGet("/recipes/{id}", GetRecipeById)
+    app.MapGet("/recipes/{id:int}", GetRecipeById)
       .WithTags("Recipes");
 
-    app.MapGet("/recipes/images/{fileName:string}", GetFile)
+    app.MapGet("/recipes/images/{fileName}", GetFile)
       .WithTags("Recipes");
 
     app.MapPost("/recipes", CreateRecipe)
       .WithTags("Recipes")
+      .DisableAntiforgery() // TODO
       .AddFluentValidationAutoValidation();
   }
 
@@ -46,11 +47,11 @@ public class RecipesEndpoints : IEndpointsDefinition
 
   private static async Task<Results<Created<int>, NotFound>> CreateRecipe(
     [FromServices] IRecipeService recipeService,
-    [FromForm] RecipeCreateDto recipeData)
+    [FromForm] RecipeCreateDto dto)
   {
-    var recipeCreate = EndpointModelMapper.Map(recipeData);
+    var recipeCreate = EndpointModelMapper.Map(dto);
     var result = await recipeService.Create(recipeCreate);
-
+    
     return result.Match(
       recipeId => TypedResults.Created((string?)null, recipeId),
       ErrorResponseCreator.Create<Results<Created<int>, NotFound>>); // TODO: Consider proper URL

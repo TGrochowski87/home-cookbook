@@ -1,6 +1,4 @@
-﻿using Cookbook.Features.Tags.Models;
-
-namespace Cookbook.Features.Tags;
+﻿namespace Cookbook.Features.Tags;
 
 internal interface ITagRepository
 {
