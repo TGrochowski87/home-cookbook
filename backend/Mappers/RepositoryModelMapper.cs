@@ -2,6 +2,7 @@
 using Cookbook.Features.Common;
 using Cookbook.Features.Recipes;
 using Cookbook.Features.ShoppingLists;
+using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 using Category = Cookbook.Features.Categories.Category;
 using QuantifiableItemGet = Cookbook.Features.Common.QuantifiableItemGet;
@@ -22,6 +23,8 @@ internal static class RepositoryModelMapper
 
   public static TagGet Map(DataAccess.Tag entity)
     => new(entity.Id, entity.Name);
+
+  public static Tag Map(TagCreate domainModel) => new() { Name = domainModel.Name };
 
   public static List<TagGet> Map(IEnumerable<DataAccess.Tag> entities)
     => entities.Select(Map).ToList();

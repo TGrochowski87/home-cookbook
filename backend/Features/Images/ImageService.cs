@@ -26,19 +26,17 @@ internal class ImageService : IImageService
     return $"{nameToBeSavedUnder}{imageFormat}";
   }
 
-  public Result<FileStream, Error> Get(string fileName)
+  public async Task<Result<byte[], Error>> Get(string fileName)
   {
-    var sanitizedFileName = Path.GetFileName(fileName);
-
-    var imageFormat = sanitizedFileName.Split('.')[^1];
-    // TODO: Could this be validated by validators?
+    var imageFormat = Path.GetExtension(fileName).ToLowerInvariant();
     if (_allowedImageFormats.Contains(imageFormat) == false)
     {
       return new Error(
         HttpStatusCode.UnsupportedMediaType,
-        $"Supported image formats are: {String.Join(", ", _allowedImageFormats)}");
+        $"Supported image formats are: {string.Join(", ", _allowedImageFormats)}");
     }
 
+    var sanitizedFileName = Path.GetFileName(fileName);
     var fileFullPath = $"{_storageLocation}{sanitizedFileName}";
 
     if (File.Exists(fileFullPath) == false)
@@ -46,7 +44,7 @@ internal class ImageService : IImageService
       return new Error(HttpStatusCode.NotFound, "Image not found");
     }
 
-    return File.OpenRead(fileFullPath);
+    return await File.ReadAllBytesAsync(fileFullPath);
   }
 
   private void CreateFolderForImagesIfNotExists()

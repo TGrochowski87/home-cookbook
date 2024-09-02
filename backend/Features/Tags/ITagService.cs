@@ -4,5 +4,7 @@ internal interface ITagService
 {
   Task<List<TagGet>> GetAll();
 
-  Task<int> Create(TagCreate data);
+  Task<int> Create(TagCreate tag);
+  
+  Task<List<int>> CreateMany(List<TagCreate> tags);
 }

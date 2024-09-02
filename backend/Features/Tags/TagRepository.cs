@@ -6,18 +6,26 @@ namespace Cookbook.Features.Tags;
 
 internal class TagRepository(CookbookContext context) : ITagRepository
 {
-  public async Task<int> Create(TagCreate data)
+  public async Task<int> Create(TagCreate tag)
   {
-    var tag = new Tag
-    {
-      Name = data.Name,
-    };
+    var newTag = RepositoryModelMapper.Map(tag);
 
     // TODO: Handle unique constraint violation
-    context.Tags.Add(tag);
+    context.Tags.Add(newTag);
     await context.SaveChangesAsync();
 
-    return tag.Id;
+    return newTag.Id;
+  }
+
+  public async Task<List<int>> CreateMany(List<TagCreate> tags)
+  {
+    var newTags = tags.Select(RepositoryModelMapper.Map).ToList();
+
+    // TODO: Handle unique constraint violation
+    context.Tags.AddRange(newTags);
+    await context.SaveChangesAsync();
+
+    return newTags.Select(t => t.Id).ToList();
   }
 
   public async Task<List<TagGet>> GetAll()

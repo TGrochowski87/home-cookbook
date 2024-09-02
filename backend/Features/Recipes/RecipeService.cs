@@ -9,8 +9,7 @@ internal class RecipeService(IRecipeRepository recipeRepository, ITagService tag
 {
   public async Task<Result<int, Error>> Create(RecipeCreate data)
   {
-    var createdTags = await Task.WhenAll(data.NewTags.Select(
-      async tag => await tagService.Create(tag)));
+    var createdTags = await tagService.CreateMany(data.NewTags);
     var associatedTags = data.TagIds.Concat(createdTags).ToList();
     data = data with { TagIds = associatedTags };
 
@@ -22,7 +21,8 @@ internal class RecipeService(IRecipeRepository recipeRepository, ITagService tag
     }
 
     var imageName = await imageService.Save(data.Image.Value, $"recipe-{recipeId}");
-    var setImageSourceResult = await recipeRepository.SetImageSource(recipeId, imageName);
+    var imageSrc = $"http://192.168.0.164:5212/recipes/images/{imageName}"; // TODO
+    var setImageSourceResult = await recipeRepository.SetImageSource(recipeId, imageSrc);
 
     return setImageSourceResult.IsFailure ? setImageSourceResult.Error : recipeId;
   }

@@ -6,5 +6,5 @@ internal interface IImageService
 {
   Task<string> Save(IFormFile image, string nameToBeSavedUnder);
 
-  Result<FileStream, Error> Get(string fileName);
+  Task<Result<byte[], Error>> Get(string fileName);
 }
