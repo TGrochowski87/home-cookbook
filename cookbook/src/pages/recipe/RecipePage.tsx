@@ -27,7 +27,7 @@ const RecipePage = () => {
       </div>
 
       <div className="image-space floating">
-        <img src={BurgerPlaceHolder} />
+        <img src={recipe.imageSrc ?? BurgerPlaceHolder} />
       </div>
 
       <TagSet tags={recipe.tags} tagSize="small" />
