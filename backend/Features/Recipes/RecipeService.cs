@@ -1,17 +1,20 @@
 ﻿using Cookbook.Features.Images;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
+using Ganss.Xss;
 
 namespace Cookbook.Features.Recipes;
 
 internal class RecipeService(IRecipeRepository recipeRepository, ITagService tagService, IImageService imageService) 
   : IRecipeService
 {
+  private readonly HtmlSanitizer _sanitizer = new();
+    
   public async Task<Result<int, Error>> Create(RecipeCreate data)
   {
     var createdTags = await tagService.CreateMany(data.NewTags);
     var associatedTags = data.TagIds.Concat(createdTags).ToList();
-    data = data with { TagIds = associatedTags };
+    data = data with { TagIds = associatedTags, Description = _sanitizer.Sanitize(data.Description) };
 
     var recipeId = await recipeRepository.Create(data);
 
