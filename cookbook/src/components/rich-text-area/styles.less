@@ -1,4 +1,4 @@
-@import "../../../variables.less";
+@import "../../variables.less";
 
 .rich-text-area {
   .toolbar-root {
@@ -96,9 +96,7 @@
 
   .rich-text-area-editor {
     font-weight: initial;
-    border: 2px solid #colors[primary];
-    border-radius: #numeric[big-border-radius] #numeric[big-border-radius] 4px 4px;
-    min-height: 20ch;
+    min-height: 10ch;
     padding: 4px;
     padding-bottom: 12px;
 
@@ -141,6 +139,12 @@
         }
       }
     }
+  }
+
+  .rich-text-area-editor.editable {
+    border: 2px solid #colors[primary];
+    border-radius: #numeric[big-border-radius] #numeric[big-border-radius] 4px 4px;
+    min-height: 20ch;
   }
 }
 

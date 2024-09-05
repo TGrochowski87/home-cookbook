@@ -20,12 +20,12 @@ import { useEffect } from "react";
 
 interface RichTextAreaProps {
   readonly value: string;
-  readonly onChange: (value: string) => void;
+  readonly editable?: boolean;
+  readonly onChange?: (value: string) => void;
 }
 
 // TODO: Mobile context menu can cover the toolbar. Maybe the toolbar should be below the text are on mobile.
-// TODO: Tooltips.
-const RichTextArea = ({ value, onChange }: RichTextAreaProps) => {
+const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) => {
   const editor = useEditor({
     extensions: [
       Document,
@@ -45,12 +45,15 @@ const RichTextArea = ({ value, onChange }: RichTextAreaProps) => {
       History,
     ],
     content: value,
+    editable: editable,
     onUpdate({ editor }) {
-      onChange(editor.getText());
+      if (!editable) return;
+
+      onChange?.(editor.getHTML());
     },
     editorProps: {
       attributes: {
-        class: "rich-text-area-editor block floating",
+        class: `rich-text-area-editor ${editable ? "editable block floating" : ""}`,
       },
     },
   });
@@ -64,7 +67,7 @@ const RichTextArea = ({ value, onChange }: RichTextAreaProps) => {
   return (
     <div className="rich-text-area">
       <EditorContent editor={editor} />
-      <Toolbar editor={editor} />
+      {editable && <Toolbar editor={editor} />}
     </div>
   );
 };

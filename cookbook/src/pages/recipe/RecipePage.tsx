@@ -7,6 +7,7 @@ import TitledSection from "components/TitledSection";
 import Button from "components/Button";
 import TagSet from "components/tag-set/TagSet";
 import IngredientListRead from "pages/recipe/IngredientListRead";
+import RichTextArea from "components/rich-text-area/RichTextArea";
 
 export async function loader({ params }: any) {
   const recipe = await api.get.getRecipe(params.id);
@@ -36,8 +37,9 @@ const RecipePage = () => {
         <IngredientListRead ingredients={recipe.ingredients} />
       </TitledSection>
 
-      {/* use TipTap */}
-      <TitledSection title="Treść">{recipe.description}</TitledSection>
+      <TitledSection title="Treść">
+        <RichTextArea value={recipe.description} />
+      </TitledSection>
 
       <Form className="bottom-button-space">
         <Button>edytuj</Button>

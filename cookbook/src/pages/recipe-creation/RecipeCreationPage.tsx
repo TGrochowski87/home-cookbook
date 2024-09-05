@@ -7,7 +7,6 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
 import TagSet from "components/tag-set/TagSet";
-import RichTextArea from "./rich-text-area/RichTextArea";
 import Button from "components/Button";
 import { useForm, Controller } from "react-hook-form";
 import { RecipeCreateDto } from "api/POST/DTOs";
@@ -15,6 +14,7 @@ import axios, { AxiosError } from "axios";
 import { useAlerts } from "components/alert/AlertStack";
 import EditableQuantifiableItemsList from "components/quantifiable-items-list/EditableQuantifiableItemsList";
 import QuantifiableItemData from "models/QuantifiableItemData";
+import RichTextArea from "components/rich-text-area/RichTextArea";
 
 interface LoaderResponse {
   readonly categories: readonly CategoryGetDto[];
@@ -173,7 +173,7 @@ const RecipeCreationPage = () => {
           <Controller
             control={control}
             name="description"
-            render={({ field: { value, onChange } }) => <RichTextArea value={value} onChange={onChange} />}
+            render={({ field: { value, onChange } }) => <RichTextArea value={value} editable onChange={onChange} />}
           />
         </TitledSection>
 
