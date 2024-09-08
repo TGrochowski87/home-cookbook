@@ -25,4 +25,20 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     
     return entity != null ? RepositoryModelMapper.Map<ShoppingListDetails>(entity) : Maybe<ShoppingListDetails>.None;
   }
+
+  public async Task Remove(int id)
+  {
+    var shoppingList = await context.ShoppingLists
+      .Include(sl => sl.ShoppingSublists)
+      .ThenInclude(ss => ss.List)
+      .SingleOrDefaultAsync(sl => sl.Id == id);
+    if (shoppingList is null)
+    {
+      return;
+    }
+    
+    context.Lists.RemoveRange(shoppingList.ShoppingSublists.Select(ss => ss.List));
+    context.ShoppingLists.Remove(shoppingList);
+    await context.SaveChangesAsync();
+  }
 }

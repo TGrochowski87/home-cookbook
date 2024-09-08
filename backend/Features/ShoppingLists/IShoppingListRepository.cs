@@ -7,4 +7,6 @@ internal interface IShoppingListRepository
   Task<List<ShoppingList>> GetAll();
   
   Task<Maybe<ShoppingListDetails>> GetById(int id);
+  
+  Task Remove(int id);
 }
