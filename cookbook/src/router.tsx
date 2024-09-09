@@ -4,6 +4,7 @@ import App from "./App";
 import RecipesPage, { loader as recipesPageLoader } from "pages/recipes/RecipesPage";
 import RecipePage, { loader as recipePageLoader } from "pages/recipe/RecipePage";
 import RecipeCreationPage, { loader as recipeCreationPageLoader } from "pages/recipe-creation/RecipeCreationPage";
+import RecipeEditionPage, { loader as recipeEditionPageLoader } from "pages/recipe-edition/RecipeEditionPage";
 import ShoppingListPage, { loader as shoppingListPageLoader } from "pages/shopping-list/ShoppingListPage";
 import ShoppingPage, { loader as shoppingPageLoader } from "pages/shopping-lists/ShoppingPage";
 
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="/recipes/:id" element={<RecipePage />} loader={recipePageLoader} />
       <Route path="/recipes/new" element={<RecipeCreationPage />} loader={recipeCreationPageLoader} />
+      <Route path="/recipes/:id/edit" element={<RecipeEditionPage />} loader={recipeEditionPageLoader} />
       <Route path="/shopping-lists/:id" element={<ShoppingListPage />} loader={shoppingListPageLoader} />
     </Route>
   )

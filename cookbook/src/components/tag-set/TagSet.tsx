@@ -14,6 +14,7 @@ interface TagSetProps {
   readonly disableShadow?: boolean;
   readonly selection?: {
     readonly disabled?: boolean;
+    readonly initiallySelected?: readonly number[];
     readonly onSelectionChange?: (selectedTagIds: (number | string)[]) => void;
   };
   readonly tagCreationEnabled?: boolean;
@@ -27,8 +28,8 @@ const TagSet = ({
   tagCreationEnabled = false,
   align = "center",
 }: TagSetProps) => {
-  const [selectedTags, setSelectedTags] = useState<number[]>([]);
-  const [newTags, setNewTags] = useState<string[]>([]);
+  const [selectedTags, setSelectedTags] = useState<readonly number[]>(selection.initiallySelected ?? []);
+  const [newTags, setNewTags] = useState<readonly string[]>([]);
 
   useEffect(() => {
     if (selection.onSelectionChange) {

@@ -1,6 +1,6 @@
 import { RecipeDetailsGetDto } from "api/GET/DTOs";
 import api from "api/api";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
 import "./styles.less";
 import TitledSection from "components/TitledSection";
@@ -18,6 +18,7 @@ export async function loader({ params }: any) {
 const RecipePage = () => {
   const { displayMessage } = useAlerts();
   const recipe = useLoaderData() as RecipeDetailsGetDto;
+  const navigate = useNavigate();
 
   return (
     <div className="page recipe-page">
@@ -52,7 +53,7 @@ const RecipePage = () => {
           <p>Wariant</p>
         </button>
 
-        <button>
+        <button onClick={() => navigate(`/recipes/${recipe.id}/edit`)}>
           <Edit />
           <p>Edytuj</p>
         </button>
