@@ -1,6 +1,6 @@
 import { CircleAlert } from "lucide-react";
 
-export type AlertType = "error" | "success";
+export type AlertType = "error" | "success" | "info";
 
 interface AlertProps {
   readonly type: AlertType;
