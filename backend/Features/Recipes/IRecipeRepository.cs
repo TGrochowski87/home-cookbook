@@ -10,5 +10,7 @@ internal interface IRecipeRepository
 
   Task<int> Create(RecipeCreate data);
 
+  Task<UnitResult<Error>> Update(int id, RecipeCreate data);
+
   Task<UnitResult<Error>> SetImageSource(int recipeId, string imageSrc);
 }

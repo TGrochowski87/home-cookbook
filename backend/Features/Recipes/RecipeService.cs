@@ -1,4 +1,5 @@
-﻿using Cookbook.Features.Images;
+﻿using Cookbook.Extensions;
+using Cookbook.Features.Images;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 using Ganss.Xss;
@@ -12,22 +13,20 @@ internal class RecipeService(IRecipeRepository recipeRepository, ITagService tag
     
   public async Task<Result<int, Error>> Create(RecipeCreate data)
   {
-    var createdTags = await tagService.CreateMany(data.NewTags);
-    var associatedTags = data.TagIds.Concat(createdTags).ToList();
-    data = data with { TagIds = associatedTags, Description = _sanitizer.Sanitize(data.Description) };
+    return await tagService.CreateMany(data.NewTags)
+      .ToResultAsync<List<int>, Error>()
+      .Map(newTagIds => data with { TagIds = newTagIds, Description = _sanitizer.Sanitize(data.Description) })
+      .Bind(updateData => recipeRepository.Create(updateData).ToResultAsync<int, Error>())
+      .CheckIf(data.Image.HasValue, recipeId => SaveRecipeImage(recipeId, data.Image.Value));
+  }
 
-    var recipeId = await recipeRepository.Create(data);
-
-    if (data.Image.HasValue == false)
-    {
-      return recipeId;
-    }
-
-    var imageName = await imageService.Save(data.Image.Value, $"recipe-{recipeId}");
-    var imageSrc = $"http://192.168.0.164:5212/recipes/images/{imageName}"; // TODO
-    var setImageSourceResult = await recipeRepository.SetImageSource(recipeId, imageSrc);
-
-    return setImageSourceResult.IsFailure ? setImageSourceResult.Error : recipeId;
+  public async Task<UnitResult<Error>> Update(int id, RecipeCreate data)
+  {
+    return await tagService.CreateMany(data.NewTags)
+      .ToResultAsync<List<int>, Error>()
+      .Map(newTagIds => data with { TagIds = newTagIds, Description = _sanitizer.Sanitize(data.Description) })
+      .Bind(updateData => recipeRepository.Update(id, updateData))
+      .CheckIf(data.Image.HasValue, () => SaveRecipeImage(id, data.Image.Value));
   }
 
   public async Task<List<RecipeGet>> GetAll()
@@ -35,4 +34,11 @@ internal class RecipeService(IRecipeRepository recipeRepository, ITagService tag
 
   public async Task<Maybe<RecipeDetailsGet>> GetById(int id) 
     => await recipeRepository.GetById(id);
+
+  private async Task<UnitResult<Error>> SaveRecipeImage(int recipeId, IFormFile image)
+  {
+    var imageName = await imageService.Save(image, $"recipe-{recipeId}");
+    var imageSrc = $"http://192.168.0.164:5212/recipes/images/{imageName}"; // TODO
+    return await recipeRepository.SetImageSource(recipeId, imageSrc);
+  }
 }

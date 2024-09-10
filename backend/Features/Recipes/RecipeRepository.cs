@@ -36,6 +36,25 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     return newRecipe.Id;
   }
 
+  public async Task<UnitResult<Error>> Update(int id, RecipeCreate data)
+  {
+    var recipe = await context.Recipes.Include(r => r.List).SingleOrDefaultAsync(r => r.Id == id);
+    if(recipe == null)
+    {
+      return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
+    }
+    
+    recipe.Name = data.Name;
+    recipe.CategoryId = data.CategoryId;
+    recipe.Description = data.Description;
+    recipe.List.QuantifiableItems = RepositoryModelMapper.Map(data.Ingredients);
+    recipe.Tags = context.Tags.Where(t => data.TagIds.Contains(t.Id)).ToList();
+    
+    context.Recipes.Update(recipe);
+    await context.SaveChangesAsync();
+    return UnitResult.Success<Error>();
+  }
+
   public async Task<List<RecipeGet>> GetAll()
   {
     // TODO: Pagination

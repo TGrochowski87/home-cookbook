@@ -27,6 +27,11 @@ public class RecipesEndpoints : IEndpointsDefinition
       .WithTags("Recipes")
       .DisableAntiforgery() // TODO
       .AddFluentValidationAutoValidation();
+    
+    app.MapPut("/recipes/{id:int}", OverrideRecipe)
+      .WithTags("Recipes")
+      .DisableAntiforgery() // TODO
+      .AddFluentValidationAutoValidation();
   }
 
   private static async Task<Ok<List<RecipeGetDto>>> GetAllRecipes(
@@ -56,6 +61,23 @@ public class RecipesEndpoints : IEndpointsDefinition
     
     return result.Match<int, Results<Created<int>, NotFound<string>>, Error>(
       recipeId => TypedResults.Created((string?)null, recipeId), // TODO: Consider proper URL
+      error => error.StatusCode switch
+      {
+        HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
+      });
+  }
+
+  private static async Task<Result<NoContent, NotFound<string>>> OverrideRecipe(
+    [FromServices] IRecipeService recipeService,
+    [FromRoute] int id,
+    [FromForm] RecipeCreateDto dto)
+  {
+    var recipeCreate = EndpointModelMapper.Map(dto);
+    var result = await recipeService.Update(id, recipeCreate);
+    
+    return result.Match<Result<NoContent, NotFound<string>>, Error>(
+      () => TypedResults.NoContent(), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
