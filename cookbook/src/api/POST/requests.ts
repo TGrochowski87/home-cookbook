@@ -3,6 +3,15 @@ import { RecipeCreateDto } from "./DTOs";
 import axios from "axios";
 
 export const createRecipe = async (recipe: RecipeCreateDto): Promise<void> => {
+  const formData = prepareRecipeFormData(recipe);
+  const url = `${baseUrl}/recipes`;
+  const response = await axios.post(url, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return response.data;
+};
+
+export const prepareRecipeFormData = (recipe: RecipeCreateDto): FormData => {
   const formData = new FormData();
   formData.append("name", recipe.name);
   formData.append("categoryId", recipe.categoryId.toString());
@@ -25,9 +34,5 @@ export const createRecipe = async (recipe: RecipeCreateDto): Promise<void> => {
   });
   formData.append("description", recipe.description);
 
-  const url = `${baseUrl}/recipes`;
-  const response = await axios.post(url, formData, {
-    headers: { "Content-Type": "multipart/form-data" },
-  });
-  return response.data;
+  return formData;
 };

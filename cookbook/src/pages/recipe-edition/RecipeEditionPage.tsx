@@ -24,7 +24,7 @@ const RecipeEditionPage = () => {
   const { displayMessage } = useAlerts();
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
-    await api.post.createRecipe(dto);
+    await api.put.updateRecipe(recipe.id, dto);
     displayMessage({ type: "success", message: "Zmiany zostały zapisane.", fadeOutAfter: 5000 });
   };
 

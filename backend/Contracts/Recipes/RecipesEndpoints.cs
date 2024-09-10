@@ -16,7 +16,7 @@ public class RecipesEndpoints : IEndpointsDefinition
   {
     app.MapGet("/recipes", GetAllRecipes)
       .WithTags("Recipes");
-    
+
     app.MapGet("/recipes/{id:int}", GetRecipeById)
       .WithTags("Recipes");
 
@@ -27,7 +27,7 @@ public class RecipesEndpoints : IEndpointsDefinition
       .WithTags("Recipes")
       .DisableAntiforgery() // TODO
       .AddFluentValidationAutoValidation();
-    
+
     app.MapPut("/recipes/{id:int}", OverrideRecipe)
       .WithTags("Recipes")
       .DisableAntiforgery() // TODO
@@ -41,14 +41,14 @@ public class RecipesEndpoints : IEndpointsDefinition
     var recipeDtos = EndpointModelMapper.Map(recipes);
     return TypedResults.Ok(recipeDtos);
   }
-  
+
   private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound<string>>> GetRecipeById(
-    [FromServices] IRecipeService recipeService, 
+    [FromServices] IRecipeService recipeService,
     [FromRoute] int id)
   {
     var recipe = await recipeService.GetById(id);
     return recipe.Match<Results<Ok<RecipeDetailsGetDto>, NotFound<string>>, RecipeDetailsGet>(
-      value => TypedResults.Ok(EndpointModelMapper.Map(value)), 
+      value => TypedResults.Ok(EndpointModelMapper.Map(value)),
       () => TypedResults.NotFound("Przepis o podanym ID nie istnieje."));
   }
 
@@ -58,7 +58,7 @@ public class RecipesEndpoints : IEndpointsDefinition
   {
     var recipeCreate = EndpointModelMapper.Map(dto);
     var result = await recipeService.Create(recipeCreate);
-    
+
     return result.Match<int, Results<Created<int>, NotFound<string>>, Error>(
       recipeId => TypedResults.Created((string?)null, recipeId), // TODO: Consider proper URL
       error => error.StatusCode switch
@@ -68,15 +68,15 @@ public class RecipesEndpoints : IEndpointsDefinition
       });
   }
 
-  private static async Task<Result<NoContent, NotFound<string>>> OverrideRecipe(
+  private static async Task<Results<NoContent, NotFound<string>>> OverrideRecipe(
     [FromServices] IRecipeService recipeService,
     [FromRoute] int id,
     [FromForm] RecipeCreateDto dto)
   {
     var recipeCreate = EndpointModelMapper.Map(dto);
     var result = await recipeService.Update(id, recipeCreate);
-    
-    return result.Match<Result<NoContent, NotFound<string>>, Error>(
+
+    return result.Match<Results<NoContent, NotFound<string>>, Error>(
       () => TypedResults.NoContent(), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
@@ -86,17 +86,18 @@ public class RecipesEndpoints : IEndpointsDefinition
   }
 
   private static async Task<Results<FileContentHttpResult, NotFound<string>, ProblemHttpResult>> GetFile(
-      [FromServices] IImageService imageService,
-      [FromRoute] string fileName)
+    [FromServices] IImageService imageService,
+    [FromRoute] string fileName)
   {
     var result = await imageService.Get(fileName);
-    
+
     return result.Match<byte[], Results<FileContentHttpResult, NotFound<string>, ProblemHttpResult>, Error>(
       file => TypedResults.File(file, MimeTypeFromExtension(Path.GetExtension(fileName).ToLowerInvariant())),
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
-        HttpStatusCode.UnsupportedMediaType => TypedResults.Problem(detail: error.Message, statusCode: (int?)error.StatusCode),
+        HttpStatusCode.UnsupportedMediaType => TypedResults.Problem(detail: error.Message,
+          statusCode: (int?)error.StatusCode),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
   }
