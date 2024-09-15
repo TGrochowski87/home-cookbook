@@ -38,7 +38,11 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
 
   public async Task<UnitResult<Error>> Update(int id, RecipeCreate data)
   {
-    var recipe = await context.Recipes.Include(r => r.List).SingleOrDefaultAsync(r => r.Id == id);
+    var recipe = await context.Recipes
+      .Include(r => r.Tags)
+      .Include(r => r.List)
+      .ThenInclude(l => l.QuantifiableItems)
+      .SingleOrDefaultAsync(r => r.Id == id);
     if(recipe == null)
     {
       return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
@@ -47,8 +51,16 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     recipe.Name = data.Name;
     recipe.CategoryId = data.CategoryId;
     recipe.Description = data.Description;
-    recipe.List.QuantifiableItems = RepositoryModelMapper.Map(data.Ingredients);
+    
+    recipe.Tags.Clear();
     recipe.Tags = context.Tags.Where(t => data.TagIds.Contains(t.Id)).ToList();
+    
+    recipe.List.QuantifiableItems.Clear();
+    var listItems = RepositoryModelMapper.Map(data.Ingredients);
+    foreach (var item in listItems)
+    {
+      recipe.List.QuantifiableItems.Add(item);
+    }
     
     context.Recipes.Update(recipe);
     await context.SaveChangesAsync();

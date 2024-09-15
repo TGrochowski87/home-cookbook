@@ -15,7 +15,11 @@ internal class RecipeService(IRecipeRepository recipeRepository, ITagService tag
   {
     return await tagService.CreateMany(data.NewTags)
       .ToResultAsync<List<int>, Error>()
-      .Map(newTagIds => data with { TagIds = newTagIds, Description = _sanitizer.Sanitize(data.Description) })
+      .Map(newTagIds => data with
+      {
+        TagIds = newTagIds.Concat(data.TagIds).ToList(), 
+        Description = _sanitizer.Sanitize(data.Description)
+      })
       .Bind(updateData => recipeRepository.Create(updateData).ToResultAsync<int, Error>())
       .CheckIf(data.Image.HasValue, recipeId => SaveRecipeImage(recipeId, data.Image.Value));
   }
@@ -24,7 +28,11 @@ internal class RecipeService(IRecipeRepository recipeRepository, ITagService tag
   {
     return await tagService.CreateMany(data.NewTags)
       .ToResultAsync<List<int>, Error>()
-      .Map(newTagIds => data with { TagIds = newTagIds, Description = _sanitizer.Sanitize(data.Description) })
+      .Map(newTagIds => data with
+      {
+        TagIds = newTagIds.Concat(data.TagIds).ToList(), 
+        Description = _sanitizer.Sanitize(data.Description)
+      })
       .Bind(updateData => recipeRepository.Update(id, updateData))
       .CheckIf(data.Image.HasValue, () => SaveRecipeImage(id, data.Image.Value));
   }
