@@ -1,4 +1,4 @@
-import { ShoppingItemGetDto, ShoppingListGetDto, ShoppingListSublistGetDto } from "api/GET/DTOs";
+import { ShoppingItemGetDto, ShoppingListDetailsGetDto, ShoppingListSublistGetDto } from "api/GET/DTOs";
 import QuantifiableItemData from "models/QuantifiableItemData";
 import { ShoppingList, ShoppingListSublist } from "models/ShoppingList";
 
@@ -16,7 +16,7 @@ const toShoppingListSublist = (from: ShoppingListSublistGetDto): ShoppingListSub
   };
 };
 
-const toShoppingList = (from: ShoppingListGetDto): ShoppingList => {
+const toShoppingList = (from: ShoppingListDetailsGetDto): ShoppingList => {
   return {
     ...from,
     sublists: from.sublists?.map(toShoppingListSublist),

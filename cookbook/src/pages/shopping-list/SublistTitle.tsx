@@ -1,33 +1,32 @@
 import { CircleMinus, CirclePlus, Link2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import ConfirmationPopover from "components/ConfirmationPopover";
+import { ShoppingListSublist } from "models/ShoppingList";
 
 interface SublistTitleProps {
-  readonly title: string;
-  readonly recipeId?: number;
-  readonly count: number;
-  readonly onIncrement: () => void;
-  readonly onDecrement: () => void;
+  readonly sublist: ShoppingListSublist;
+  readonly onIncrement: (sublist: ShoppingListSublist) => void;
+  readonly onDecrement: (sublist: ShoppingListSublist) => void;
 }
 
-const SublistTitle = ({ title, count, onIncrement, onDecrement, recipeId }: SublistTitleProps) => {
+const SublistTitle = ({ sublist, onIncrement, onDecrement }: SublistTitleProps) => {
   return (
     <div className="sublist-title">
-      <Link to={`/recipes/${recipeId}`}>
-        <h2>{title}</h2>
+      <Link to={`/recipes/${sublist.recipeId}`}>
+        <h2>{sublist.name}</h2>
         <Link2 width="1.3em" height="1.3em" />
       </Link>
 
-      <CirclePlus width="1.5em" height="1.5em" onClick={onIncrement} />
+      <CirclePlus width="1.5em" height="1.5em" onClick={() => onIncrement(sublist)} />
 
-      <h2>{`x${count}`}</h2>
+      <h2>{`x${sublist.count}`}</h2>
 
-      {count === 1 ? (
-        <ConfirmationPopover text="Usunąć listę?" onConfirm={onDecrement} side="left">
-          <CircleMinus className="delete-icon" width="1.5em" height="1.5em" onClick={onDecrement} />
+      {sublist.count === 1 ? (
+        <ConfirmationPopover text="Usunąć listę?" onConfirm={() => onDecrement(sublist)} side="left">
+          <CircleMinus className="delete-icon" width="1.5em" height="1.5em" />
         </ConfirmationPopover>
       ) : (
-        <CircleMinus className="delete-icon" width="1.5em" height="1.5em" onClick={onDecrement} />
+        <CircleMinus className="delete-icon" width="1.5em" height="1.5em" onClick={() => onDecrement(sublist)} />
       )}
     </div>
   );

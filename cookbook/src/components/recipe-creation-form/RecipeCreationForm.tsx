@@ -80,7 +80,8 @@ const RecipeCreationForm = ({
         return;
       }
 
-      displayMessage({ type: "error", message: "Wystąpił nieoczekiwany błąd.", fadeOutAfter: 5000 });
+      // TODO: ErrorBoundry for unexpected errors.
+      throw error;
     }
   };
 

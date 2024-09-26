@@ -13,7 +13,7 @@ const ConfirmationPopover = ({ children, onConfirm, text, side = "top" }: Confir
     <Popover.Root>
       <Popover.Trigger asChild>
         {/* I don't remember why, but this <span> is crucial. Without it, the popover does not stick to the child. */}
-        <span>{children}</span>
+        <span style={{ display: "flex" }}>{children}</span>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Content className="confirmation-popover-content floating" side={side} sideOffset={2}>

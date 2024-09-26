@@ -1,4 +1,4 @@
-import { ShoppingListGetDto } from "api/GET/DTOs";
+import { ShoppingListDetailsGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import TitledSection from "components/TitledSection";
 import { useLoaderData } from "react-router-dom";
@@ -17,17 +17,8 @@ export async function loader({ params }: any) {
   return shoppingList;
 }
 
-const prepareShoppingList = (shoppingListDto: ShoppingListGetDto): ShoppingList => {
-  const shoppingList: ShoppingList = mapper.map.toShoppingList(shoppingListDto);
-  const sortedShoppingList: ShoppingList = {
-    ...shoppingList,
-    sublists: shoppingList.sublists!.toSorted((a, b) => a.id - b.id),
-  };
-  return sortedShoppingList;
-};
-
 const ShoppingListPage = () => {
-  const shoppingListFromLoader = useLoaderData() as ShoppingListGetDto;
+  const shoppingListFromLoader = useLoaderData() as ShoppingListDetailsGetDto;
   const [shoppingList, setShoppingList] = useState<ShoppingList>(prepareShoppingList(shoppingListFromLoader));
 
   const checkboxClickHandler = (sublistId: number): ((item: QuantifiableItemData) => void) => {
@@ -53,6 +44,23 @@ const ShoppingListPage = () => {
     }));
   };
 
+  const onIncrementHandler = async (sublist: ShoppingListSublist) => {
+    await api.patch.updateShoppingSublistCount(sublist.id, sublist.count + 1);
+    const updatedShoppingList = await api.get.getShoppingList(shoppingList.id);
+    setShoppingList(prepareShoppingList(updatedShoppingList));
+  };
+
+  const onDecrementHandler = async (sublist: ShoppingListSublist) => {
+    if (sublist.count === 1) {
+      await api.delete.deleteShoppingListSublist(sublist.id);
+    } else {
+      await api.patch.updateShoppingSublistCount(sublist.id, sublist.count - 1);
+    }
+
+    const updatedShoppingList = await api.get.getShoppingList(shoppingList.id);
+    setShoppingList(prepareShoppingList(updatedShoppingList));
+  };
+
   const setManualSublistItems = (items: readonly QuantifiableItemData[]): void => {
     setShoppingList(prev => ({
       ...prev,
@@ -75,14 +83,7 @@ const ShoppingListPage = () => {
           <TitledSection
             key={sublist.id}
             title={
-              <SublistTitle
-                title={sublist.name}
-                recipeId={sublist.recipeId}
-                count={sublist.count}
-                // TODO: implement onIncrement and onDecrement
-                onIncrement={() => {}}
-                onDecrement={() => {}}
-              />
+              <SublistTitle sublist={sublist} onIncrement={onIncrementHandler} onDecrement={onDecrementHandler} />
             }>
             <QuantifiableItemsList
               items={sublist.items}
@@ -101,6 +102,15 @@ const ShoppingListPage = () => {
       </TitledSection>
     </div>
   );
+};
+
+const prepareShoppingList = (shoppingListDto: ShoppingListDetailsGetDto): ShoppingList => {
+  const shoppingList: ShoppingList = mapper.map.toShoppingList(shoppingListDto);
+  const sortedShoppingList: ShoppingList = {
+    ...shoppingList,
+    sublists: shoppingList.sublists!.toSorted((a, b) => a.id - b.id),
+  };
+  return sortedShoppingList;
 };
 
 export default ShoppingListPage;

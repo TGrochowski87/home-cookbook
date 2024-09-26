@@ -9,4 +9,8 @@ internal interface IShoppingListService
   Task<Maybe<ShoppingListDetails>> GetById(int id);
   
   Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId);
+  
+  Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId);
+  
+  Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, int count);
 }

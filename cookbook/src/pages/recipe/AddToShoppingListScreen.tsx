@@ -15,13 +15,9 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
   const { displayMessage } = useAlerts();
 
   const listClickHandler = async (listId: number) => {
-    try {
-      await api.post.createShoppingListSublist(listId, recipeId);
-      displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
-      navigate(`/shopping-lists/${listId}`);
-    } catch (error) {
-      displayMessage({ type: "error", message: "Wystąpił nieoczekiwany błąd.", fadeOutAfter: 5000 });
-    }
+    await api.post.createShoppingListSublist(listId, recipeId);
+    displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
+    navigate(`/shopping-lists/${listId}`);
   };
 
   return (
