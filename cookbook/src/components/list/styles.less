@@ -1,0 +1,91 @@
+@import "../../variables.less";
+
+@import "@radix-ui/colors/sage.css";
+@import "@radix-ui/colors/sage-dark.css";
+
+@import "@radix-ui/colors/grass.css";
+@import "@radix-ui/colors/grass-dark.css";
+@import "@radix-ui/colors/grass-alpha.css";
+@import "@radix-ui/colors/grass-dark-alpha.css";
+
+.highlighting-list {
+  position: relative;
+  padding-left: 24px;
+
+  &:has(.left-side-action) {
+    padding-left: 48px;
+  }
+
+  .action-button {
+    width: 24px;
+    aspect-ratio: 1/1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+  }
+
+  .list-item {
+    width: 100%;
+
+    &::marker {
+      color: rgb(26, 163, 26);
+      font-weight: 600;
+    }
+
+    .left-side-action {
+      position: absolute;
+      left: 0;
+
+      svg {
+        transform: rotate(45deg);
+        fill: #colors[delete-button];
+      }
+    }
+  }
+
+  .list-item:nth-of-type(even) {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--grass-a3) 10%,
+      var(--grass-a3) 90%,
+      transparent 100%,
+      transparent
+    );
+  }
+
+  .list-item:nth-of-type(odd) {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--grass-a1) 10%,
+      var(--grass-a1) 90%,
+      transparent 100%,
+      transparent
+    );
+  }
+
+  .list-item.highlighted {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--grass-a5) 10%,
+      var(--grass-a5) 90%,
+      transparent 100%,
+      transparent
+    );
+  }
+}
+
+.highlighting-list.no-markers {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+
+  .list-item {
+    padding-left: 16px;
+  }
+}
