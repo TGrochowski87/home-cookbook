@@ -1,4 +1,4 @@
-import { RecipeDetailsGetDto } from "api/GET/DTOs";
+import { RecipeDetailsGetDto, ShoppingListGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
@@ -9,15 +9,24 @@ import IngredientListRead from "pages/recipe/IngredientListRead";
 import RichTextArea from "components/rich-text-area/RichTextArea";
 import { CirclePlus, Edit, Trash2 } from "lucide-react";
 import { useAlerts } from "components/alert/AlertStack";
+import Popup from "components/Popup";
+import HighlightingList from "components/list/HighlightingList";
 
-export async function loader({ params }: any) {
+interface LoaderResponse {
+  readonly recipe: RecipeDetailsGetDto;
+  readonly shoppingLists: readonly ShoppingListGetDto[];
+}
+
+// TODO: Implement redux
+export async function loader({ params }: any): Promise<LoaderResponse> {
   const recipe = await api.get.getRecipe(params.id);
-  return recipe;
+  const shoppingLists = await api.get.getShoppingLists();
+  return { recipe, shoppingLists };
 }
 
 const RecipePage = () => {
   const { displayMessage } = useAlerts();
-  const recipe = useLoaderData() as RecipeDetailsGetDto;
+  const { recipe, shoppingLists } = useLoaderData() as LoaderResponse;
   const navigate = useNavigate();
 
   return (
@@ -38,6 +47,31 @@ const RecipePage = () => {
 
       <TitledSection title="Składniki">
         <IngredientListRead ingredients={recipe.ingredients} />
+
+        <Popup
+          className="add-to-shopping-list-popup"
+          trigger={
+            <div className="add-to-shopping-list-button-space">
+              <button type="submit">Dodaj niezaznaczone do listy zakupów</button>
+            </div>
+          }
+          title="Wybierz listę"
+          fullScreen>
+          <HighlightingList
+            className="shopping-lists"
+            noMarkers
+            items={shoppingLists.map(sl => ({ ...sl, key: sl.id }))}
+            render={list => (
+              <button
+                key={list.id}
+                onClick={() => {
+                  navigate(`/shopping-lists/${list.id}`);
+                }}>
+                {list.name}
+              </button>
+            )}
+          />
+        </Popup>
       </TitledSection>
 
       <TitledSection title="Treść">

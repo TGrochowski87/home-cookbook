@@ -1,4 +1,5 @@
 @import "../variables.less";
+@import "../common.less";
 
 // Alert colors
 @import "@radix-ui/colors/red.css";
@@ -171,5 +172,74 @@
 
   .popover-arrow {
     fill: var(--sage-8);
+  }
+}
+
+// Popup
+.popup-overlay {
+  background-color: var(--black-a9);
+  position: fixed;
+  inset: 0;
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.popup-content {
+  position: fixed;
+  background-color: #colors[popup];
+  padding: 12px 16px 20px 16px;
+
+  .main-content {
+    margin-top: 24px;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    height: 24px;
+    width: 24px;
+
+    border: unset;
+    background-color: unset;
+    padding: unset;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 100%;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .smooth-color-hover();
+  }
+}
+
+.popup-content.full-screen {
+  inset: 0;
+}
+.popup-content.window {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: clamp(300px, 90vw, 400px);
+
+  border-radius: #numeric[big-border-radius];
+  border: 2px solid #colors[primary];
+
+  font-size: 0.8em;
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

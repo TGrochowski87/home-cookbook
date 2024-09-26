@@ -1,6 +1,6 @@
-import * as Dialog from "@radix-ui/react-dialog";
 import Input from "components/Input";
-import { Info, Pencil, X } from "lucide-react";
+import Popup from "components/Popup";
+import { Info, Pencil } from "lucide-react";
 import { ShoppingList } from "models/ShoppingList";
 import { useState } from "react";
 import formatDate from "utilities/formatDate";
@@ -19,57 +19,44 @@ const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
   // TODO: handle rename and update date
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <Info />
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay className="info-modal-overlay" />
-        <Dialog.Content className="info-modal-content" onOpenAutoFocus={e => e.preventDefault()}>
-          <Dialog.Title>
-            {renameActive ? (
-              <Input
-                className="rename-input"
-                disableShadow
-                autoFocus
-                onBlur={() => {
-                  renameHandler(input);
-                  setRenameActive(false);
-                }}
-                value={input}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
-              />
-            ) : (
-              <>
-                {shoppingListInfo.name}
-                <button className="rename-button" onClick={() => setRenameActive(true)}>
-                  <Pencil />
-                </button>
-              </>
-            )}
-          </Dialog.Title>
-          {/* Description added just to silence the warning. This is currently a private app without a need for accessibility. */}
-          <Dialog.Description></Dialog.Description>
-          <Dialog.Close asChild>
-            <button className="close-button smooth-color-hover">
-              <X />
+    <Popup
+      className="shopping-list-info-modal"
+      trigger={<Info />}
+      title={
+        renameActive ? (
+          <Input
+            className="rename-input"
+            disableShadow
+            autoFocus
+            onBlur={() => {
+              renameHandler(input);
+              setRenameActive(false);
+            }}
+            value={input}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
+          />
+        ) : (
+          <>
+            {shoppingListInfo.name}
+            <button className="rename-button" onClick={() => setRenameActive(true)}>
+              <Pencil />
             </button>
-          </Dialog.Close>
-          <div className="info-space">
-            <div className="date-info-row">
-              <p>utworzono:</p>
-              <p>{formatDate(shoppingListInfo.creationDate)}</p>
-            </div>
-            <div className="date-info-row">
-              <p>zaktualizowano:</p>
-              <p>{formatDate(shoppingListInfo.updateDate)}</p>
-            </div>
-            <p>automatyczne usunięcie nastąpi za:</p>
-            <p>{millisecondsToTime(timeUntilDeletion)}</p>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+          </>
+        )
+      }>
+      <div className="info-space">
+        <div className="date-info-row">
+          <p>utworzono:</p>
+          <p>{formatDate(shoppingListInfo.creationDate)}</p>
+        </div>
+        <div className="date-info-row">
+          <p>zaktualizowano:</p>
+          <p>{formatDate(shoppingListInfo.updateDate)}</p>
+        </div>
+        <p>automatyczne usunięcie nastąpi za:</p>
+        <p>{millisecondsToTime(timeUntilDeletion)}</p>
+      </div>
+    </Popup>
   );
 };
 

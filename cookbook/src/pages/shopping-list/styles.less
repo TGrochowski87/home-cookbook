@@ -41,29 +41,7 @@
   }
 }
 
-// Info Modal
-.info-modal-overlay {
-  background-color: var(--black-a9);
-  position: fixed;
-  inset: 0;
-  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.info-modal-content {
-  background-color: #colors[popup];
-  border-radius: #numeric[big-border-radius];
-  border: 2px solid #colors[primary];
-
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  width: clamp(300px, 90vw, 400px);
-  padding: 12px 16px 20px 16px;
-
-  font-size: 0.8em;
-
+.shopping-list-info-modal {
   .rename-input {
     height: fit-content;
     padding: 0px 6px;
@@ -71,7 +49,6 @@
   }
 
   .info-space {
-    margin-top: 24px;
     margin-inline: auto;
     width: 270px;
     .date-info-row {
@@ -85,7 +62,7 @@
     }
   }
 
-  button {
+  .rename-button {
     border: unset;
     background-color: unset;
     padding: unset;
@@ -96,34 +73,17 @@
 
     border-radius: 100%;
 
-    color: var(--violet-11);
-
-    .smooth-color-hover();
-  }
-
-  .rename-button {
     margin-left: 4px;
 
     height: 28px;
     width: 28px;
+
     svg {
       width: 0.9em;
       height: 0.9em;
     }
-  }
 
-  .close-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-
-    height: 24px;
-    width: 24px;
-
-    svg {
-      width: 20px;
-      height: 20px;
-    }
+    .smooth-color-hover();
   }
 }
 
