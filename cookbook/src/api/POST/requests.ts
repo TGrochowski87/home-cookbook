@@ -2,6 +2,12 @@ import { baseUrl } from "api/api";
 import { RecipeCreateDto } from "./DTOs";
 import axios from "axios";
 
+export const createShoppingListSublist = async (shoppingListId: number, recipeId: number) => {
+  const url = `${baseUrl}/shopping-lists/${shoppingListId}/sublists`;
+  const response = await axios.post(url, { recipeId });
+  return response.data;
+};
+
 export const createRecipe = async (recipe: RecipeCreateDto): Promise<void> => {
   const formData = prepareRecipeFormData(recipe);
   const url = `${baseUrl}/recipes`;

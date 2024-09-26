@@ -14,8 +14,22 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     app.MapGet("/shopping-lists", GetAllShoppingLists)
       .WithTags("ShoppingLists");
     
-    app.MapGet("/shopping-lists/{id}", GetShoppingListById)
+    app.MapGet("/shopping-lists/{id:int}", GetShoppingListById)
       .WithTags("ShoppingLists");
+    
+    app.MapPost("/shopping-lists/{id:int}/sublists", AddRecipeIngredients)
+      .WithTags("ShoppingLists");
+  }
+
+  private static async Task<Results<Created, NotFound<string>>> AddRecipeIngredients(
+    [FromServices] IShoppingListService shoppingListService, 
+    [FromRoute] int id, 
+    [FromBody] ShoppingSublistCreateDto dto)
+  {
+    var result = await shoppingListService.CreateSublist(id, dto.RecipeId);
+    return result.Match<Results<Created, NotFound<string>>, Error>(
+      () => TypedResults.Created(),
+      error => TypedResults.NotFound(error.Message));
   }
   
   private static async Task<Ok<List<ShoppingListGetDto>>> GetAllShoppingLists(

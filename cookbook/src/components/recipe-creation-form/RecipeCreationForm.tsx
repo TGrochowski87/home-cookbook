@@ -8,7 +8,7 @@ import TagSet from "components/tag-set/TagSet";
 import Button from "components/Button";
 import { useForm, Controller } from "react-hook-form";
 import { RecipeCreateDto } from "api/POST/DTOs";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { useAlerts } from "components/alert/AlertStack";
 import EditableQuantifiableItemsList from "components/quantifiable-items-list/EditableQuantifiableItemsList";
 import QuantifiableItemData from "models/QuantifiableItemData";
@@ -75,19 +75,12 @@ const RecipeCreationForm = ({
       reset();
       navigate(onSuccessNavigateTo, { replace: replaceOnNavigate });
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError;
-
-        if (axiosError.request || (axiosError.response && axiosError.response?.status >= 500)) {
-          displayMessage({ type: "error", message: "Wystąpił nieoczekiwany błąd.", fadeOutAfter: 5000 });
-          return;
-        }
-
-        if (axiosError.response?.status === 400) {
-          displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
-          return;
-        }
+      if (axios.isAxiosError(error) && error.response?.status === 400) {
+        displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
+        return;
       }
+
+      displayMessage({ type: "error", message: "Wystąpił nieoczekiwany błąd.", fadeOutAfter: 5000 });
     }
   };
 

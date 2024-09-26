@@ -48,7 +48,7 @@ const ShoppingListPage = () => {
     setShoppingList(prev => ({
       ...prev,
       sublists: prev.sublists!.map(sub =>
-        sub.id === 1 ? { ...sub, items: sub.items.filter(i => i.key !== item.key) } : sub
+        sub.recipeId === null ? { ...sub, items: sub.items.filter(i => i.key !== item.key) } : sub
       ),
     }));
   };
@@ -56,11 +56,11 @@ const ShoppingListPage = () => {
   const setManualSublistItems = (items: readonly QuantifiableItemData[]): void => {
     setShoppingList(prev => ({
       ...prev,
-      sublists: prev.sublists!.map(sub => (sub.id === 1 ? { ...sub, items } : sub)),
+      sublists: prev.sublists!.map(sub => (sub.recipeId === null ? { ...sub, items } : sub)),
     }));
   };
 
-  const manualSublist: ShoppingListSublist = shoppingList.sublists!.find(s => s.id === 1)!;
+  const manualSublist: ShoppingListSublist = shoppingList.sublists!.find(s => s.recipeId === null)!;
 
   return (
     <div className="page shopping-list-page">

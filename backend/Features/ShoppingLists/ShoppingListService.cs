@@ -23,4 +23,7 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
 
   public Task<Maybe<ShoppingListDetails>> GetById(int id) 
     => shoppingListRepository.GetById(id);
+
+  public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId) 
+    => shoppingListRepository.CreateSublist(shoppingListId, recipeId);
 }

@@ -1,4 +1,5 @@
-﻿using Cookbook.DataAccess;
+﻿using System.Net;
+using Cookbook.DataAccess;
 using Cookbook.Mappers;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -40,5 +41,41 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     context.Lists.RemoveRange(shoppingList.ShoppingSublists.Select(ss => ss.List));
     context.ShoppingLists.Remove(shoppingList);
     await context.SaveChangesAsync();
+  }
+
+  public async Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
+  {
+    var recipe = await context.Recipes
+      .Include(r => r.List)
+      .ThenInclude(l => l.QuantifiableItems)
+      .SingleOrDefaultAsync(r => r.Id == recipeId);
+    if (recipe is null)
+    {
+      return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
+    }
+
+    var list = new List
+    {
+      QuantifiableItems = recipe.List.QuantifiableItems.Select(item => new QuantifiableItem
+      {
+        Name = item.Name,
+        Checked = item.Checked,
+        Unit = item.Unit,
+        Value = item.Value,
+      }).ToList()
+    };
+    context.Lists.Add(list);
+    await context.SaveChangesAsync();
+    
+    var shoppingSublist = new DataAccess.ShoppingSublist
+    {
+      Count = 1,
+      RecipeId = recipeId,
+      ListId = list.Id,
+      ShoppingListId = shoppingListId
+    };
+    context.ShoppingSublists.Add(shoppingSublist);
+    await context.SaveChangesAsync();
+    return UnitResult.Success<Error>();
   }
 }

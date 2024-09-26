@@ -9,8 +9,7 @@ import IngredientListRead from "pages/recipe/IngredientListRead";
 import RichTextArea from "components/rich-text-area/RichTextArea";
 import { CirclePlus, Edit, Trash2 } from "lucide-react";
 import { useAlerts } from "components/alert/AlertStack";
-import Popup from "components/Popup";
-import HighlightingList from "components/list/HighlightingList";
+import AddToShoppingListScreen from "./AddToShoppingListScreen";
 
 interface LoaderResponse {
   readonly recipe: RecipeDetailsGetDto;
@@ -47,31 +46,7 @@ const RecipePage = () => {
 
       <TitledSection title="Składniki">
         <IngredientListRead ingredients={recipe.ingredients} />
-
-        <Popup
-          className="add-to-shopping-list-popup"
-          trigger={
-            <div className="add-to-shopping-list-button-space">
-              <button type="submit">Dodaj niezaznaczone do listy zakupów</button>
-            </div>
-          }
-          title="Wybierz listę"
-          fullScreen>
-          <HighlightingList
-            className="shopping-lists"
-            noMarkers
-            items={shoppingLists.map(sl => ({ ...sl, key: sl.id }))}
-            render={list => (
-              <button
-                key={list.id}
-                onClick={() => {
-                  navigate(`/shopping-lists/${list.id}`);
-                }}>
-                {list.name}
-              </button>
-            )}
-          />
-        </Popup>
+        <AddToShoppingListScreen recipeId={recipe.id} shoppingLists={shoppingLists} />
       </TitledSection>
 
       <TitledSection title="Treść">
