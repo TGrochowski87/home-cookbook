@@ -1,3 +1,3 @@
 ﻿namespace Cookbook.Contracts.ShoppingLists;
 
-public record ShoppingSublistUpdateDto(int Count);
+public record ShoppingSublistUpdateDto(decimal Count);

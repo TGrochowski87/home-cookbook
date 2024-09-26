@@ -14,5 +14,5 @@ internal interface IShoppingListRepository
   
   Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId);
   
-  Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, int count);
+  Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count);
 }

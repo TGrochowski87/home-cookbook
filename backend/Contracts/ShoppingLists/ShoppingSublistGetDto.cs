@@ -2,4 +2,4 @@
 
 namespace Cookbook.Contracts.ShoppingLists;
 
-public record ShoppingSublistGetDto(int Id, string Name, int? RecipeId, int Count, List<QuantifiableItemGetDto> Items);
+public record ShoppingSublistGetDto(int Id, string Name, int? RecipeId, decimal Count, List<QuantifiableItemGetDto> Items);

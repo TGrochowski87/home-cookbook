@@ -10,7 +10,7 @@ internal partial class ShoppingSublist
 
   public int? RecipeId { get; set; }
 
-  public int Count { get; set; }
+  public decimal Count { get; set; }
 
   public virtual List List { get; set; } = null!;
 

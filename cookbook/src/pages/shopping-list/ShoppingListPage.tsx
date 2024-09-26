@@ -45,16 +45,16 @@ const ShoppingListPage = () => {
   };
 
   const onIncrementHandler = async (sublist: ShoppingListSublist) => {
-    await api.patch.updateShoppingSublistCount(sublist.id, sublist.count + 1);
+    await api.patch.updateShoppingSublistCount(sublist.id, sublist.count + 0.5);
     const updatedShoppingList = await api.get.getShoppingList(shoppingList.id);
     setShoppingList(prepareShoppingList(updatedShoppingList));
   };
 
   const onDecrementHandler = async (sublist: ShoppingListSublist) => {
-    if (sublist.count === 1) {
+    if (sublist.count === 0.5) {
       await api.delete.deleteShoppingListSublist(sublist.id);
     } else {
-      await api.patch.updateShoppingSublistCount(sublist.id, sublist.count - 1);
+      await api.patch.updateShoppingSublistCount(sublist.id, sublist.count - 0.5);
     }
 
     const updatedShoppingList = await api.get.getShoppingList(shoppingList.id);

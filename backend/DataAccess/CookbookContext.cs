@@ -38,6 +38,8 @@ internal partial class CookbookContext : DbContext
 
       entity.ToTable("categories");
 
+      entity.HasIndex(e => e.Name, "categories_name_key").IsUnique();
+
       entity.Property(e => e.Id)
         .ValueGeneratedNever()
         .HasColumnName("id");
@@ -150,7 +152,9 @@ internal partial class CookbookContext : DbContext
       entity.ToTable("shopping_sublists");
 
       entity.Property(e => e.Id).HasColumnName("id");
-      entity.Property(e => e.Count).HasColumnName("count");
+      entity.Property(e => e.Count)
+        .HasPrecision(2, 1)
+        .HasColumnName("count");
       entity.Property(e => e.ListId).HasColumnName("list_id");
       entity.Property(e => e.RecipeId).HasColumnName("recipe_id");
       entity.Property(e => e.ShoppingListId).HasColumnName("shopping_list_id");
@@ -174,6 +178,8 @@ internal partial class CookbookContext : DbContext
       entity.HasKey(e => e.Id).HasName("tags_pkey");
 
       entity.ToTable("tags");
+
+      entity.HasIndex(e => e.Name, "tags_name_key").IsUnique();
 
       entity.Property(e => e.Id).HasColumnName("id");
       entity.Property(e => e.Name)

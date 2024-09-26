@@ -30,6 +30,6 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   public Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId)
     => shoppingListRepository.RemoveSublist(shoppingSublistId);
 
-  public Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, int count) 
+  public Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count) 
     => shoppingListRepository.UpdateSublistCount(shoppingSublistId, count);
 }

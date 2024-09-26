@@ -3,4 +3,4 @@ using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;
 
-internal record ShoppingSublist(int Id, string Name, Maybe<int?> RecipeId, int Count, List<QuantifiableItemGet> Items);
+internal record ShoppingSublist(int Id, string Name, Maybe<int?> RecipeId, decimal Count, List<QuantifiableItemGet> Items);

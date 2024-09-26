@@ -46,7 +46,7 @@ CREATE TABLE shopping_sublists (
   shopping_list_id int NOT NULL,
   list_id int NOT NULL,
   recipe_id int,
-  count int NOT NULL,
+  count numeric(2, 1) NOT NULL,
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE,
   CONSTRAINT fk_shopping_list FOREIGN KEY (shopping_list_id) REFERENCES shopping_lists (id) ON DELETE CASCADE,
   CONSTRAINT fk_recipe FOREIGN KEY (recipe_id) REFERENCES recipes (id) ON DELETE CASCADE

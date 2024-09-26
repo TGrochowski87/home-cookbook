@@ -94,7 +94,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     return UnitResult.Success<Error>();
   }
 
-  public async Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, int count)
+  public async Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count)
   {
     var shoppingSublist = await context.ShoppingSublists
       .SingleOrDefaultAsync(ss => ss.Id == shoppingSublistId);
