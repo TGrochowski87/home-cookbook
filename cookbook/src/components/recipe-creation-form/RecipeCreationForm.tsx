@@ -44,6 +44,7 @@ const getDefaultFormValues = (recipe?: RecipeDetailsGetDto): RecipeData => {
   };
 };
 
+// TODO: Confirmation on leaving with pending changes
 const RecipeCreationForm = ({
   recipe,
   categories,

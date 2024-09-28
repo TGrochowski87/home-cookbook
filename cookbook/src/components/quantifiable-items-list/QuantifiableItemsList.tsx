@@ -14,7 +14,7 @@ const QuantifiableItemsList = ({ items, leftSideAction, rightSideAction }: Quant
   return (
     <HighlightingList
       className="quantifiable-items-list"
-      items={items}
+      items={items.toSorted((a, b) => +a.checked - +b.checked)}
       render={item => (
         <QuantifiableItem
           key={item.key}

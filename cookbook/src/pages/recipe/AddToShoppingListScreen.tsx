@@ -25,7 +25,7 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
       className="add-to-shopping-list-popup"
       trigger={
         <div className="add-to-shopping-list-button-space">
-          <button>Dodaj niezaznaczone do listy zakupów</button>
+          <button>Dodaj składniki do listy zakupów</button>
         </div>
       }
       title="Wybierz listę"
