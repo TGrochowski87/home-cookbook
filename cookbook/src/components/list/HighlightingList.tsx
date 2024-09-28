@@ -21,11 +21,26 @@ const HighlightingList = <T extends { readonly key: string | number }>({
   const [highlightedItem, setHighlightedItem] = useState<T["key"]>();
   const listRef = useRef<HTMLOListElement>(null); // This is needed for setting up event handlers because React's onTouch events are passive.
 
+  /**
+   * These two hooks are use for enabling highlighting only after a short time of holding the touch.
+   * Highlighting should not hijack every page scrolling attempt.
+   */
+  const timeoutId = useRef<number>();
+  const [highlightingActive, setHighlightingActive] = useState<boolean>(false);
+
   const handleTouchStart = (key: T["key"]) => {
-    setHighlightedItem(key);
+    timeoutId.current = setTimeout(() => {
+      setHighlightedItem(key);
+      setHighlightingActive(true);
+    }, 200);
   };
 
   const handleTouchMove = (event: TouchEvent) => {
+    if (highlightingActive === false) {
+      clearTimeout(timeoutId.current);
+      return;
+    }
+
     event.preventDefault();
 
     const touch = event.touches[0];
@@ -39,6 +54,7 @@ const HighlightingList = <T extends { readonly key: string | number }>({
   };
 
   const handleTouchEnd = () => {
+    setHighlightingActive(false);
     setHighlightedItem(undefined);
   };
 
