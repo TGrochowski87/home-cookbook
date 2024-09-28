@@ -9,6 +9,9 @@ interface HighlightingListProps<T extends { readonly key: string | number }> {
   readonly className?: string;
 }
 
+/**
+ * A list of items that get highlighted when the user moves their finger over them.
+ */
 const HighlightingList = <T extends { readonly key: string | number }>({
   items,
   render,
@@ -16,18 +19,15 @@ const HighlightingList = <T extends { readonly key: string | number }>({
   noMarkers = false,
 }: HighlightingListProps<T>) => {
   const [highlightedItem, setHighlightedItem] = useState<T["key"]>();
-  const listRef = useRef<HTMLOListElement>(null); // This is needed because React's onTouch events are passive
-  const isScrolling = useRef<boolean>(false);
+  const listRef = useRef<HTMLOListElement>(null); // This is needed for setting up event handlers because React's onTouch events are passive.
 
   const handleTouchStart = (key: T["key"]) => {
-    isScrolling.current = false;
     setHighlightedItem(key);
   };
 
   const handleTouchMove = (event: TouchEvent) => {
     event.preventDefault();
 
-    isScrolling.current = true;
     const touch = event.touches[0];
     const element = document.elementFromPoint(touch.clientX, touch.clientY)!;
     if (element) {
@@ -38,13 +38,8 @@ const HighlightingList = <T extends { readonly key: string | number }>({
     }
   };
 
-  const handleTouchEnd = (event: TouchEvent) => {
-    if (isScrolling.current) {
-      event.preventDefault();
-    }
-
+  const handleTouchEnd = () => {
     setHighlightedItem(undefined);
-    isScrolling.current = false;
   };
 
   useEffect(() => {
