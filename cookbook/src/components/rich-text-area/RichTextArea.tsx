@@ -10,13 +10,13 @@ import Highlight from "@tiptap/extension-highlight";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 import TaskList from "@tiptap/extension-task-list";
-import TaskItem from "@tiptap/extension-task-item";
-import ListItem from "@tiptap/extension-list-item";
 import History from "@tiptap/extension-history";
 import Toolbar from "./Toolbar";
 import "./styles.less";
-import CustomHeading from "./CustomHeading";
+import CustomHeading from "./extensions/CustomHeading";
 import { useEffect } from "react";
+import CustomListItem from "./extensions/CustomListItem";
+import CustomTaskItem from "./extensions/CustomTaskItem";
 
 interface RichTextAreaProps {
   readonly value: string;
@@ -39,9 +39,9 @@ const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) 
       CustomHeading,
       BulletList.configure({ keepAttributes: true, keepMarks: true }),
       OrderedList.configure({ keepAttributes: true, keepMarks: true }),
-      ListItem,
+      CustomListItem,
       TaskList,
-      TaskItem.configure({ nested: true }),
+      CustomTaskItem,
       History,
     ],
     content: value,

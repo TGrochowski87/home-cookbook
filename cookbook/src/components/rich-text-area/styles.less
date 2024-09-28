@@ -126,16 +126,18 @@
 
     ul[data-type="taskList"] {
       list-style: none;
-      // padding: 0;
 
       li {
         position: relative;
         display: flex;
 
         > label {
-          position: absolute;
+          width: 0;
+          position: relative;
+          margin-block: auto;
+          // position: absolute;
+          // bottom: 10%;
           left: -1.5rem;
-          // margin-right: 0.5rem;
         }
       }
     }
