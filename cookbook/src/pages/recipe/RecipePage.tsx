@@ -10,6 +10,13 @@ import RichTextArea from "components/rich-text-area/RichTextArea";
 import { CirclePlus, Edit, Trash2 } from "lucide-react";
 import { useAlerts } from "components/alert/AlertStack";
 import AddToShoppingListScreen from "./AddToShoppingListScreen";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import QuantifiableItemData from "models/QuantifiableItemData";
+
+interface CheckboxChecks {
+  readonly ingredients: readonly number[];
+  readonly checkboxesInDescription: readonly number[];
+}
 
 interface LoaderResponse {
   readonly recipe: RecipeDetailsGetDto;
@@ -28,6 +35,109 @@ const RecipePage = () => {
   const { recipe, shoppingLists } = useLoaderData() as LoaderResponse;
   const navigate = useNavigate();
 
+  // This list needs to be created in this component as it is used for checkbox state caching mechanism.
+  const [ingredients, setIngredients] = useState<ReadonlyArray<QuantifiableItemData>>(
+    recipe.ingredients.map(i => ({ ...i, key: i.id }))
+  );
+
+  // Reference to array under useRef is not changed on rerender, so it can be safely used in cleanup functions.
+  const ingredientChecks = useRef<readonly number[]>([]);
+
+  const cacheCheckboxChecksInSessionStorage = () => {
+    const richTextArea = document.getElementsByClassName("rich-text-area-editor")[0] as HTMLDivElement;
+
+    /**
+     * This is probably only needed in development as this is the cleanup function and the problem is that
+     * component dismounts right away in strict mode before rich-text-area-editor is rendered.
+     */
+    if (richTextArea === undefined) {
+      return;
+    }
+    const checkboxes = [...richTextArea.getElementsByTagName("input")];
+    const indexesOfChecked = [];
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].getAttribute("checked") === "true") {
+        indexesOfChecked.push(i);
+      }
+    }
+
+    const checksObject: CheckboxChecks = {
+      ingredients: ingredientChecks.current,
+      checkboxesInDescription: indexesOfChecked,
+    };
+
+    // TODO: Clear session storage on recipe edit.
+    sessionStorage.setItem(`checks-recipe-${recipe.id}`, JSON.stringify(checksObject));
+  };
+
+  /**
+   * This keeps ingredientChecks ref up to date.
+   */
+  useEffect(() => {
+    ingredientChecks.current = ingredients.filter(i => i.checked).map(i => i.key as number); // In this view all keys should be IDs, because ingredients are all saved.
+  }, [ingredients]);
+
+  /**
+   * This handles reading checkbox state from sessionStorage as a component setup.
+   * It also fills the cache on component dismount.
+   *
+   * It must be useLayoutEffect as normal useEffect fires after rich-text-area-editor is already removed from the DOM.
+   */
+  useLayoutEffect(() => {
+    const cachedChecks = sessionStorage.getItem(`checks-recipe-${recipe.id}`);
+    if (cachedChecks) {
+      const checks = JSON.parse(cachedChecks) as CheckboxChecks;
+
+      setIngredients(prev =>
+        prev.map(i => (checks.ingredients.includes(i.key as number) ? { ...i, checked: true } : i))
+      );
+
+      /**
+       * TipTap does not provide any event that fires after the text content is loaded, so the best I can do is
+       * retrying a bunch of times.
+       */
+      let retryCount = 0;
+      const intervalId = setInterval(() => {
+        if (retryCount == 10) {
+          clearInterval(intervalId);
+          return;
+        }
+
+        const richTextArea = document.getElementsByClassName("rich-text-area-editor")[0] as HTMLDivElement;
+        if (richTextArea === undefined) {
+          retryCount++;
+          return;
+        }
+
+        const checkboxes = [...richTextArea.getElementsByTagName("input")];
+        checks.checkboxesInDescription.forEach(i => {
+          /**
+           * TipTap's checkboxes' HTML in read-only mode do not change at all on click, but somehow they get checked
+           * when this attribute is provided.
+           */
+          checkboxes[i].setAttribute("checked", "true");
+        });
+
+        clearInterval(intervalId);
+      }, 100);
+    }
+
+    return () => {
+      cacheCheckboxChecksInSessionStorage();
+    };
+  }, []);
+
+  /**
+   * useEffect cleanup does not fire on page close/refresh so this is also needed.
+   */
+  useEffect(() => {
+    window.addEventListener("beforeunload", cacheCheckboxChecksInSessionStorage);
+
+    return () => {
+      window.removeEventListener("beforeunload", cacheCheckboxChecksInSessionStorage);
+    };
+  }, [ingredients]);
+
   return (
     <div className="page recipe-page">
       <header>
@@ -45,7 +155,7 @@ const RecipePage = () => {
       <TagSet tags={recipe.tags} tagSize="small" />
 
       <TitledSection title="Składniki">
-        <IngredientListRead ingredients={recipe.ingredients} />
+        <IngredientListRead ingredients={ingredients} setIngredients={setIngredients} />
         <AddToShoppingListScreen recipeId={recipe.id} shoppingLists={shoppingLists} />
       </TitledSection>
 

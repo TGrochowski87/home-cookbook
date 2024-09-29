@@ -26,6 +26,7 @@ export type IngredientGetDto = {
   readonly id: number;
   readonly name: string;
   readonly amount: Amount;
+  readonly checked: boolean;
 };
 
 export interface Amount {
