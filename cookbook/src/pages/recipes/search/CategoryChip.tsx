@@ -10,7 +10,6 @@ const CategoryChip = ({ category }: CategoryChipProps) => {
   return (
     <>
       <input type="radio" name="category" id={category.name} value={category.name} />
-      {/* @ts-ignore */}
       <label
         className="category-chip block floating interactive-element"
         style={{ "--color": category.color }}

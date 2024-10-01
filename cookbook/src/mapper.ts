@@ -1,8 +1,8 @@
-import { ShoppingItemGetDto, ShoppingListDetailsGetDto, ShoppingListSublistGetDto } from "api/GET/DTOs";
+import { QuantifiableItemGetDto, ShoppingListDetailsGetDto, ShoppingListSublistGetDto } from "api/GET/DTOs";
 import QuantifiableItemData from "models/QuantifiableItemData";
 import { ShoppingList, ShoppingListSublist } from "models/ShoppingList";
 
-const toShoppingItem = (from: ShoppingItemGetDto): QuantifiableItemData => {
+const toShoppingItem = (from: QuantifiableItemGetDto): QuantifiableItemData => {
   return {
     ...from,
     key: from.id,

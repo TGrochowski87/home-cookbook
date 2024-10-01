@@ -1,4 +1,4 @@
-import { IngredientGetDto } from "api/GET/DTOs";
+import { QuantifiableItemGetDto } from "api/GET/DTOs";
 
 export interface RecipeCreateDto {
   readonly name: string;
@@ -10,7 +10,7 @@ export interface RecipeCreateDto {
   readonly description: string;
 }
 
-export type IngredientCreateDto = Omit<IngredientGetDto, "id">;
+export type IngredientCreateDto = Omit<QuantifiableItemGetDto, "id">;
 
 export interface TagCreateDto {
   readonly name: string;

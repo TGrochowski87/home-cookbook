@@ -18,11 +18,11 @@ export interface RecipeGetDto {
 }
 
 export interface RecipeDetailsGetDto extends RecipeGetDto {
-  readonly ingredients: readonly IngredientGetDto[];
+  readonly ingredients: readonly QuantifiableItemGetDto[];
   readonly description: string;
 }
 
-export type IngredientGetDto = {
+export type QuantifiableItemGetDto = {
   readonly id: number;
   readonly name: string;
   readonly amount: Amount;
@@ -50,9 +50,5 @@ export interface ShoppingListSublistGetDto {
   readonly name: string;
   readonly recipeId?: number;
   readonly count: number;
-  readonly items: readonly ShoppingItemGetDto[];
-}
-
-export interface ShoppingItemGetDto extends IngredientGetDto {
-  readonly checked: boolean;
+  readonly items: readonly QuantifiableItemGetDto[];
 }

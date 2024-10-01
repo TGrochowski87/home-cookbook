@@ -17,8 +17,8 @@
     display: flex;
     align-items: center;
 
-    > *:first-child {
-      margin-right: auto;
+    > * {
+      flex-shrink: 0;
     }
 
     > h2 {
@@ -27,8 +27,18 @@
     }
 
     a {
+      margin-right: 1rem;
       display: flex;
       align-items: center;
+      overflow: hidden;
+      flex-shrink: 1;
+
+      h2 {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
     }
 
     svg {
