@@ -1,4 +1,5 @@
-﻿using Cookbook.Features.ShoppingLists;
+﻿using Cookbook.Contracts.ShoppingLists.Update;
+using Cookbook.Features.ShoppingLists;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;
@@ -20,12 +21,24 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     app.MapPost("/shopping-lists/{id:int}/sublists", AddRecipeIngredients)
       .WithTags("ShoppingLists");
 
-    app.MapDelete("/shopping-lists/sublists/{sublistId:int}", RemoveRecipeIngredients)
-      .WithTags("ShoppingLists");
+    // app.MapDelete("/shopping-lists/sublists/{sublistId:int}", RemoveRecipeIngredients)
+    //   .WithTags("ShoppingLists");
+    //
+    // app.MapPatch("/shopping-lists/sublists/{sublistId:int}", UpdateShoppingSublistCount)
+    //   .WithTags("ShoppingLists")
+    //   .AddFluentValidationAutoValidation();
     
-    app.MapPatch("/shopping-lists/sublists/{sublistId:int}", UpdateShoppingSublistCount)
+    app.MapPatch("./shopping-lists/{id:int}", UpdateShoppingList)
       .WithTags("ShoppingLists")
       .AddFluentValidationAutoValidation();
+  }
+
+  private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>>> UpdateShoppingList(
+    [FromServices] IShoppingListService shoppingListService,
+    [FromRoute] int id,
+    [FromBody] ShoppingListUpdateDto dto)
+  {
+    
   }
 
   private static async Task<Results<NoContent, NotFound<string>>> UpdateShoppingSublistCount(

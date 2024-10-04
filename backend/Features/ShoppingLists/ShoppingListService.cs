@@ -1,4 +1,6 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Net;
+using Cookbook.Features.ShoppingLists.Update;
+using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;
 
@@ -17,19 +19,95 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
         await shoppingListRepository.Remove(shoppingList.Id);
       }
     }
-    
+
     return test.FirstOrDefault(group => group.Key == false)?.ToList() ?? [];
   }
 
-  public Task<Maybe<ShoppingListDetails>> GetById(int id) 
+  public Task<Maybe<ShoppingListDetails>> GetById(int id)
     => shoppingListRepository.GetById(id);
 
-  public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId) 
+  public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
     => shoppingListRepository.CreateSublist(shoppingListId, recipeId);
 
   public Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId)
     => shoppingListRepository.RemoveSublist(shoppingSublistId);
 
-  public Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count) 
+  public Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count)
     => shoppingListRepository.UpdateSublistCount(shoppingSublistId, count);
+
+  public async Task<UnitResult<Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
+  {
+    var shoppingListMaybe = await shoppingListRepository.GetById(id);
+    if (shoppingListMaybe.HasNoValue)
+    {
+      return new Error(HttpStatusCode.NotFound, "Lista o podanym ID nie istnieje.");
+    }
+    
+    return await shoppingListRepository.GetById(id).Bind()
+
+    var shoppingList = shoppingListMaybe.Value;
+  }
+
+  private UnitResult<Error> ValidateShoppingListUpdateWithDbData(
+    ShoppingListUpdate updateData,
+    ShoppingListDetails currentData)
+  {
+    if (updateData.Sublists.HasNoValue)
+    {
+      return UnitResult.Success<Error>();
+    }
+
+    foreach (var sublistUpdate in updateData.Sublists.Value)
+    {
+      var sublist = currentData.Sublists.SingleOrDefault(ss => ss.Id == sublistUpdate.Id);
+      if (sublist is null)
+      {
+        return new Error(HttpStatusCode.NotFound, $"Podlista o ID = {sublistUpdate.Id} nie istnieje.");
+      }
+
+      var sublistValidationResult = sublistUpdate.State.Match(
+        state => ValidateShoppingSublistStateUpdateWithDbData(state, sublist),
+        () => sublist.RecipeId.HasNoValue
+          ? new Error(HttpStatusCode.BadRequest, "Nie można usunąć manualnej podlisty z listy zakupów.")
+          : UnitResult.Success<Error>());
+
+      if (sublistValidationResult.IsFailure)
+      {
+        return sublistValidationResult;
+      }
+    }
+
+    return UnitResult.Success<Error>();
+  }
+
+  private UnitResult<Error> ValidateShoppingSublistStateUpdateWithDbData(
+    ShoppingSublistStateUpdate sublistStateUpdate, 
+    ShoppingSublist currentData)
+  {
+    if (sublistStateUpdate.Items.HasNoValue)
+    {
+      return UnitResult.Success<Error>();
+    }
+
+    foreach (var itemUpdate in sublistStateUpdate.Items.Value)
+    {
+      var errorMaybe = itemUpdate switch
+      {
+        ListItemDelete delete when currentData.Items.Any(item => item.Id == delete.Id) == false
+          => new Error(HttpStatusCode.NotFound, $"Element o ID = {delete.Id} nie istnieje."),
+        ListItemUpdate update when currentData.Items.Any(item => item.Id == update.Id) == false
+          => new Error(HttpStatusCode.NotFound, $"Element o ID = {update.Id} nie istnieje."),
+        ListItemCreate create when currentData.Items.Any(item => item.Name == create.Name)
+          => new Error(HttpStatusCode.BadRequest, $"Element o nazwie {create.Name} już istnieje."),
+        _ => UnitResult.Success<Error>()
+      };
+
+      if (errorMaybe.IsFailure)
+      {
+        return errorMaybe;
+      }
+    }
+
+    return UnitResult.Success<Error>();
+  }
 }

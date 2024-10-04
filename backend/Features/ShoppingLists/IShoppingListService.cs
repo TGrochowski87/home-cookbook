@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Cookbook.Features.ShoppingLists.Update;
+using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;
 
@@ -13,4 +14,6 @@ internal interface IShoppingListService
   Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId);
   
   Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count);
+
+  Task<UnitResult<Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData);
 }

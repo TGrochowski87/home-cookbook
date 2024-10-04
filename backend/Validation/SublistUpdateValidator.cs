@@ -1,4 +1,5 @@
 ﻿using Cookbook.Contracts.ShoppingLists;
+using Cookbook.Contracts.ShoppingLists.Update;
 using FluentValidation;
 
 namespace Cookbook.Validation;

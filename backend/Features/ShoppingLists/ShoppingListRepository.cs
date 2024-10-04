@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Cookbook.DataAccess;
+using Cookbook.Features.ShoppingLists.Update;
 using Cookbook.Mappers;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -104,6 +105,49 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     }
     
     shoppingSublist.Count = count;
+    await context.SaveChangesAsync();
+    
+    return UnitResult.Success<Error>();
+  }
+  
+  public async Task<UnitResult<Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
+  {
+    var shoppingList = await context.ShoppingLists
+      .Include(sl => sl.ShoppingSublists)
+      .ThenInclude(ss => ss.List)
+      .ThenInclude(l => l.QuantifiableItems)
+      .SingleOrDefaultAsync(sl => sl.Id == id);
+    
+    if (shoppingList is null)
+    {
+      return new Error(HttpStatusCode.NotFound, "Lista o podanym ID nie istnieje.");
+    }
+    
+    
+    shoppingList.Name = updateData.Name.HasValue ? updateData.Name.Value : shoppingList.Name;
+
+    if (updateData.Sublists.HasValue)
+    {
+      foreach (var sublistUpdate in updateData.Sublists.Value)
+      {
+        var sublist = shoppingList.ShoppingSublists.SingleOrDefault(ss => ss.Id == sublistUpdate.Id);
+        if (sublist is null)
+        {
+          return new Error(HttpStatusCode.NotFound, $"Podlista o ID = {sublistUpdate.Id} nie istnieje.");
+        }
+        
+        if (sublistUpdate.State.HasNoValue)
+        {
+          if (sublist.RecipeId is null)
+          {
+            return new Error(HttpStatusCode.BadRequest)
+          }
+        }
+      }
+    }
+    
+    
+    shoppingList.Updatedate = DateTime.Now;
     await context.SaveChangesAsync();
     
     return UnitResult.Success<Error>();

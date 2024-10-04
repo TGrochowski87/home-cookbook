@@ -2,10 +2,12 @@
 using Cookbook.Contracts.Common;
 using Cookbook.Contracts.Recipes;
 using Cookbook.Contracts.ShoppingLists;
+using Cookbook.Contracts.ShoppingLists.Update;
 using Cookbook.Contracts.Tags;
 using Cookbook.Features.Common;
 using Cookbook.Features.Recipes;
 using Cookbook.Features.ShoppingLists;
+using Cookbook.Features.ShoppingLists.Update;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 using Category = Cookbook.Features.Categories.Category;
@@ -103,7 +105,43 @@ internal static class EndpointModelMapper
       dto.CategoryId, 
       dto.TagIds ?? [], 
       dto.NewTags != null ? Map(dto.NewTags) : [],
-      dto.Image == null ? Maybe<IFormFile>.None : Maybe<IFormFile>.From(dto.Image), 
+      Maybe<IFormFile>.From(dto.Image), 
       dto.Description ?? "", 
       dto.Ingredients != null ? Map(dto.Ingredients) : []);
+
+  public static ShoppingListUpdate Map(ShoppingListUpdateDto dto)
+  {
+    var updateModel = new ShoppingListUpdate(
+      dto.Name, 
+      dto.Sublists?.Select(MapShoppingSublistUpdateDto).ToList());
+    
+    return updateModel;
+
+    ShoppingSublistUpdate MapShoppingSublistUpdateDto(ShoppingSublistUpdateDto shoppingSublistDto)
+    {
+      var state = shoppingSublistDto.State is not null 
+        ? new ShoppingSublistStateUpdate(
+          shoppingSublistDto.State.Count, 
+          shoppingSublistDto.State.Items?.Select(MapListItemUpdateDto).ToList()) 
+        : null;
+      
+      return new ShoppingSublistUpdate(shoppingSublistDto.Id, state);
+    }
+      
+    ListItemRelatedChange MapListItemUpdateDto(ListItemUpdateDto listItemDto)
+    {
+      return (listItemDto.Id, listItemDto.State) switch
+      {
+        (null, null) => throw new ArgumentException("All properties of an object in list of update objects are null."),
+        (_, null) => new ListItemDelete((int)listItemDto.Id),
+        (_, { Amount: null, Name: null }) => new ListItemUpdate((int)listItemDto.Id!, (bool)listItemDto.State.Checked!),
+        (null, { Amount: not null, Name: not null, Checked: not null })
+          => new ListItemCreate(
+            listItemDto.State.Name,
+            new Amount(listItemDto.State.Amount.Value, listItemDto.State.Amount.Unit),
+            (bool)listItemDto.State.Checked),
+        _ => throw new ArgumentException("This case should not be reached.")
+      };
+    }
+  }
 }

@@ -3,7 +3,6 @@ using Cookbook.Features.Common;
 using Cookbook.Features.Recipes;
 using Cookbook.Features.ShoppingLists;
 using Cookbook.Features.Tags;
-using CSharpFunctionalExtensions;
 using Category = Cookbook.Features.Categories.Category;
 using QuantifiableItemGet = Cookbook.Features.Common.QuantifiableItemGet;
 using Recipe = Cookbook.DataAccess.Recipe;
@@ -36,7 +35,7 @@ internal static class RepositoryModelMapper
     => entities.Select(Map).ToList();
 
   public static QuantifiableItemGet Map(DataAccess.QuantifiableItem entity)
-    => new(entity.Id, entity.Name, new Amount(entity.Value, entity.Unit ?? Maybe<string?>.None), entity.Checked);
+    => new(entity.Id, entity.Name, new Amount(entity.Value, entity.Unit), entity.Checked);
   
   public static List<QuantifiableItemGet> Map(IEnumerable<DataAccess.QuantifiableItem> entities)
     => entities.Select(Map).ToList();
@@ -47,15 +46,15 @@ internal static class RepositoryModelMapper
       entity.Name,
       Map(entity.Category),
       Map(entity.Tags),
-      entity.ImageSrc ?? Maybe<string?>.None, 
-      entity.Description ?? "", 
+      entity.ImageSrc, 
+      entity.Description, 
       Map(entity.List.QuantifiableItems));
     
   public static ShoppingSublist Map(DataAccess.ShoppingSublist entity) 
     => new(
       entity.Id, 
       entity.Recipe?.Name ?? "Manualnie dodane",
-      entity.Recipe?.Id ?? Maybe<int?>.None,
+      entity.Recipe?.Id,
       entity.Count,
       Map(entity.List.QuantifiableItems));
   
