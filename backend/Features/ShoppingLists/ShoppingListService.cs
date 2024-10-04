@@ -37,15 +37,9 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
 
   public async Task<UnitResult<Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
   {
-    var shoppingListMaybe = await shoppingListRepository.GetById(id);
-    if (shoppingListMaybe.HasNoValue)
-    {
-      return new Error(HttpStatusCode.NotFound, "Lista o podanym ID nie istnieje.");
-    }
-    
-    return await shoppingListRepository.GetById(id).Bind()
-
-    var shoppingList = shoppingListMaybe.Value;
+    return await shoppingListRepository.GetById(id)
+      .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
+      .Bind(() => shoppingListRepository.UpdateShoppingList(id, updateData));
   }
 
   private UnitResult<Error> ValidateShoppingListUpdateWithDbData(

@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics;
+using System.Net;
 using Cookbook.DataAccess;
 using Cookbook.Features.ShoppingLists.Update;
 using Cookbook.Mappers;
@@ -122,9 +123,9 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     
     if (shoppingList is null)
     {
-      return new Error(HttpStatusCode.NotFound, "Lista o podanym ID nie istnieje.");
+      throw new UnreachableException(
+        "The invalid shopping list scenario should have already been handled in the service layer.");
     }
-    
     
     shoppingList.Name = updateData.Name.HasValue ? updateData.Name.Value : shoppingList.Name;
 
@@ -133,17 +134,10 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       foreach (var sublistUpdate in updateData.Sublists.Value)
       {
         var sublist = shoppingList.ShoppingSublists.SingleOrDefault(ss => ss.Id == sublistUpdate.Id);
-        if (sublist is null)
-        {
-          return new Error(HttpStatusCode.NotFound, $"Podlista o ID = {sublistUpdate.Id} nie istnieje.");
-        }
         
         if (sublistUpdate.State.HasNoValue)
         {
-          if (sublist.RecipeId is null)
-          {
-            return new Error(HttpStatusCode.BadRequest)
-          }
+          
         }
       }
     }
