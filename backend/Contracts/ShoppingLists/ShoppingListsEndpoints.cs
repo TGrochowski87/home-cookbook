@@ -1,4 +1,6 @@
-﻿using Cookbook.Contracts.ShoppingLists.Update;
+﻿using System.Diagnostics;
+using System.Net;
+using Cookbook.Contracts.ShoppingLists.Update;
 using Cookbook.Features.ShoppingLists;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -81,13 +83,17 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     return TypedResults.Ok(shoppingListDtos);
   }
   
-  private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound>> GetShoppingListById(
+  private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>>> GetShoppingListById(
     [FromServices] IShoppingListService shoppingListService, [FromRoute] int id)
   {
     var shoppingList = await shoppingListService.GetById(id);
-    var test = shoppingList.Match<Results<Ok<ShoppingListDetailsGetDto>, NotFound>, ShoppingListDetails>(
+    var test = shoppingList.Match<ShoppingListDetails, Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>>, Error>(
       value => TypedResults.Ok(EndpointModelMapper.Map(value)), 
-      () => TypedResults.NotFound());
+      error => error.StatusCode switch
+      {
+        HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
+      });
 
     return test;
   }

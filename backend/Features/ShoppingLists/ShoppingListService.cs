@@ -23,7 +23,7 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
     return test.FirstOrDefault(group => group.Key == false)?.ToList() ?? [];
   }
 
-  public Task<Maybe<ShoppingListDetails>> GetById(int id)
+  public Task<Result<ShoppingListDetails, Error>> GetById(int id)
     => shoppingListRepository.GetById(id);
 
   public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)

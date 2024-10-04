@@ -86,7 +86,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       .ToList();
   }
 
-  public async Task<Maybe<RecipeDetailsGet>> GetById(int id)
+  public async Task<Result<RecipeDetailsGet, Error>> GetById(int id)
   {
     var entity = await context.Recipes
       .Include(r => r.Category)
@@ -95,7 +95,9 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       .ThenInclude(l => l.QuantifiableItems)
       .SingleOrDefaultAsync(r => r.Id == id);
     
-    return entity is not null ? RepositoryModelMapper.Map(entity) : Maybe<RecipeDetailsGet>.None;
+    return entity is not null 
+      ? RepositoryModelMapper.Map(entity) 
+      : new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
   }
 
   public async Task<UnitResult<Error>> SetImageSource(int recipeId, string imageSrc)

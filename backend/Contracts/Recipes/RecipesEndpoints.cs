@@ -47,9 +47,14 @@ public class RecipesEndpoints : IEndpointsDefinition
     [FromRoute] int id)
   {
     var recipe = await recipeService.GetById(id);
-    return recipe.Match<Results<Ok<RecipeDetailsGetDto>, NotFound<string>>, RecipeDetailsGet>(
+    
+    return recipe.Match<RecipeDetailsGet, Results<Ok<RecipeDetailsGetDto>, NotFound<string>>, Error>(
       value => TypedResults.Ok(EndpointModelMapper.Map(value)),
-      () => TypedResults.NotFound("Przepis o podanym ID nie istnieje."));
+      error => error.StatusCode switch
+      {
+        HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
+      });
   }
 
   private static async Task<Results<Created<int>, NotFound<string>>> CreateRecipe(

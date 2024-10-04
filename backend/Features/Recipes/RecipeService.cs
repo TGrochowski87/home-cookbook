@@ -56,7 +56,7 @@ internal class RecipeService : IRecipeService
   public async Task<List<RecipeGet>> GetAll()
     => await _recipeRepository.GetAll();
 
-  public async Task<Maybe<RecipeDetailsGet>> GetById(int id) 
+  public async Task<Result<RecipeDetailsGet, Error>> GetById(int id) 
     => await _recipeRepository.GetById(id);
 
   private async Task<UnitResult<Error>> SaveRecipeImage(int recipeId, IFormFile image)

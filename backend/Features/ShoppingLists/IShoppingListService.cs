@@ -7,7 +7,7 @@ internal interface IShoppingListService
 {
   Task<List<ShoppingList>> GetAll();
   
-  Task<Maybe<ShoppingListDetails>> GetById(int id);
+  Task<Result<ShoppingListDetails, Error>> GetById(int id);
   
   Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId);
   

@@ -15,7 +15,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     return RepositoryModelMapper.Map(entities);
   }
 
-  public async Task<Maybe<ShoppingListDetails>> GetById(int id)
+  public async Task<Result<ShoppingListDetails, Error>> GetById(int id)
   {
     var entity = await context.ShoppingLists
       .Include(sl => sl.ShoppingSublists)
@@ -25,7 +25,9 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       .ThenInclude(sub => sub.Recipe)
       .SingleOrDefaultAsync(sl => sl.Id == id);
     
-    return entity != null ? RepositoryModelMapper.Map<ShoppingListDetails>(entity) : Maybe<ShoppingListDetails>.None;
+    return entity != null 
+      ? RepositoryModelMapper.Map<ShoppingListDetails>(entity) 
+      : new Error(HttpStatusCode.NotFound, "Lista o podanym ID nie istnieje.");
   }
 
   public async Task Remove(int id)
