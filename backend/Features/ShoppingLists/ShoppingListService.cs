@@ -39,7 +39,7 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   {
     return await shoppingListRepository.GetById(id)
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
-      .Bind(() => shoppingListRepository.UpdateShoppingList(id, updateData));
+      .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData));
   }
 
   private UnitResult<Error> ValidateShoppingListUpdateWithDbData(

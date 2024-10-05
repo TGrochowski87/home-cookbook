@@ -113,19 +113,13 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     return UnitResult.Success<Error>();
   }
   
-  public async Task<UnitResult<Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
+  public async Task UpdateShoppingList(int id, ShoppingListUpdate updateData)
   {
     var shoppingList = await context.ShoppingLists
       .Include(sl => sl.ShoppingSublists)
       .ThenInclude(ss => ss.List)
       .ThenInclude(l => l.QuantifiableItems)
-      .SingleOrDefaultAsync(sl => sl.Id == id);
-    
-    if (shoppingList is null)
-    {
-      throw new UnreachableException(
-        "The invalid shopping list scenario should have already been handled in the service layer.");
-    }
+      .FirstAsync(sl => sl.Id == id);
     
     shoppingList.Name = updateData.Name.HasValue ? updateData.Name.Value : shoppingList.Name;
 
@@ -133,19 +127,59 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     {
       foreach (var sublistUpdate in updateData.Sublists.Value)
       {
-        var sublist = shoppingList.ShoppingSublists.SingleOrDefault(ss => ss.Id == sublistUpdate.Id);
-        
+        var sublist = shoppingList.ShoppingSublists.First(ss => ss.Id == sublistUpdate.Id);
+
         if (sublistUpdate.State.HasNoValue)
         {
-          
+          // This way the cascading delete should also remove the sublist and items.
+          context.Lists.Remove(sublist.List);
+          continue;
+        }
+
+        sublist.Count = sublistUpdate.State.HasValue 
+          ? (decimal)sublistUpdate.State.Value.Count.Value! 
+          : sublist.Count;
+
+        if(sublistUpdate.State.Value.Items.HasValue)
+        {
+          var sublistItems = sublistUpdate.State.Value.Items.Value;
+          sublistItems.ForEach(item => ProcessShoppingListItemChange(sublist, item));
         }
       }
     }
     
-    
     shoppingList.Updatedate = DateTime.Now;
     await context.SaveChangesAsync();
-    
-    return UnitResult.Success<Error>();
+  }
+
+  private void ProcessShoppingListItemChange(DataAccess.ShoppingSublist relatedSublist, ListItemRelatedChange listItemChange)
+  {
+    switch (listItemChange)
+    {
+      case ListItemDelete delete:
+        {
+          var item = relatedSublist.List.QuantifiableItems.First(item => item.Id == delete.Id);
+          context.QuantifiableItems.Remove(item);
+          break;
+        }
+      case ListItemUpdate update:
+        {
+          var item = relatedSublist.List.QuantifiableItems.First(item => item.Id == update.Id);
+          item.Checked = update.Checked;
+          break;
+        }
+      case ListItemCreate create:
+        {
+          var newItem = new QuantifiableItem
+          {
+            Name = create.Name,
+            Value = create.Amount.Value,
+            Unit = create.Amount.Unit.GetValueOrDefault(),
+            Checked = create.Checked
+          };
+          relatedSublist.List.QuantifiableItems.Add(newItem);
+          break;
+        }
+    }
   }
 }

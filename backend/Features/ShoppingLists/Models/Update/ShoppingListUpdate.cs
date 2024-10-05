@@ -7,7 +7,7 @@ internal record ShoppingListUpdate(Maybe<string> Name, Maybe<List<ShoppingSublis
 
 internal record ShoppingSublistUpdate(int Id, Maybe<ShoppingSublistStateUpdate> State);
 
-internal record ShoppingSublistStateUpdate(Maybe<int?> Count, Maybe<List<ListItemRelatedChange>> Items);
+internal record ShoppingSublistStateUpdate(Maybe<decimal?> Count, Maybe<List<ListItemRelatedChange>> Items);
 
 internal abstract record ListItemRelatedChange();
 
