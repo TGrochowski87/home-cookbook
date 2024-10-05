@@ -82,36 +82,6 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     await context.SaveChangesAsync();
     return UnitResult.Success<Error>();
   }
-
-  public async Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId)
-  {
-    var shoppingSublist = await context.ShoppingSublists
-      .SingleOrDefaultAsync(ss => ss.Id == shoppingSublistId);
-    if (shoppingSublist is null)
-    {
-      return new Error(HttpStatusCode.NotFound, "Podlista o podanym ID nie istnieje.");
-    }
-    
-    context.ShoppingSublists.Remove(shoppingSublist);
-    await context.SaveChangesAsync();
-    
-    return UnitResult.Success<Error>();
-  }
-
-  public async Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count)
-  {
-    var shoppingSublist = await context.ShoppingSublists
-      .SingleOrDefaultAsync(ss => ss.Id == shoppingSublistId);
-    if (shoppingSublist is null)
-    {
-      return new Error(HttpStatusCode.NotFound, "Podlista o podanym ID nie istnieje.");
-    }
-    
-    shoppingSublist.Count = count;
-    await context.SaveChangesAsync();
-    
-    return UnitResult.Success<Error>();
-  }
   
   public async Task UpdateShoppingList(int id, ShoppingListUpdate updateData)
   {

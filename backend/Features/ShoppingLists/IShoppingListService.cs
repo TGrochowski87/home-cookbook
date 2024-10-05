@@ -10,10 +10,6 @@ internal interface IShoppingListService
   Task<Result<ShoppingListDetails, Error>> GetById(int id);
   
   Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId);
-  
-  Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId);
-  
-  Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count);
 
   Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData);
 }

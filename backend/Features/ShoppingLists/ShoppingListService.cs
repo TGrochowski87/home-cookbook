@@ -29,12 +29,6 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
     => shoppingListRepository.CreateSublist(shoppingListId, recipeId);
 
-  public Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId)
-    => shoppingListRepository.RemoveSublist(shoppingSublistId);
-
-  public Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count)
-    => shoppingListRepository.UpdateSublistCount(shoppingSublistId, count);
-
   public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
   {
     return await shoppingListRepository.GetById(id)

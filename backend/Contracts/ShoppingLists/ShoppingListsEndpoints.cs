@@ -22,13 +22,6 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     
     app.MapPost("/shopping-lists/{id:int}/sublists", AddRecipeIngredients)
       .WithTags("ShoppingLists");
-
-    // app.MapDelete("/shopping-lists/sublists/{sublistId:int}", RemoveRecipeIngredients)
-    //   .WithTags("ShoppingLists");
-    //
-    // app.MapPatch("/shopping-lists/sublists/{sublistId:int}", UpdateShoppingSublistCount)
-    //   .WithTags("ShoppingLists")
-    //   .AddFluentValidationAutoValidation();
     
     app.MapPatch("./shopping-lists/{id:int}", UpdateShoppingList)
       .WithTags("ShoppingLists")
@@ -51,27 +44,6 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
         HttpStatusCode.BadRequest => TypedResults.BadRequest(error.Message),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
-  }
-
-  private static async Task<Results<NoContent, NotFound<string>>> UpdateShoppingSublistCount(
-    [FromServices] IShoppingListService shoppingListService,
-    [FromRoute] int sublistId,
-    [FromBody] ShoppingSublistUpdateDto dto)
-  {
-    var result = await shoppingListService.UpdateSublistCount(sublistId, dto.Count);
-    return result.Match<Results<NoContent, NotFound<string>>, Error>(
-      () => TypedResults.NoContent(), 
-      error => TypedResults.NotFound(error.Message));
-  }
-
-  private static async Task<Results<NoContent, NotFound<string>>> RemoveRecipeIngredients(
-    [FromServices] IShoppingListService shoppingListService,
-    [FromRoute] int sublistId)
-  {
-    var result = await shoppingListService.RemoveSublist(sublistId);
-    return result.Match<Results<NoContent, NotFound<string>>, Error>(
-      () => TypedResults.NoContent(), 
-      error => TypedResults.NotFound(error.Message));
   }
 
   private static async Task<Results<Created, NotFound<string>>> AddRecipeIngredients(

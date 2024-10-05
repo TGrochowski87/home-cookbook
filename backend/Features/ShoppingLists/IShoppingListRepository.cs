@@ -12,10 +12,6 @@ internal interface IShoppingListRepository
   Task Remove(int id);
 
   Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId);
-  
-  Task<UnitResult<Error>> RemoveSublist(int shoppingSublistId);
-  
-  Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count);
 
   Task UpdateShoppingList(int id, ShoppingListUpdate updateData);
 }
