@@ -35,11 +35,12 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   public Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count)
     => shoppingListRepository.UpdateSublistCount(shoppingSublistId, count);
 
-  public async Task<UnitResult<Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
+  public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
   {
     return await shoppingListRepository.GetById(id)
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
-      .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData));
+      .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData)) // Update does not return any expected errors.
+      .Bind(() => shoppingListRepository.GetById(id)); // Return updated object.
   }
 
   private UnitResult<Error> ValidateShoppingListUpdateWithDbData(

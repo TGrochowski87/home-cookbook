@@ -35,12 +35,22 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
       .AddFluentValidationAutoValidation();
   }
 
-  private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>>> UpdateShoppingList(
+  private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>>> UpdateShoppingList(
     [FromServices] IShoppingListService shoppingListService,
     [FromRoute] int id,
     [FromBody] ShoppingListUpdateDto dto)
   {
-    
+    var shoppingListUpdate = EndpointModelMapper.Map(dto);
+    var result = await shoppingListService.UpdateShoppingList(id, shoppingListUpdate);
+
+    return result.Match<ShoppingListDetails, Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>>, Error>(
+      shoppingList => TypedResults.Ok(EndpointModelMapper.Map(shoppingList)),
+      error => error.StatusCode switch
+      {
+        HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        HttpStatusCode.BadRequest => TypedResults.BadRequest(error.Message),
+        _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
+      });
   }
 
   private static async Task<Results<NoContent, NotFound<string>>> UpdateShoppingSublistCount(

@@ -15,5 +15,5 @@ internal interface IShoppingListService
   
   Task<UnitResult<Error>> UpdateSublistCount(int shoppingSublistId, decimal count);
 
-  Task<UnitResult<Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData);
+  Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData);
 }
