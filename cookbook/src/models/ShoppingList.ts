@@ -5,7 +5,7 @@ export type ShoppingList = {
   readonly name: string;
   readonly creationDate: string;
   readonly updateDate: string;
-  readonly sublists?: readonly ShoppingListSublist[];
+  readonly sublists: readonly ShoppingListSublist[];
 };
 
 export interface ShoppingListSublist {
