@@ -5,11 +5,12 @@ import { ShoppingListSublist } from "models/ShoppingList";
 
 interface SublistTitleProps {
   readonly sublist: ShoppingListSublist;
-  readonly onIncrement: (sublist: ShoppingListSublist) => void;
-  readonly onDecrement: (sublist: ShoppingListSublist) => void;
+  readonly onIncrement: (sublistId: number) => void;
+  readonly onDecrement: (sublistId: number) => void;
+  readonly onRemove: (sublistId: number) => void;
 }
 
-const SublistTitle = ({ sublist, onIncrement, onDecrement }: SublistTitleProps) => {
+const SublistTitle = ({ sublist, onIncrement, onDecrement, onRemove }: SublistTitleProps) => {
   return (
     <div className="sublist-title">
       <Link to={`/recipes/${sublist.recipeId}`}>
@@ -17,16 +18,16 @@ const SublistTitle = ({ sublist, onIncrement, onDecrement }: SublistTitleProps) 
         <Link2 width="1.3em" height="1.3em" />
       </Link>
 
-      <CirclePlus width="1.5em" height="1.5em" onClick={() => onIncrement(sublist)} />
+      <CirclePlus width="1.5em" height="1.5em" onClick={() => onIncrement(sublist.id)} />
 
       <h2>{`x${sublist.count.toFixed(1)}`}</h2>
 
       {sublist.count === 0.5 ? (
-        <ConfirmationPopover text="Usunąć listę?" onConfirm={() => onDecrement(sublist)} side="left">
+        <ConfirmationPopover text="Usunąć listę?" onConfirm={() => onRemove(sublist.id)} side="left">
           <CircleMinus className="delete-icon" width="1.5em" height="1.5em" />
         </ConfirmationPopover>
       ) : (
-        <CircleMinus className="delete-icon" width="1.5em" height="1.5em" onClick={() => onDecrement(sublist)} />
+        <CircleMinus className="delete-icon" width="1.5em" height="1.5em" onClick={() => onDecrement(sublist.id)} />
       )}
     </div>
   );
