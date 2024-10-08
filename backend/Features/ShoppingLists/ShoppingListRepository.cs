@@ -82,7 +82,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     await context.SaveChangesAsync();
     return UnitResult.Success<Error>();
   }
-  
+
   public async Task UpdateShoppingList(int id, ShoppingListUpdate updateData)
   {
     var shoppingList = await context.ShoppingLists
@@ -90,66 +90,57 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       .ThenInclude(ss => ss.List)
       .ThenInclude(l => l.QuantifiableItems)
       .FirstAsync(sl => sl.Id == id);
-    
-    shoppingList.Name = updateData.Name.HasValue ? updateData.Name.Value : shoppingList.Name;
 
-    if (updateData.Sublists.HasValue)
+    shoppingList.Name = updateData.Name;
+
+    foreach (var sublist in shoppingList.ShoppingSublists)
     {
-      foreach (var sublistUpdate in updateData.Sublists.Value)
+      var correspondingSublistUpdate = updateData.Sublists
+        .FirstOrDefault(sl => sl.Id == sublist.Id);
+      
+      // If the sublist is missing in the update data, it should be removed.
+      if (correspondingSublistUpdate == null)
       {
-        var sublist = shoppingList.ShoppingSublists.First(ss => ss.Id == sublistUpdate.Id);
+        // This way the cascading delete should also remove the sublist and items.
+        context.Lists.Remove(sublist.List);
+        continue;
+      }
 
-        if (sublistUpdate.State.HasNoValue)
+      sublist.Count = correspondingSublistUpdate.Count;
+
+      foreach (var item in sublist.List.QuantifiableItems)
+      {
+        var correspondingItemUpdate = correspondingSublistUpdate.Items
+          .FirstOrDefault(i => i.Id == item.Id);
+        
+        // If the item is missing in the update data, it should be removed.
+        if (correspondingItemUpdate == null)
         {
-          // This way the cascading delete should also remove the sublist and items.
-          context.Lists.Remove(sublist.List);
-          continue;
+          context.QuantifiableItems.Remove(item);
+          return;
         }
+        
+        item.Name = correspondingItemUpdate.Name;
+        item.Checked = correspondingItemUpdate.Checked;
+        item.Unit = correspondingItemUpdate.Amount.Unit.GetValueOrDefault();
+        item.Value = correspondingItemUpdate.Amount.Value;
+      }
 
-        sublist.Count = sublistUpdate.State.HasValue 
-          ? (decimal)sublistUpdate.State.Value.Count.Value! 
-          : sublist.Count;
-
-        if(sublistUpdate.State.Value.Items.HasValue)
+      // Update item data without ID means that it is new and should be created.
+      foreach (var newItem in correspondingSublistUpdate.Items.Where(item => item.Id.HasNoValue))
+      {
+        var item = new QuantifiableItem
         {
-          var sublistItems = sublistUpdate.State.Value.Items.Value;
-          sublistItems.ForEach(item => ProcessShoppingListItemChange(sublist, item));
-        }
+          Name = newItem.Name,
+          Checked = newItem.Checked,
+          Unit = newItem.Amount.Unit.GetValueOrDefault(),
+          Value = newItem.Amount.Value
+        };
+        sublist.List.QuantifiableItems.Add(item);
       }
     }
     
     shoppingList.Updatedate = DateTime.Now;
     await context.SaveChangesAsync();
-  }
-
-  private void ProcessShoppingListItemChange(DataAccess.ShoppingSublist relatedSublist, ListItemRelatedChange listItemChange)
-  {
-    switch (listItemChange)
-    {
-      case ListItemDelete delete:
-        {
-          var item = relatedSublist.List.QuantifiableItems.First(item => item.Id == delete.Id);
-          context.QuantifiableItems.Remove(item);
-          break;
-        }
-      case ListItemUpdate update:
-        {
-          var item = relatedSublist.List.QuantifiableItems.First(item => item.Id == update.Id);
-          item.Checked = update.Checked;
-          break;
-        }
-      case ListItemCreate create:
-        {
-          var newItem = new QuantifiableItem
-          {
-            Name = create.Name,
-            Value = create.Amount.Value,
-            Unit = create.Amount.Unit.GetValueOrDefault(),
-            Checked = create.Checked
-          };
-          relatedSublist.List.QuantifiableItems.Add(newItem);
-          break;
-        }
-    }
   }
 }

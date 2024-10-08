@@ -111,37 +111,17 @@ internal static class EndpointModelMapper
 
   public static ShoppingListUpdate Map(ShoppingListUpdateDto dto)
   {
-    var updateModel = new ShoppingListUpdate(
-      dto.Name, 
-      dto.Sublists?.Select(MapShoppingSublistUpdateDto).ToList());
-    
-    return updateModel;
+    var model = new ShoppingListUpdate(dto.Name, dto.Sublists.Select(MapSublistUpdate).ToList());
+    return model;
 
-    ShoppingSublistUpdate MapShoppingSublistUpdateDto(ShoppingSublistUpdateDto shoppingSublistDto)
+    ShoppingSublistUpdate MapSublistUpdate(ShoppingSublistUpdateDto dto)
     {
-      var state = shoppingSublistDto.State is not null 
-        ? new ShoppingSublistStateUpdate(
-          shoppingSublistDto.State.Count, 
-          shoppingSublistDto.State.Items?.Select(MapListItemUpdateDto).ToList()) 
-        : null;
-      
-      return new ShoppingSublistUpdate(shoppingSublistDto.Id, state);
+      return new ShoppingSublistUpdate(dto.Id, dto.Count, dto.Items.Select(MapShoppingListItem).ToList());
     }
-      
-    ListItemRelatedChange MapListItemUpdateDto(ListItemUpdateDto listItemDto)
+
+    ShoppingListItemUpdate MapShoppingListItem(ShoppingListItemUpdateDto dto)
     {
-      return (listItemDto.Id, listItemDto.State) switch
-      {
-        (null, null) => throw new ArgumentException("All properties of an object in list of update objects are null."),
-        (_, null) => new ListItemDelete((int)listItemDto.Id),
-        (_, { Amount: null, Name: null }) => new ListItemUpdate((int)listItemDto.Id!, (bool)listItemDto.State.Checked!),
-        (null, { Amount: not null, Name: not null, Checked: not null })
-          => new ListItemCreate(
-            listItemDto.State.Name,
-            new Amount(listItemDto.State.Amount.Value, listItemDto.State.Amount.Unit),
-            (bool)listItemDto.State.Checked),
-        _ => throw new ArgumentException("This case should not be reached.")
-      };
+      return new ShoppingListItemUpdate(dto.Id, dto.Name, Map(dto.Amount), dto.Checked);
     }
   }
 }
