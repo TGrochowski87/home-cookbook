@@ -21,30 +21,38 @@ const ShoppingListPage = () => {
   const shoppingListFromLoader = useLoaderData() as ShoppingListDetailsGetDto;
   const [shoppingList, setShoppingList] = useState<ShoppingList>(mapper.map.toShoppingList(shoppingListFromLoader));
 
+  // We need to copy state to ref to be able to read it in useEffect's cleanup that will run only once on unmount.
+  const shoppingListRef = useRef<ShoppingList>(shoppingList);
+  // This prevents needless API calls when nothing has changed. Also blocks calling on initial unmount in development in strict mode.
+  const shoppingListChanged = useRef<boolean>(false);
+
   const updateShoppingList: React.Dispatch<React.SetStateAction<ShoppingList>> = (
     newState: ShoppingList | ((prevState: ShoppingList) => ShoppingList)
   ) => {
     setShoppingList(newState);
 
-    if (apiCallTimeoutId.current === undefined) {
-      apiCallTimeoutId.current = setTimeout(async () => await saveBeforeUnmount(), 5000);
-    }
+    // This is better than useEffect because it actually runs only after performing some action.
+    shoppingListChanged.current = true;
   };
-
   const handle = useShoppingListUpdateManagement(updateShoppingList);
 
-  // Fields related to delayed saving.
-  const apiCallTimeoutId = useRef<number>();
-
   const saveBeforeUnmount = async () => {
+    if (shoppingListChanged.current === false) {
+      return;
+    }
+    console.log("B");
+
     // No error handling because no errors are expected.
     const updatedShoppingList = await api.put.updateShoppingList(
       shoppingList.id,
-      mapper.map.toShoppingListUpdateDto(shoppingList)
+      mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
     );
     setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
-    apiCallTimeoutId.current = undefined;
   };
+
+  useEffect(() => {
+    shoppingListRef.current = shoppingList;
+  }, [shoppingList]);
 
   // Call API immediately on unmount.
   useEffect(() => {
@@ -56,20 +64,25 @@ const ShoppingListPage = () => {
   // Send quick API call before page/browser closing.
   useEffect(() => {
     const saveBeforeUnloadWithBeacon = () => {
-      if (apiCallTimeoutId.current === undefined) {
+      if (shoppingListChanged.current === false || document.visibilityState !== "hidden") {
         return;
       }
 
+      console.log("C");
       const dto = mapper.map.toShoppingListUpdateDto(shoppingList);
-      navigator.sendBeacon(`/api/shopping-lists/${shoppingList.id}`, JSON.stringify(dto));
+      const headers = {
+        type: "application/json",
+      };
+      const blob = new Blob([JSON.stringify(dto)], headers);
+      navigator.sendBeacon(`${api.baseUrl}/shopping-lists/${shoppingList.id}`, blob);
     };
 
-    window.addEventListener("beforeunload", saveBeforeUnloadWithBeacon);
+    document.addEventListener("visibilitychange", saveBeforeUnloadWithBeacon);
 
     return () => {
-      window.removeEventListener("beforeunload", saveBeforeUnloadWithBeacon);
+      document.removeEventListener("visibilitychange", saveBeforeUnloadWithBeacon);
     };
-  }, [shoppingList]);
+  }, [shoppingList, shoppingListChanged]);
 
   const manualSublist: ShoppingListSublist = shoppingList.sublists.find(s => s.recipeId === null)!;
 

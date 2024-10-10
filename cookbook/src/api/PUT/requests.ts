@@ -19,6 +19,6 @@ export const updateShoppingList = async (
   dto: ShoppingListUpdateDto
 ): Promise<ShoppingListDetailsGetDto> => {
   const url = `${baseUrl}/shopping-lists/${shoppingListId}`;
-  const response = await axios.put(url, dto);
+  const response = await axios.post(url, dto);
   return response.data;
 };

@@ -23,11 +23,12 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     app.MapPost("/shopping-lists/{id:int}/sublists", AddRecipeIngredients)
       .WithTags("ShoppingLists");
 
-    app.MapPut("/shopping-lists/{id:int}", OverrideShoppingList)
+    app.MapPost("/shopping-lists/{id:int}", OverrideShoppingList)
       .WithTags("ShoppingLists")
       .AddFluentValidationAutoValidation();
   }
 
+  // TODO: If-Match
   private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>>> OverrideShoppingList(
       [FromServices] IShoppingListService shoppingListService,
       [FromRoute] int id,

@@ -116,8 +116,8 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
         // If the item is missing in the update data, it should be removed.
         if (correspondingItemUpdate == null)
         {
-          context.QuantifiableItems.Remove(item);
-          return;
+          context.Entry(item).State = EntityState.Deleted;
+          continue;
         }
         
         item.Name = correspondingItemUpdate.Name;
