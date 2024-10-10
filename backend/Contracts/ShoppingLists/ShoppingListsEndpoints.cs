@@ -23,7 +23,7 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     app.MapPost("/shopping-lists/{id:int}/sublists", AddRecipeIngredients)
       .WithTags("ShoppingLists");
 
-    app.MapPost("/shopping-lists/{id:int}", OverrideShoppingList)
+    app.MapPut("/shopping-lists/{id:int}", OverrideShoppingList)
       .WithTags("ShoppingLists")
       .AddFluentValidationAutoValidation();
   }

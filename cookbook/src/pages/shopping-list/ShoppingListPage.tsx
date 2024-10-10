@@ -40,9 +40,8 @@ const ShoppingListPage = () => {
     if (shoppingListChanged.current === false) {
       return;
     }
-    console.log("B");
 
-    // No error handling because no errors are expected.
+    // No error handling because no errors are expected due to client-side validation.
     const updatedShoppingList = await api.put.updateShoppingList(
       shoppingList.id,
       mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
@@ -68,15 +67,10 @@ const ShoppingListPage = () => {
         return;
       }
 
-      console.log("C");
-      const dto = mapper.map.toShoppingListUpdateDto(shoppingList);
-      const headers = {
-        type: "application/json",
-      };
-      const blob = new Blob([JSON.stringify(dto)], headers);
-      navigator.sendBeacon(`${api.baseUrl}/shopping-lists/${shoppingList.id}`, blob);
+      api.put.updateShoppingListWithFetch(shoppingList.id, mapper.map.toShoppingListUpdateDto(shoppingList));
     };
 
+    // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.
     document.addEventListener("visibilitychange", saveBeforeUnloadWithBeacon);
 
     return () => {
