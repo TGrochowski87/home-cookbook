@@ -6,6 +6,13 @@ import * as DELETE from "./DELETE/requests";
 
 export const baseUrl = "http://192.168.0.164:5212";
 
-const api = { get: { ...GET }, post: { ...POST }, put: { ...PUT }, patch: { ...PATCH }, delete: { ...DELETE } };
+const api = {
+  baseUrl,
+  get: { ...GET },
+  post: { ...POST },
+  put: { ...PUT },
+  patch: { ...PATCH },
+  delete: { ...DELETE },
+};
 
 export default api;

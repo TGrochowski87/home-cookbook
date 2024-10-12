@@ -11,5 +11,8 @@ internal interface IShoppingListService
   
   Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId);
 
-  Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData);
+  Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(
+    int id, 
+    DateTime resourceStateTimestampFromRequest, 
+    ShoppingListUpdate updateData);
 }

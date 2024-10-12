@@ -7,89 +7,43 @@ public class ShoppingListUpdateValidator : AbstractValidator<ShoppingListUpdateD
 {
   public ShoppingListUpdateValidator()
   {
-    RuleFor(sl => sl.Name)
+    RuleFor(l => l.Name)
       .MaximumLength(100)
-      .WithMessage("Nazwa listy powinna mieć maksymalnie 100 znaków.")
-      .When(sl => string.IsNullOrEmpty(sl.Name) == false)
-      .NotNull()
-      .WithMessage("Przynajmniej jeden atrybut obiektu listy musi mieć podaną wartość.")
-      .When(sl => sl.Sublists is null, ApplyConditionTo.CurrentValidator);
+      .WithMessage("Nazwa listy powinna mieć maksymalnie 100 znaków.");
 
-    RuleForEach(sl => sl.Sublists).ChildRules(sublist =>
-    {
-      sublist.RuleFor(sub => sub.State!)
-        .SetValidator(new ShoppingSublistStateUpdateValidator())
-        .When(sub => sub.State is not null);
-    }).When(sl => sl.Sublists is not null);
+    RuleFor(l => l.Sublists)
+      .NotEmpty()
+      .WithMessage("Lista zakupów musi zawierać przynajmniej manualną podlistę.");
+
+    RuleForEach(l => l.Sublists).SetValidator(new ShoppingSublistUpdateValidator());
   }
 
-  private class ShoppingSublistStateUpdateValidator : AbstractValidator<ShoppingSublistStateUpdateDto>
+  private class ShoppingSublistUpdateValidator : AbstractValidator<ShoppingSublistUpdateDto>
   {
-    public ShoppingSublistStateUpdateValidator()
+    public ShoppingSublistUpdateValidator()
     {
-      RuleFor(ss => ss.Count)
+      RuleFor(sl => sl.Count)
         .GreaterThan(0)
-        .WithMessage("Mnożnik podlisty zakupów musi mieć wartość wyższą od zera.")
-        .When(ss => ss.Count is not null)
-        .NotNull()
-        .WithMessage("Przynajmniej jeden atrybut obiektu stanu podlisty musi mieć podaną wartość.")
-        .When(ss => ss.Items is null, ApplyConditionTo.CurrentValidator);
-          
-      RuleForEach(ss => ss.Items)
-        .SetValidator(new ListItemUpdateValidator())
-        .When(ss => ss.Items is not null);
+        .WithMessage("Mnożnik podlisty zakupów musi mieć wartość wyższą od zera.");
+
+      RuleForEach(sl => sl.Items).SetValidator(new ShoppingListItemUpdateValidator());
     }
   }
 
-  private class ListItemUpdateValidator : AbstractValidator<ListItemUpdateDto>
+  private class ShoppingListItemUpdateValidator : AbstractValidator<ShoppingListItemUpdateDto>
   {
-    public ListItemUpdateValidator()
+    public ShoppingListItemUpdateValidator()
     {
-      RuleFor(item => item.Id)
-        .NotNull()
-        .When(item => item.State is null)
-        .WithMessage("Identyfikator przedmiotu z listy i jego stan nie mogą być puste jednocześnie.");
-      
-      When(item => item.Id is not null, () =>
-      {
-        RuleFor(item => item.State).ChildRules(state =>
-        {
-          state.RuleFor(x => x!.Amount)
-            .Null()
-            .WithMessage("Ilość raz utworzonego przedmiotu nie jest edytowalna.");
-          
-          state.RuleFor(x => x!.Name)
-            .Null()
-            .WithMessage("Nazwa raz utworzonego przedmiotu nie jest edytowalna.");
-        }).When(item => item.State is not null);
-      }).Otherwise(() =>
-      {
-        RuleFor(item => item.State).ChildRules(state =>
-        {
-          state.RuleFor(x => x!.Amount)
-            .NotNull()
-            .WithMessage("Dane o ilości są wymagane podczas tworzenia przedmiotu.")
-            .ChildRules(amount =>
-            {
-              amount.RuleFor(x => x!.Value)
-                .Must(value => value.Length <= 20)
-                .WithMessage("Tekst określający ilość powinien mieć maksymalnie 20 znaków.");
-              
-              amount.RuleFor(x => x!.Unit)
-                .Must(unit => unit!.Length <= 10)
-                .WithMessage("Tekst określający jednostkę powinien mieć maksymalnie 10 znaków.")
-                .When(x => x!.Unit != null);
-            });
-          
-          state.RuleFor(x => x!.Name)
-            .NotNull()
-            .WithMessage("Nazwa jest wymagana podczas tworzenia przedmiotu.");
-          
-          state.RuleFor(x => x!.Checked)
-            .NotNull()
-            .WithMessage("Status zaznaczenia jest wymagany podczas tworzenia przedmiotu.");
-        }).When(item => item.State is not null);
-      });
+      RuleFor(i => i.Name)
+        .MaximumLength(100)
+        .WithMessage("Nazwa przedmiotu z listy powinna mieć maksymalnie 100 znaków.");
+
+      RuleFor(item => item.Amount)
+        .Must(amount => amount.Value.Length <= 20)
+        .WithMessage("Tekst określający ilość powinien mieć maksymalnie 20 znaków.")
+        .Must(amount => amount.Unit!.Length <= 10)
+        .WithMessage("Tekst określający jednostkę powinien mieć maksymalnie 10 znaków.")
+        .When(item => item.Amount.Unit != null, ApplyConditionTo.CurrentValidator);
     }
   }
 }

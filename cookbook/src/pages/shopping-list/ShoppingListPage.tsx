@@ -4,13 +4,15 @@ import TitledSection from "components/TitledSection";
 import { useLoaderData } from "react-router-dom";
 import SublistTitle from "./SublistTitle";
 import QuantifiableItemsList from "components/quantifiable-items-list/QuantifiableItemsList";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import EditableQuantifiableItemsList from "components/quantifiable-items-list/EditableQuantifiableItemsList";
 import { ShoppingList, ShoppingListSublist } from "models/ShoppingList";
 import mapper from "mapper";
 import InfoModal from "./InfoModal";
-import "./styles.less";
 import useShoppingListUpdateManagement from "./useShoppingListUpdateManagement";
+import "./styles.less";
+import axios from "axios";
+import { useAlerts } from "components/alert/AlertStack";
 
 export async function loader({ params }: any) {
   const shoppingList = await api.get.getShoppingList(params.id);
@@ -19,8 +21,81 @@ export async function loader({ params }: any) {
 
 const ShoppingListPage = () => {
   const shoppingListFromLoader = useLoaderData() as ShoppingListDetailsGetDto;
-  const [shoppingList, setShoppingList] = useState<ShoppingList>(prepareShoppingList(shoppingListFromLoader));
-  const handle = useShoppingListUpdateManagement(shoppingList);
+  const [shoppingList, setShoppingList] = useState<ShoppingList>(mapper.map.toShoppingList(shoppingListFromLoader));
+
+  // We need to copy state to ref to be able to read it in useEffect's cleanup that will run only once on unmount.
+  const shoppingListRef = useRef<ShoppingList>(shoppingList);
+  // This prevents needless API calls when nothing has changed. Also blocks calling on initial unmount in development in strict mode.
+  const shoppingListChanged = useRef<boolean>(false);
+  const { displayMessage } = useAlerts();
+
+  const updateShoppingList: React.Dispatch<React.SetStateAction<ShoppingList>> = (
+    newState: ShoppingList | ((prevState: ShoppingList) => ShoppingList)
+  ) => {
+    setShoppingList(newState);
+
+    // This is better than useEffect because it actually runs only after performing some action.
+    shoppingListChanged.current = true;
+  };
+  const handle = useShoppingListUpdateManagement(updateShoppingList);
+
+  const saveBeforeUnmount = async () => {
+    if (shoppingListChanged.current === false) {
+      return;
+    }
+
+    try {
+      const updatedShoppingList = await api.put.updateShoppingList(
+        shoppingList.id,
+        shoppingList.updateDate,
+        mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
+      );
+      setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
+    } catch (error) {
+      // TODO: Consider notifying through SignalR.
+      if (axios.isAxiosError(error) && error.response?.status === 412) {
+        displayMessage({
+          type: "error",
+          message: "Zmiany nie mogły zostać zapisane.\nLista zakupów została w międzyczasie zmodyfikowana.",
+          fadeOutAfter: 5000,
+        });
+        return;
+      }
+    }
+  };
+
+  useEffect(() => {
+    shoppingListRef.current = shoppingList;
+  }, [shoppingList]);
+
+  // Call API immediately on unmount.
+  useEffect(() => {
+    return () => {
+      saveBeforeUnmount();
+    };
+  }, []);
+
+  // Send quick API call before page/browser closing.
+  useEffect(() => {
+    const saveBeforeUnloadWithBeacon = () => {
+      if (shoppingListChanged.current === false || document.visibilityState !== "hidden") {
+        return;
+      }
+
+      api.put.updateShoppingListWithFetch(
+        shoppingList.id,
+        shoppingList.updateDate,
+        mapper.map.toShoppingListUpdateDto(shoppingList)
+      );
+    };
+
+    // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.
+    document.addEventListener("visibilitychange", saveBeforeUnloadWithBeacon);
+
+    return () => {
+      document.removeEventListener("visibilitychange", saveBeforeUnloadWithBeacon);
+    };
+  }, [shoppingList, shoppingListChanged]);
 
   const manualSublist: ShoppingListSublist = shoppingList.sublists.find(s => s.recipeId === null)!;
 
@@ -41,12 +116,11 @@ const ShoppingListPage = () => {
                 sublist={sublist}
                 onIncrement={handle.sublistIncrementCount}
                 onDecrement={handle.sublistDecrementCount}
-                onRemove={handle.removeSublist}
               />
             }>
             <QuantifiableItemsList
               items={sublist.items}
-              rightSideAction={{ type: "check", callback: checkboxClickHandler(sublist.id) }}
+              rightSideAction={{ type: "check", callback: handle.checkboxClick(sublist.id) }}
             />
           </TitledSection>
         ))}
@@ -54,22 +128,13 @@ const ShoppingListPage = () => {
       <TitledSection title={"Manualnie dodane"}>
         <EditableQuantifiableItemsList
           items={manualSublist.items}
-          setItems={items => setManualSublistItems(items)}
-          leftSideAction={{ type: "remove", callback: removeItemHandler }}
-          rightSideAction={{ type: "check", callback: checkboxClickHandler(manualSublist.id) }}
+          setItems={items => handle.manualSublistItemsUpdate(items)}
+          leftSideAction={{ type: "remove", callback: handle.listItemDelete }}
+          rightSideAction={{ type: "check", callback: handle.checkboxClick(manualSublist.id) }}
         />
       </TitledSection>
     </div>
   );
-};
-
-const prepareShoppingList = (shoppingListDto: ShoppingListDetailsGetDto): ShoppingList => {
-  const shoppingList: ShoppingList = mapper.map.toShoppingList(shoppingListDto);
-  const sortedShoppingList: ShoppingList = {
-    ...shoppingList,
-    sublists: shoppingList.sublists.toSorted((a, b) => a.id - b.id),
-  };
-  return sortedShoppingList;
 };
 
 export default ShoppingListPage;

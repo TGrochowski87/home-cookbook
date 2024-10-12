@@ -14,8 +14,9 @@ import EditableQuantifiableItemsList from "components/quantifiable-items-list/Ed
 import QuantifiableItemData from "models/QuantifiableItemData";
 import RichTextArea from "components/rich-text-area/RichTextArea";
 import CategorySelect from "./category-select/CategorySelect";
+import mapper from "mapper";
 
-interface RecipeData {
+export interface RecipeData {
   readonly name: string;
   readonly categoryId: number | undefined;
   readonly image: Blob | undefined;
@@ -60,19 +61,9 @@ const RecipeCreationForm = ({
   });
 
   const onSubmit = async (data: RecipeData): Promise<void> => {
-    const dto: RecipeCreateDto = {
-      name: data.name,
-      categoryId: data.categoryId!,
-      image: data.image,
-      tagIds: data.tags.filter(t => typeof t === "number") as number[],
-      newTags: data.tags.filter(t => typeof t === "string").map(tagName => ({ name: tagName as string })),
-      ingredients: data.ingredients,
-      description: data.description,
-    };
-
     // TODO: Consider some helper for handling different status codes.
     try {
-      await onSubmitCallback(dto);
+      await onSubmitCallback(mapper.map.toRecipeCreateDto(data));
       reset();
       navigate(onSuccessNavigateTo, { replace: replaceOnNavigate });
     } catch (error) {

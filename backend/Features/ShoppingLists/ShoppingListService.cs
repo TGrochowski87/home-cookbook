@@ -29,71 +29,55 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
     => shoppingListRepository.CreateSublist(shoppingListId, recipeId);
 
-  public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
+  public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(
+    int id, 
+    DateTime resourceStateTimestampFromRequest, 
+    ShoppingListUpdate updateData)
   {
     return await shoppingListRepository.GetById(id)
+      .Check(shoppingList => VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
       .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData)) // Update does not return any expected errors.
       .Bind(() => shoppingListRepository.GetById(id)); // Return updated object.
   }
 
-  private UnitResult<Error> ValidateShoppingListUpdateWithDbData(
+  private static UnitResult<Error> VerifyResourceStateNotOutdated(DateTime resourceStateTimestampFromRequest, DateTime resourceUpdateDate)
+  {
+    // TODO: I am actually not using these messages on UI. Change to english.
+    return resourceUpdateDate > resourceStateTimestampFromRequest 
+      ? new Error(HttpStatusCode.PreconditionFailed, "Zasób został w międzyczasie zmodyfikowany.") 
+      : UnitResult.Success<Error>();
+  }
+
+  private static UnitResult<Error> ValidateShoppingListUpdateWithDbData(
     ShoppingListUpdate updateData,
     ShoppingListDetails currentData)
   {
-    if (updateData.Sublists.HasNoValue)
+    var manualListId = currentData.Sublists.First(sl => sl.RecipeId.HasNoValue).Id;
+    if (updateData.Sublists.Any(slUpdate => slUpdate.Id == manualListId) == false)
     {
-      return UnitResult.Success<Error>();
+      return new Error(HttpStatusCode.BadRequest,
+        "Manualna podlista nie może zostać usunięta z listy zakupów.");
     }
 
-    foreach (var sublistUpdate in updateData.Sublists.Value)
+    var existentSublistIds = updateData.Sublists.Select(sl => sl.Id).ToList();
+    var existentItemIds = currentData.Sublists
+      .SelectMany(sl => sl.Items)
+      .Select(i => i.Id).ToList();
+
+    foreach (var sublistUpdate in updateData.Sublists)
     {
-      var sublist = currentData.Sublists.SingleOrDefault(ss => ss.Id == sublistUpdate.Id);
-      if (sublist is null)
+      if (existentSublistIds.Contains(sublistUpdate.Id) == false)
       {
         return new Error(HttpStatusCode.NotFound, $"Podlista o ID = {sublistUpdate.Id} nie istnieje.");
       }
 
-      var sublistValidationResult = sublistUpdate.State.Match(
-        state => ValidateShoppingSublistStateUpdateWithDbData(state, sublist),
-        () => sublist.RecipeId.HasNoValue
-          ? new Error(HttpStatusCode.BadRequest, "Nie można usunąć manualnej podlisty z listy zakupów.")
-          : UnitResult.Success<Error>());
-
-      if (sublistValidationResult.IsFailure)
+      foreach (var itemUpdate in sublistUpdate.Items.Where(item => item.Id.HasValue))
       {
-        return sublistValidationResult;
-      }
-    }
-
-    return UnitResult.Success<Error>();
-  }
-
-  private UnitResult<Error> ValidateShoppingSublistStateUpdateWithDbData(
-    ShoppingSublistStateUpdate sublistStateUpdate, 
-    ShoppingSublist currentData)
-  {
-    if (sublistStateUpdate.Items.HasNoValue)
-    {
-      return UnitResult.Success<Error>();
-    }
-
-    foreach (var itemUpdate in sublistStateUpdate.Items.Value)
-    {
-      var errorMaybe = itemUpdate switch
-      {
-        ListItemDelete delete when currentData.Items.Any(item => item.Id == delete.Id) == false
-          => new Error(HttpStatusCode.NotFound, $"Element o ID = {delete.Id} nie istnieje."),
-        ListItemUpdate update when currentData.Items.Any(item => item.Id == update.Id) == false
-          => new Error(HttpStatusCode.NotFound, $"Element o ID = {update.Id} nie istnieje."),
-        ListItemCreate create when currentData.Items.Any(item => item.Name == create.Name)
-          => new Error(HttpStatusCode.BadRequest, $"Element o nazwie {create.Name} już istnieje."),
-        _ => UnitResult.Success<Error>()
-      };
-
-      if (errorMaybe.IsFailure)
-      {
-        return errorMaybe;
+        if (existentItemIds.Contains((int)itemUpdate.Id.Value!) == false)
+        {
+          return new Error(HttpStatusCode.NotFound, $"Przedmiot o ID = {itemUpdate.Id} nie istnieje.");
+        }
       }
     }
 
