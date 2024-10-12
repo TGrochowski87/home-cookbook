@@ -14,6 +14,10 @@ internal partial class Recipe
 
   public string? ImageSrc { get; set; }
 
+  public DateTime Creationdate { get; set; }
+
+  public DateTime Updatedate { get; set; }
+
   public virtual Category Category { get; set; } = null!;
 
   public virtual List List { get; set; } = null!;

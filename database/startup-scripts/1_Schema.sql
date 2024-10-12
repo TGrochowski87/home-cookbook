@@ -37,6 +37,8 @@ CREATE TABLE recipes (
   name varchar(100) NOT NULL,
   description text NOT NULL,
   image_src varchar(2048),
+  creationDate timestamp NOT NULL,
+  updateDate timestamp NOT NULL,
   CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE,
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE
 );
