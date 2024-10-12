@@ -11,7 +11,9 @@ interface ActionProps {
 
 const Action = ({ item, action, isLeftSide = false }: ActionProps) => {
   return (
-    <span className={`action-button ${isLeftSide ? "left-side-action" : ""}`} onClick={() => action.callback(item)}>
+    <span
+      className={`action-button type-${action.type} ${isLeftSide ? "left-side-action" : ""}`}
+      onClick={() => action.callback(item)}>
       {action.type === "check" ? (
         <Checkbox checked={item.checked} />
       ) : (
