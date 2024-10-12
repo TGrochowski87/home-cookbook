@@ -2,7 +2,7 @@ import { ShoppingListGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import Popup from "components/Popup";
 import { useAlerts } from "components/alert/AlertStack";
-import HighlightingList from "components/list/HighlightingList";
+import HighlightingList from "components/highlighting-list/HighlightingList";
 import { useNavigate } from "react-router-dom";
 
 interface AddToShoppingListScreenProps {

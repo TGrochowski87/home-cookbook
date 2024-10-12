@@ -2,7 +2,7 @@ import ActionData from "../../models/ActionData";
 import QuantifiableItem from "./QuantifiableItem";
 import QuantifiableItemData from "../../models/QuantifiableItemData";
 import "./styles.less";
-import HighlightingList from "components/list/HighlightingList";
+import HighlightingList from "components/highlighting-list/HighlightingList";
 
 interface QuantifiableItemsListProps {
   readonly items: readonly QuantifiableItemData[];
