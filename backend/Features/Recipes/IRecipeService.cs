@@ -10,5 +10,5 @@ internal interface IRecipeService
 
   Task<Result<int, Error>> Create(RecipeCreate data);
 
-  Task<UnitResult<Error>> Update(int id, RecipeCreate data);
+  Task<UnitResult<Error>> Update(int id, DateTime resourceStateTimestampFromRequest, RecipeCreate data);
 }

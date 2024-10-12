@@ -1,4 +1,4 @@
-﻿using Cookbook.Features.Common;
+﻿using Cookbook.Features.Common.Models;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 

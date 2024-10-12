@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Net;
-using Cookbook.Contracts.ShoppingLists.Update;
 using Cookbook.Features.ShoppingLists;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;

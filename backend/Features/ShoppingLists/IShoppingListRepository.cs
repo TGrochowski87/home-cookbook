@@ -1,5 +1,4 @@
-﻿using Cookbook.Features.ShoppingLists.Update;
-using CSharpFunctionalExtensions;
+﻿using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;
 

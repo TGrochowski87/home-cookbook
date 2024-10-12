@@ -1,5 +1,5 @@
 ﻿using Cookbook.Features.Categories;
-using Cookbook.Features.Common;
+using Cookbook.Features.Common.Models;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 
@@ -12,5 +12,7 @@ internal record RecipeDetailsGet(
   List<TagGet> Tags, 
   Maybe<string> ImageSrc, 
   string Description, 
-  List<QuantifiableItemGet> Ingredients) 
+  List<QuantifiableItemGet> Ingredients, 
+  DateTime CreationDate, 
+  DateTime UpdateDate) 
   : RecipeGet(Id, Name, Category, Tags, ImageSrc);

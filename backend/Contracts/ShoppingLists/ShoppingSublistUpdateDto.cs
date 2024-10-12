@@ -1,6 +1,6 @@
 ﻿using Cookbook.Contracts.Common;
 
-namespace Cookbook.Contracts.ShoppingLists.Update;
+namespace Cookbook.Contracts.ShoppingLists;
 
 public record ShoppingListUpdateDto(string Name, List<ShoppingSublistUpdateDto> Sublists);
 

@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using Cookbook.Features.ShoppingLists.Update;
+using Cookbook.Features.Common;
 using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;
@@ -35,18 +35,10 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
     ShoppingListUpdate updateData)
   {
     return await shoppingListRepository.GetById(id)
-      .Check(shoppingList => VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
+      .Check(shoppingList => CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
       .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData)) // Update does not return any expected errors.
       .Bind(() => shoppingListRepository.GetById(id)); // Return updated object.
-  }
-
-  private static UnitResult<Error> VerifyResourceStateNotOutdated(DateTime resourceStateTimestampFromRequest, DateTime resourceUpdateDate)
-  {
-    // TODO: I am actually not using these messages on UI. Change to english.
-    return resourceUpdateDate > resourceStateTimestampFromRequest 
-      ? new Error(HttpStatusCode.PreconditionFailed, "Zasób został w międzyczasie zmodyfikowany.") 
-      : UnitResult.Success<Error>();
   }
 
   private static UnitResult<Error> ValidateShoppingListUpdateWithDbData(

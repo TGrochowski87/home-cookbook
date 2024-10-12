@@ -73,19 +73,21 @@ public class RecipesEndpoints : IEndpointsDefinition
       });
   }
 
-  private static async Task<Results<NoContent, NotFound<string>>> OverrideRecipe(
+  private static async Task<Results<NoContent, NotFound<string>, ProblemHttpResult>> OverrideRecipe(
     [FromServices] IRecipeService recipeService,
     [FromRoute] int id,
-    [FromForm] RecipeCreateDto dto)
+    [FromForm] RecipeCreateDto dto,
+    [FromHeader(Name = "If-Unmodified-Since")] DateTime resourceStateTimestamp)
   {
     var recipeCreate = EndpointModelMapper.Map(dto);
-    var result = await recipeService.Update(id, recipeCreate);
+    var result = await recipeService.Update(id, resourceStateTimestamp, recipeCreate);
 
-    return result.Match<Results<NoContent, NotFound<string>>, Error>(
+    return result.Match<Results<NoContent, NotFound<string>, ProblemHttpResult>, Error>(
       () => TypedResults.NoContent(), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        HttpStatusCode.PreconditionFailed => TypedResults.Problem(statusCode: (int)HttpStatusCode.PreconditionFailed, detail: error.Message),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
   }

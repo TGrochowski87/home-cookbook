@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using Cookbook.DataAccess;
-using Cookbook.Features.ShoppingLists.Update;
 using Cookbook.Mappers;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;

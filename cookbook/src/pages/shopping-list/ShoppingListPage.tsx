@@ -61,6 +61,8 @@ const ShoppingListPage = () => {
         });
         return;
       }
+
+      throw error;
     }
   };
 
@@ -138,50 +140,3 @@ const ShoppingListPage = () => {
 };
 
 export default ShoppingListPage;
-
-// const checkboxClickHandler = (sublistId: number): ((item: QuantifiableItemData) => void) => {
-//   return (item: QuantifiableItemData) => {
-//     setShoppingList(prev => ({
-//       ...prev,
-//       sublists: prev.sublists!.map(sub =>
-//         sub.id === sublistId
-//           ? { ...sub, items: sub.items.map(i => (i.key === item.key ? { ...i, checked: !i.checked } : i)) }
-//           : sub
-//       ),
-//     }));
-//   };
-// };
-
-// // Currently there can only be one manual sublist
-// const removeItemHandler = (item: QuantifiableItemData): void => {
-//   setShoppingList(prev => ({
-//     ...prev,
-//     sublists: prev.sublists!.map(sub =>
-//       sub.recipeId === null ? { ...sub, items: sub.items.filter(i => i.key !== item.key) } : sub
-//     ),
-//   }));
-// };
-
-// const onIncrementHandler = async (sublist: ShoppingListSublist) => {
-//   await api.patch.updateShoppingSublistCount(sublist.id, sublist.count + 0.5);
-//   const updatedShoppingList = await api.get.getShoppingList(shoppingList.id);
-//   setShoppingList(prepareShoppingList(updatedShoppingList));
-// };
-
-// const onDecrementHandler = async (sublist: ShoppingListSublist) => {
-//   if (sublist.count === 0.5) {
-//     await api.delete.deleteShoppingListSublist(sublist.id);
-//   } else {
-//     await api.patch.updateShoppingSublistCount(sublist.id, sublist.count - 0.5);
-//   }
-
-//   const updatedShoppingList = await api.get.getShoppingList(shoppingList.id);
-//   setShoppingList(prepareShoppingList(updatedShoppingList));
-// };
-
-// const setManualSublistItems = (items: readonly QuantifiableItemData[]): void => {
-//   setShoppingList(prev => ({
-//     ...prev,
-//     sublists: prev.sublists!.map(sub => (sub.recipeId === null ? { ...sub, items } : sub)),
-//   }));
-// };

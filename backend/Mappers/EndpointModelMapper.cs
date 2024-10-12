@@ -2,16 +2,14 @@
 using Cookbook.Contracts.Common;
 using Cookbook.Contracts.Recipes;
 using Cookbook.Contracts.ShoppingLists;
-using Cookbook.Contracts.ShoppingLists.Update;
 using Cookbook.Contracts.Tags;
-using Cookbook.Features.Common;
+using Cookbook.Features.Common.Models;
 using Cookbook.Features.Recipes;
 using Cookbook.Features.ShoppingLists;
-using Cookbook.Features.ShoppingLists.Update;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 using Category = Cookbook.Features.Categories.Category;
-using QuantifiableItemGet = Cookbook.Features.Common.QuantifiableItemGet;
+using QuantifiableItemGet = Cookbook.Features.Common.Models.QuantifiableItemGet;
 using RecipeGet = Cookbook.Features.Recipes.RecipeGet;
 using ShoppingList = Cookbook.Features.ShoppingLists.ShoppingList;
 using TagGet = Cookbook.Features.Tags.TagGet;
@@ -70,7 +68,9 @@ internal static class EndpointModelMapper
       Map(domainModel.Tags),
       domainModel.ImageSrc.GetValueOrDefault(),
       domainModel.Description,
-      Map(domainModel.Ingredients));
+      Map(domainModel.Ingredients),
+      domainModel.CreationDate,
+      domainModel.UpdateDate);
   
   public static ShoppingSublistGetDto Map(ShoppingSublist domainModel) => 
     new(domainModel.Id, domainModel.Name, domainModel.RecipeId.GetValueOrDefault(), domainModel.Count, Map(domainModel.Items));

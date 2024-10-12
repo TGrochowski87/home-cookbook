@@ -11,4 +11,6 @@ public record RecipeDetailsGetDto(
   List<TagGetDto> Tags, 
   string? ImageSrc,
   string Description,
-  List<QuantifiableItemGetDto> Ingredients) : RecipeGetDto(Id, Name, Category, Tags, ImageSrc);
+  List<QuantifiableItemGetDto> Ingredients, 
+  DateTime CreationDate, 
+  DateTime UpdateDate) : RecipeGetDto(Id, Name, Category, Tags, ImageSrc);

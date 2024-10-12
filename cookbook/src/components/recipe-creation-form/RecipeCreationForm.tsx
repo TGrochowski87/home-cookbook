@@ -61,15 +61,27 @@ const RecipeCreationForm = ({
   });
 
   const onSubmit = async (data: RecipeData): Promise<void> => {
-    // TODO: Consider some helper for handling different status codes.
     try {
       await onSubmitCallback(mapper.map.toRecipeCreateDto(data));
       reset();
       navigate(onSuccessNavigateTo, { replace: replaceOnNavigate });
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 400) {
-        displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
-        return;
+      if (axios.isAxiosError(error)) {
+        // TODO: Consider some helper for handling different status codes.
+        switch (error.response?.status) {
+          case 400:
+            displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
+            return;
+          case 412:
+            displayMessage({
+              type: "error",
+              message: "Zmiany nie mogły zostać zapisane.\nPrzepis został w międzyczasie zmodyfikowany.",
+              fadeOutAfter: 5000,
+            });
+            return;
+          default:
+            break;
+        }
       }
 
       // TODO: ErrorBoundry for unexpected errors.

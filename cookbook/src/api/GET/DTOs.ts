@@ -15,6 +15,8 @@ export interface RecipeGetDto {
   readonly category: CategoryGetDto;
   readonly tags: readonly TagGetDto[];
   readonly imageSrc?: string;
+  readonly creationDate: string;
+  readonly updateDate: string;
 }
 
 export interface RecipeDetailsGetDto extends RecipeGetDto {

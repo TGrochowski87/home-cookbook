@@ -1,10 +1,10 @@
 ﻿using Cookbook.DataAccess;
-using Cookbook.Features.Common;
+using Cookbook.Features.Common.Models;
 using Cookbook.Features.Recipes;
 using Cookbook.Features.ShoppingLists;
 using Cookbook.Features.Tags;
 using Category = Cookbook.Features.Categories.Category;
-using QuantifiableItemGet = Cookbook.Features.Common.QuantifiableItemGet;
+using QuantifiableItemGet = Cookbook.Features.Common.Models.QuantifiableItemGet;
 using Recipe = Cookbook.DataAccess.Recipe;
 using ShoppingList = Cookbook.Features.ShoppingLists.ShoppingList;
 using ShoppingSublist = Cookbook.Features.ShoppingLists.ShoppingSublist;
@@ -48,7 +48,9 @@ internal static class RepositoryModelMapper
       Map(entity.Tags),
       entity.ImageSrc, 
       entity.Description, 
-      Map(entity.List.QuantifiableItems));
+      Map(entity.List.QuantifiableItems),
+      entity.Creationdate,
+      entity.Updatedate);
     
   public static ShoppingSublist Map(DataAccess.ShoppingSublist entity) 
     => new(

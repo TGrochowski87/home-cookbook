@@ -1,7 +1,7 @@
-﻿using Cookbook.Features.Common;
+﻿using Cookbook.Features.Common.Models;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Features.ShoppingLists.Update;
+namespace Cookbook.Features.ShoppingLists;
 
 internal record ShoppingListUpdate(string Name, List<ShoppingSublistUpdate> Sublists);
 

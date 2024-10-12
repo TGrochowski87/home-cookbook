@@ -1,4 +1,4 @@
-﻿using Cookbook.Features.Common;
+﻿using Cookbook.Features.Common.Models;
 using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;
