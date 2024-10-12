@@ -11,6 +11,8 @@ import mapper from "mapper";
 import InfoModal from "./InfoModal";
 import useShoppingListUpdateManagement from "./useShoppingListUpdateManagement";
 import "./styles.less";
+import axios from "axios";
+import { useAlerts } from "components/alert/AlertStack";
 
 export async function loader({ params }: any) {
   const shoppingList = await api.get.getShoppingList(params.id);
@@ -25,6 +27,7 @@ const ShoppingListPage = () => {
   const shoppingListRef = useRef<ShoppingList>(shoppingList);
   // This prevents needless API calls when nothing has changed. Also blocks calling on initial unmount in development in strict mode.
   const shoppingListChanged = useRef<boolean>(false);
+  const { displayMessage } = useAlerts();
 
   const updateShoppingList: React.Dispatch<React.SetStateAction<ShoppingList>> = (
     newState: ShoppingList | ((prevState: ShoppingList) => ShoppingList)
@@ -41,12 +44,24 @@ const ShoppingListPage = () => {
       return;
     }
 
-    // No error handling because no errors are expected due to client-side validation.
-    const updatedShoppingList = await api.put.updateShoppingList(
-      shoppingList.id,
-      mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
-    );
-    setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
+    try {
+      const updatedShoppingList = await api.put.updateShoppingList(
+        shoppingList.id,
+        shoppingList.updateDate,
+        mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
+      );
+      setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
+    } catch (error) {
+      // TODO: Consider notifying through SignalR.
+      if (axios.isAxiosError(error) && error.response?.status === 412) {
+        displayMessage({
+          type: "error",
+          message: "Zmiany nie mogły zostać zapisane.\nLista zakupów została w międzyczasie zmodyfikowana.",
+          fadeOutAfter: 5000,
+        });
+        return;
+      }
+    }
   };
 
   useEffect(() => {
@@ -67,7 +82,11 @@ const ShoppingListPage = () => {
         return;
       }
 
-      api.put.updateShoppingListWithFetch(shoppingList.id, mapper.map.toShoppingListUpdateDto(shoppingList));
+      api.put.updateShoppingListWithFetch(
+        shoppingList.id,
+        shoppingList.updateDate,
+        mapper.map.toShoppingListUpdateDto(shoppingList)
+      );
     };
 
     // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.

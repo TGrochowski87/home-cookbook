@@ -29,12 +29,24 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
     => shoppingListRepository.CreateSublist(shoppingListId, recipeId);
 
-  public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(int id, ShoppingListUpdate updateData)
+  public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(
+    int id, 
+    DateTime resourceStateTimestampFromRequest, 
+    ShoppingListUpdate updateData)
   {
     return await shoppingListRepository.GetById(id)
+      .Check(shoppingList => VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
       .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData)) // Update does not return any expected errors.
       .Bind(() => shoppingListRepository.GetById(id)); // Return updated object.
+  }
+
+  private static UnitResult<Error> VerifyResourceStateNotOutdated(DateTime resourceStateTimestampFromRequest, DateTime resourceUpdateDate)
+  {
+    // TODO: I am actually not using these messages on UI. Change to english.
+    return resourceUpdateDate > resourceStateTimestampFromRequest 
+      ? new Error(HttpStatusCode.PreconditionFailed, "Zasób został w międzyczasie zmodyfikowany.") 
+      : UnitResult.Success<Error>();
   }
 
   private static UnitResult<Error> ValidateShoppingListUpdateWithDbData(

@@ -28,22 +28,23 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
       .AddFluentValidationAutoValidation();
   }
 
-  // TODO: If-Match
-  private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>>> OverrideShoppingList(
+  private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>> OverrideShoppingList(
       [FromServices] IShoppingListService shoppingListService,
       [FromRoute] int id,
-      [FromBody] ShoppingListUpdateDto dto)
+      [FromBody] ShoppingListUpdateDto dto,
+      [FromHeader(Name = "If-Unmodified-Since")] DateTime resourceStateTimestamp)
   {
     var shoppingListUpdate = EndpointModelMapper.Map(dto);
-    var result = await shoppingListService.UpdateShoppingList(id, shoppingListUpdate);
+    var result = await shoppingListService.UpdateShoppingList(id, resourceStateTimestamp, shoppingListUpdate);
 
     return result
-      .Match<ShoppingListDetails, Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>>, Error>(
+      .Match<ShoppingListDetails, Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>, Error>(
         shoppingList => TypedResults.Ok(EndpointModelMapper.Map(shoppingList)),
         error => error.StatusCode switch
         {
           HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
           HttpStatusCode.BadRequest => TypedResults.BadRequest(error.Message),
+          HttpStatusCode.PreconditionFailed => TypedResults.Problem(statusCode: (int)HttpStatusCode.PreconditionFailed, detail: error.Message),
           _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
         });
   }
