@@ -78,6 +78,10 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       ShoppingListId = shoppingListId
     };
     context.ShoppingSublists.Add(shoppingSublist);
+
+    var shoppingList = await context.ShoppingLists.FindAsync(shoppingListId);
+    shoppingList!.Updatedate = DateTime.Now;
+    
     await context.SaveChangesAsync();
     return UnitResult.Success<Error>();
   }
