@@ -9,9 +9,10 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   public async Task<List<ShoppingList>> GetAll()
   {
     var shoppingLists = await shoppingListRepository.GetAll();
-    var test = shoppingLists.GroupBy(sl => DateTime.Now > sl.CreationDate.AddMonths(1)).ToList();
+    var groupedByExpirationStatus = shoppingLists.GroupBy(sl => DateTime.Now > sl.CreationDate.AddMonths(1)).ToList();
 
-    var overdueShoppingLists = test.FirstOrDefault(group => group.Key);
+    // Removing overdue shopping lists
+    var overdueShoppingLists = groupedByExpirationStatus.FirstOrDefault(group => group.Key);
     if (overdueShoppingLists is not null)
     {
       foreach (var shoppingList in overdueShoppingLists)
@@ -20,7 +21,10 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
       }
     }
 
-    return test.FirstOrDefault(group => group.Key == false)?.ToList() ?? [];
+    var shoppingListsLeft = groupedByExpirationStatus.FirstOrDefault(group => group.Key == false)?.ToList() ?? [];
+    shoppingListsLeft.Sort((a, b) => b.UpdateDate.CompareTo(a.UpdateDate));
+
+    return shoppingListsLeft;
   }
 
   public Task<Result<ShoppingListDetails, Error>> GetById(int id)
