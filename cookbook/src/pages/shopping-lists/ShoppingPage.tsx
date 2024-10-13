@@ -3,7 +3,7 @@ import ShoppingListItem from "./ShoppingList";
 import "./styles.less";
 import api from "api/api";
 import { useLoaderData, useNavigate } from "react-router-dom";
-import AddButton from "components/AddButton";
+import AddButton from "components/buttons/AddButton";
 import BottomPageFadeout from "components/BottomPageFadeout";
 
 interface LoaderResponse {

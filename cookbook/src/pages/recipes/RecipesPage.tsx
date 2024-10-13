@@ -6,7 +6,7 @@ import api from "api/api";
 import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
 import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
-import AddButton from "components/AddButton";
+import AddButton from "components/buttons/AddButton";
 import TagSet from "components/tag-set/TagSet";
 import BottomPageFadeout from "components/BottomPageFadeout";
 
