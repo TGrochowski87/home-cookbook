@@ -16,8 +16,6 @@ const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
 
   const timeUntilDeletion: number = calculateTimeUntilDeletion(shoppingListInfo.creationDate);
 
-  // TODO: handle rename and update date
-
   return (
     <Popup
       className="shopping-list-info-modal"

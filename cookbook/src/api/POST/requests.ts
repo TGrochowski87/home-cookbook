@@ -8,6 +8,12 @@ export const createShoppingListSublist = async (shoppingListId: number, recipeId
   return response.data;
 };
 
+export const createShoppingList = async (name: string): Promise<number> => {
+  const url = `${baseUrl}/shopping-lists`;
+  const response = await axios.post(url, { name });
+  return response.data;
+};
+
 export const createRecipe = async (recipe: RecipeCreateDto): Promise<void> => {
   const formData = prepareRecipeFormData(recipe);
   const url = `${baseUrl}/recipes`;

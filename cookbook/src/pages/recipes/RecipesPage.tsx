@@ -6,8 +6,9 @@ import api from "api/api";
 import { CategoryGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
 import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
-import AddButton from "./AddButton";
+import AddButton from "components/AddButton";
 import TagSet from "components/tag-set/TagSet";
+import BottomPageFadeout from "components/BottomPageFadeout";
 
 interface LoaderResponse {
   readonly recipes: readonly RecipeGetDto[];
@@ -54,7 +55,7 @@ const RecipeListPage = () => {
           <RecipeListItem key={recipe.id} recipe={recipe} />
         ))}
       </div>
-      <div className="shadow"></div>
+      <BottomPageFadeout />
       <AddButton onClick={() => navigate(`./new`, { relative: "path" })} />
     </div>
   );
