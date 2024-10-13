@@ -58,7 +58,11 @@ internal class RecipeService : IRecipeService
   }
 
   public async Task<List<RecipeGet>> GetAll()
-    => await _recipeRepository.GetAll();
+  {
+    var recipes = await _recipeRepository.GetAll();
+    recipes.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCultureIgnoreCase));
+    return recipes;
+  }
 
   public async Task<Result<RecipeDetailsGet, Error>> GetById(int id)
     => await _recipeRepository.GetById(id);
