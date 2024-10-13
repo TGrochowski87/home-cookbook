@@ -4,14 +4,25 @@
 @import "@radix-ui/colors/gray-dark.css";
 
 .main-page {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 48px 1fr;
+  column-gap: 16px;
+  height: 48px;
+
+  > div {
+    grid-column: 1 / 3;
+  }
+
+  .theme-button {
+    aspect-ratio: 1/1;
+  }
+
   .page-switch {
     position: relative;
     align-self: center;
-    width: 280px;
-    height: 48px;
+    height: 100%;
     padding: 0;
-    margin-bottom: 8px;
-    flex-shrink: 0;
 
     border: none;
     border-radius: #numeric[big-border-radius];
@@ -49,7 +60,7 @@
 
       p {
         width: 50%;
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 600;
         letter-spacing: 2px;
         color: #colors[text];
