@@ -29,6 +29,9 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
     => shoppingListRepository.CreateSublist(shoppingListId, recipeId);
 
+  public Task<int> Create(string name) 
+    => shoppingListRepository.Create(name);
+
   public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(
     int id, 
     DateTime resourceStateTimestampFromRequest, 

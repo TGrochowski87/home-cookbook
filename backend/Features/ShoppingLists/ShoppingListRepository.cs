@@ -82,6 +82,30 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     return UnitResult.Success<Error>();
   }
 
+  public async Task<int> Create(string name)
+  {
+    var manualSublistList = new List();
+
+    var manualSublist = new DataAccess.ShoppingSublist
+    {
+      Count = 1,
+      RecipeId = null,
+      List = manualSublistList
+    };
+    
+    var shoppingList = new DataAccess.ShoppingList
+    {
+      Name = name,
+      ShoppingSublists = [manualSublist],
+      Creationdate = DateTime.Now,
+      Updatedate = DateTime.Now,
+    };
+    
+    context.ShoppingLists.Add(shoppingList);
+    await context.SaveChangesAsync();
+    return shoppingList.Id;
+  }
+
   public async Task UpdateShoppingList(int id, ShoppingListUpdate updateData)
   {
     var shoppingList = await context.ShoppingLists
@@ -107,39 +131,47 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
 
       sublist.Count = correspondingSublistUpdate.Count;
 
-      foreach (var item in sublist.List.QuantifiableItems)
-      {
-        var correspondingItemUpdate = correspondingSublistUpdate.Items
-          .FirstOrDefault(i => i.Id == item.Id);
-        
-        // If the item is missing in the update data, it should be removed.
-        if (correspondingItemUpdate == null)
-        {
-          context.Entry(item).State = EntityState.Deleted;
-          continue;
-        }
-        
-        item.Name = correspondingItemUpdate.Name;
-        item.Checked = correspondingItemUpdate.Checked;
-        item.Unit = correspondingItemUpdate.Amount.Unit.GetValueOrDefault();
-        item.Value = correspondingItemUpdate.Amount.Value;
-      }
-
-      // Update item data without ID means that it is new and should be created.
-      foreach (var newItem in correspondingSublistUpdate.Items.Where(item => item.Id.HasNoValue))
-      {
-        var item = new QuantifiableItem
-        {
-          Name = newItem.Name,
-          Checked = newItem.Checked,
-          Unit = newItem.Amount.Unit.GetValueOrDefault(),
-          Value = newItem.Amount.Value
-        };
-        sublist.List.QuantifiableItems.Add(item);
-      }
+      UpdateExistingListItems(sublist.List.QuantifiableItems, correspondingSublistUpdate.Items);
+      UpdateShoppingListByNewItems(sublist.List.QuantifiableItems, correspondingSublistUpdate.Items);
     }
     
     shoppingList.Updatedate = DateTime.Now;
     await context.SaveChangesAsync();
+  }
+
+  private void UpdateShoppingListByNewItems(ICollection<QuantifiableItem> currentListItems, IEnumerable<ShoppingListItemUpdate> updates)
+  {
+    // Update item data without ID means that it is new and should be created.
+    foreach (var newItem in updates.Where(item => item.Id.HasNoValue))
+    {
+      var item = new QuantifiableItem
+      {
+        Name = newItem.Name,
+        Checked = newItem.Checked,
+        Unit = newItem.Amount.Unit.GetValueOrDefault(),
+        Value = newItem.Amount.Value
+      };
+      currentListItems.Add(item);
+    }
+  }
+
+  private void UpdateExistingListItems(ICollection<QuantifiableItem> currentListItems, List<ShoppingListItemUpdate> updates)
+  {
+    foreach (var item in currentListItems)
+    {
+      var correspondingItemUpdate = updates.FirstOrDefault(i => i.Id == item.Id);
+        
+      // If the item is missing in the update data, it should be removed.
+      if (correspondingItemUpdate == null)
+      {
+        context.Entry(item).State = EntityState.Deleted;
+        continue;
+      }
+        
+      item.Name = correspondingItemUpdate.Name;
+      item.Checked = correspondingItemUpdate.Checked;
+      item.Unit = correspondingItemUpdate.Amount.Unit.GetValueOrDefault();
+      item.Value = correspondingItemUpdate.Amount.Value;
+    }
   }
 }

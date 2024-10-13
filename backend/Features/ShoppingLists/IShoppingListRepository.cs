@@ -12,5 +12,7 @@ internal interface IShoppingListRepository
 
   Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId);
   
+  Task<int> Create(string name);
+  
   Task UpdateShoppingList(int id, ShoppingListUpdate updateData);
 }

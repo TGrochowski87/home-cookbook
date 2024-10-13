@@ -22,9 +22,21 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     app.MapPost("/shopping-lists/{id:int}/sublists", AddRecipeIngredients)
       .WithTags("ShoppingLists");
 
+    app.MapPost("/shopping-lists", CreateShoppingList)
+      .WithTags("ShoppingLists")
+      .AddFluentValidationAutoValidation();
+
     app.MapPut("/shopping-lists/{id:int}", OverrideShoppingList)
       .WithTags("ShoppingLists")
       .AddFluentValidationAutoValidation();
+  }
+
+  private static async Task<Created<int>> CreateShoppingList(
+    [FromServices] IShoppingListService shoppingListService,
+    [FromBody] ShoppingListCreateDto dto)
+  {
+    var result = await shoppingListService.Create(dto.Name);
+    return TypedResults.Created((string?)null, result); // TODO: Consider proper URL
   }
 
   private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>> OverrideShoppingList(
