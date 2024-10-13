@@ -1,6 +1,6 @@
 import { PropsWithChildren } from "react";
 import * as Popover from "@radix-ui/react-popover";
-import Button from "./buttons/Button";
+import Button from "./Button";
 
 interface ConfirmationPopoverProps extends PropsWithChildren {
   readonly text: string;

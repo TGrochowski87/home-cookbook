@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
 import TagSet from "components/tag-set/TagSet";
-import Button from "components/buttons/Button";
+import Button from "components/Button";
 import { useForm, Controller } from "react-hook-form";
 import { RecipeCreateDto } from "api/POST/DTOs";
 import axios from "axios";

@@ -1,4 +1,4 @@
-import Button from "components/buttons/Button";
+import Button from "components/Button";
 import WidthAdjustingInput from "components/WidthAdjustingInput";
 import PlusIcon from "components/icons/PlusIcon";
 import { useState } from "react";

@@ -1,5 +1,5 @@
 import { PropsWithChildren } from "react";
-import "../styles.less";
+import "./styles.less";
 
 type Type = "outlined" | "filled";
 
