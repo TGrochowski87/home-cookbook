@@ -61,7 +61,6 @@ const EditableQuantifiableItemsList = ({
             maxLength: 50,
             setValueAs: (value: string) => value.trim(),
           })}
-          className={`${watch("name")?.length > 0 ? "" : "empty-input"}`}
           maxLength={50}
           autoCapitalize="none"
           placeholder="Nazwa"
@@ -72,7 +71,6 @@ const EditableQuantifiableItemsList = ({
             maxLength: 10,
             setValueAs: (value: string) => value.trim(),
           })}
-          className={`${watch("amount.value")?.length > 0 ? "" : "empty-input"}`}
           maxLength={10}
           autoCapitalize="none"
           placeholder="Ilość"
@@ -83,7 +81,7 @@ const EditableQuantifiableItemsList = ({
             maxLength: 8,
             setValueAs: (value: string) => value.trim(),
           })}
-          className={`${watch("amount.unit")?.length > 0 ? "" : "empty-input"}`}
+          className={`${watch("amount.unit")?.length > 0 ? "" : "smaller-placeholder"}`}
           maxLength={8}
           autoCapitalize="none"
           placeholder="Jednostka"
