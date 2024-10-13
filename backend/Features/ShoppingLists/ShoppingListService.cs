@@ -27,14 +27,18 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
     return shoppingListsLeft;
   }
 
-  public Task<Result<ShoppingListDetails, Error>> GetById(int id)
-    => shoppingListRepository.GetById(id);
+  public async Task<Result<ShoppingListDetails, Error>> GetById(int id)
+    => await shoppingListRepository.GetById(id);
 
-  public Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
-    => shoppingListRepository.CreateSublist(shoppingListId, recipeId);
+  public async Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)
+  {
+    return await shoppingListRepository.GetById(shoppingListId)
+      .Check(shoppingList => VerifyRecipeIsNotOnShoppingList(shoppingList, recipeId))
+      .Bind(_ => shoppingListRepository.CreateSublist(shoppingListId, recipeId));
+  }
 
-  public Task<int> Create(string name) 
-    => shoppingListRepository.Create(name);
+  public async Task<int> Create(string name) 
+    => await shoppingListRepository.Create(name);
 
   public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(
     int id, 
@@ -46,6 +50,13 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
       .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData)) // Update does not return any expected errors.
       .Bind(() => shoppingListRepository.GetById(id)); // Return updated object.
+  }
+
+  private static UnitResult<Error> VerifyRecipeIsNotOnShoppingList(ShoppingListDetails shoppingList, int recipeId)
+  {
+    return shoppingList.Sublists.Any(sl => sl.RecipeId == recipeId) 
+      ? new Error(HttpStatusCode.Conflict, "Składniki przepisu już są na liście zakupów.") 
+      : UnitResult.Success<Error>();
   }
 
   private static UnitResult<Error> ValidateShoppingListUpdateWithDbData(

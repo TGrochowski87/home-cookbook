@@ -59,10 +59,9 @@ const ShoppingListPage = () => {
           message: "Zmiany nie mogły zostać zapisane.\nLista zakupów została w międzyczasie zmodyfikowana.",
           fadeOutAfter: 5000,
         });
-        return;
+      } else {
+        throw error;
       }
-
-      throw error;
     }
   };
 

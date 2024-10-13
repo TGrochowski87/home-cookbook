@@ -71,21 +71,22 @@ const RecipeCreationForm = ({
         switch (error.response?.status) {
           case 400:
             displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
-            return;
+            break;
           case 412:
             displayMessage({
               type: "error",
               message: "Zmiany nie mogły zostać zapisane.\nPrzepis został w międzyczasie zmodyfikowany.",
               fadeOutAfter: 5000,
             });
-            return;
-          default:
             break;
+          default:
+            throw error;
         }
+      } else {
+        throw error;
       }
 
       // TODO: ErrorBoundry for unexpected errors.
-      throw error;
     }
   };
 

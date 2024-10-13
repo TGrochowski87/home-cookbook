@@ -60,15 +60,20 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
         });
   }
 
-  private static async Task<Results<Created, NotFound<string>>> AddRecipeIngredients(
+  private static async Task<Results<Created, NotFound<string>, Conflict<string>>> AddRecipeIngredients(
     [FromServices] IShoppingListService shoppingListService,
     [FromRoute] int id,
     [FromBody] ShoppingSublistCreateDto dto)
   {
     var result = await shoppingListService.CreateSublist(id, dto.RecipeId);
-    return result.Match<Results<Created, NotFound<string>>, Error>(
+    return result.Match<Results<Created, NotFound<string>, Conflict<string>>, Error>(
       () => TypedResults.Created(),
-      error => TypedResults.NotFound(error.Message));
+      error => error.StatusCode switch
+      {
+        HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        HttpStatusCode.Conflict => TypedResults.Conflict(error.Message),
+        _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
+      });
   }
 
   private static async Task<Ok<List<ShoppingListGetDto>>> GetAllShoppingLists(

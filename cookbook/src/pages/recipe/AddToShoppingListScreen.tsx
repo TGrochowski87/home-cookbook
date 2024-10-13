@@ -1,5 +1,6 @@
 import { ShoppingListGetDto } from "api/GET/DTOs";
 import api from "api/api";
+import axios from "axios";
 import Popup from "components/Popup";
 import { useAlerts } from "components/alert/AlertStack";
 import HighlightingList from "components/highlighting-list/HighlightingList";
@@ -15,8 +16,21 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
   const { displayMessage } = useAlerts();
 
   const listClickHandler = async (listId: number) => {
-    await api.post.createShoppingListSublist(listId, recipeId);
-    displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
+    try {
+      await api.post.createShoppingListSublist(listId, recipeId);
+      displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        displayMessage({
+          type: "info",
+          message: "Przepis już jest na tej liście zakupów.",
+          fadeOutAfter: 5000,
+        });
+      } else {
+        throw error;
+      }
+    }
+
     navigate(`/shopping-lists/${listId}`);
   };
 
