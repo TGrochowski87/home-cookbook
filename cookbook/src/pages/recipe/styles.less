@@ -10,6 +10,16 @@
   padding-bottom: 52px;
   font-size: 0.8rem;
 
+  header {
+    // This adds padding only for the first line, which saves space for 'Home' button
+    h1::before {
+      content: "";
+      float: right;
+      width: 32px;
+      height: 1em;
+    }
+  }
+
   .category-indicator {
     --element-height: 24px;
     --pseudo-element-width: calc(var(--element-height) / 2);

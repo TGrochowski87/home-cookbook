@@ -3,13 +3,22 @@
 @import "@radix-ui/colors/black-alpha.css";
 
 .shopping-list-page {
-  .header {
+  header {
     > * {
       display: inline;
     }
 
     h1 {
       margin-right: 4px;
+      overflow-wrap: break-word;
+
+      // This adds padding only for the first line, which saves space for 'Home' button
+      &::before {
+        content: "";
+        float: right;
+        width: 36px;
+        height: 1em;
+      }
     }
   }
 

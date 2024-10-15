@@ -13,6 +13,7 @@ import useShoppingListUpdateManagement from "./useShoppingListUpdateManagement";
 import "./styles.less";
 import axios from "axios";
 import { useAlerts } from "components/alert/AlertStack";
+import HomeButton from "components/HomeButton";
 
 export async function loader({ params }: any) {
   const shoppingList = await api.get.getShoppingList(params.id);
@@ -102,10 +103,12 @@ const ShoppingListPage = () => {
 
   return (
     <div className="page shopping-list-page">
-      <span className="header">
+      <HomeButton homeTab="shopping-lists" />
+
+      <header>
         <h1>{shoppingList.name}</h1>
         <InfoModal shoppingListInfo={shoppingList} renameHandler={handle.nameUpdate} />
-      </span>
+      </header>
 
       {shoppingList.sublists
         .filter(sublist => sublist.recipeId)

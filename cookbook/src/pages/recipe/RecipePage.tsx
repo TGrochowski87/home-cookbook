@@ -12,6 +12,7 @@ import { useAlerts } from "components/alert/AlertStack";
 import AddToShoppingListScreen from "./AddToShoppingListScreen";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import QuantifiableItemData from "models/QuantifiableItemData";
+import HomeButton from "components/HomeButton";
 
 interface CheckboxChecks {
   readonly ingredients: readonly number[];
@@ -140,6 +141,7 @@ const RecipePage = () => {
 
   return (
     <div className="page recipe-page">
+      <HomeButton homeTab="recipes" />
       <header>
         <h1>{recipe.name}</h1>
         {/* @ts-ignore */}
