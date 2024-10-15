@@ -5,7 +5,7 @@ const SearchBar = () => {
   const [input, setInput] = useState<string>();
   return (
     <div className="search-bar block floating interactive-element">
-      <input type="search" name="name" maxLength={30} value={input} onChange={event => setInput(event.target.value)} />
+      <input type="search" name="name" maxLength={100} value={input} onChange={event => setInput(event.target.value)} />
       <SearchIcon />
     </div>
   );

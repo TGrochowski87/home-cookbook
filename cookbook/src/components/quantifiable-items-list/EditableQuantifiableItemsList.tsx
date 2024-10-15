@@ -58,31 +58,31 @@ const EditableQuantifiableItemsList = ({
         <Input
           {...register("name", {
             required: true,
-            maxLength: 50,
+            maxLength: 100,
             setValueAs: (value: string) => value.trim(),
           })}
-          maxLength={50}
+          maxLength={100}
           autoCapitalize="none"
           placeholder="Nazwa"
         />
         <Input
           {...register("amount.value", {
             required: true,
-            maxLength: 10,
+            maxLength: 20,
             setValueAs: (value: string) => value.trim(),
           })}
-          maxLength={10}
+          maxLength={20}
           autoCapitalize="none"
           placeholder="Ilość"
         />
         <Input
           {...register("amount.unit", {
             required: false,
-            maxLength: 8,
+            maxLength: 10,
             setValueAs: (value: string) => value.trim(),
           })}
           className={`${watch("amount.unit")?.length > 0 ? "" : "smaller-placeholder"}`}
-          maxLength={8}
+          maxLength={10}
           autoCapitalize="none"
           placeholder="Jednostka"
         />

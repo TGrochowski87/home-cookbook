@@ -96,10 +96,10 @@ const RecipeCreationForm = ({
         <Input
           {...register("name", {
             required: "Nazwa przepisu jest wymagana",
-            maxLength: 50,
+            maxLength: 100,
             setValueAs: (value: string) => value.trim(),
           })}
-          maxLength={50}
+          maxLength={100}
           placeholder="Nazwa przepisu..."
         />
         {formState.errors.name && <p className="under-input-error-message">{formState.errors.name.message}</p>}

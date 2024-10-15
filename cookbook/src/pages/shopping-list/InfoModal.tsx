@@ -30,6 +30,7 @@ const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
               renameHandler(input);
               setRenameActive(false);
             }}
+            maxLength={100}
             value={input}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInput(e.target.value)}
           />
