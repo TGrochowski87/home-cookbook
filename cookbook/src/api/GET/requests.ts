@@ -1,15 +1,14 @@
 import axios from "axios";
 import {
   CategoryGetDto,
+  GetRecipesResponseDto,
   RecipeDetailsGetDto,
-  RecipeGetDto,
   ShoppingListDetailsGetDto,
   ShoppingListGetDto,
   TagGetDto,
 } from "./DTOs";
 import { baseUrl } from "api/api";
 
-// TODO: Extends on real API
 // TODO: Cancellation token
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {
@@ -24,9 +23,9 @@ export const getTags = async (): Promise<TagGetDto[]> => {
   return response.data;
 };
 
-export const getRecipes = async (): Promise<RecipeGetDto[]> => {
-  const url = `${baseUrl}/recipes`;
-  const response = await axios.get<RecipeGetDto[]>(url);
+export const getRecipes = async (nextPageUrl?: string): Promise<GetRecipesResponseDto> => {
+  const url = nextPageUrl ?? `${baseUrl}/recipes`;
+  const response = await axios.get<GetRecipesResponseDto>(url);
   return response.data;
 };
 

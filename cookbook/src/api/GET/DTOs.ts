@@ -9,6 +9,11 @@ export interface CategoryGetDto {
   readonly color: string;
 }
 
+export interface GetRecipesResponseDto {
+  readonly nextPage: string;
+  readonly recipes: readonly RecipeGetDto[];
+}
+
 export interface RecipeGetDto {
   readonly id: number;
   readonly name: string; // TODO: Devise a proper character limit
