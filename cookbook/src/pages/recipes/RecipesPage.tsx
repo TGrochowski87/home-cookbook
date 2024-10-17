@@ -1,7 +1,7 @@
 import SearchBar from "./search/SearchBar";
 import CategoryChip from "pages/recipes/search/CategoryChip";
 import "./styles.less";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "api/api";
 import { CategoryGetDto, GetRecipesResponseDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
@@ -11,6 +11,7 @@ import TagSet from "components/tag-set/TagSet";
 import BottomPageFadeout from "components/BottomPageFadeout";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingIndicator from "components/LoadingIndicator";
+import ScrollUpButton from "./ScrollUpButton";
 
 interface LoaderResponse {
   readonly getRecipesResponse: GetRecipesResponseDto;
@@ -29,6 +30,7 @@ const RecipeListPage = () => {
   const { getRecipesResponse, categories, tags } = useLoaderData() as LoaderResponse;
   const [recipes, setRecipes] = useState<readonly RecipeGetDto[]>(getRecipesResponse.recipes);
   const nextRecipesPage = useRef<string | null>(getRecipesResponse.nextPage);
+  const [showScrollUpButton, setShowScrollUpButton] = useState<boolean>(false);
 
   const searchTimeoutId = useRef<number>();
   const navigate = useNavigate();
@@ -39,10 +41,27 @@ const RecipeListPage = () => {
       return;
     }
 
+    // await new Promise(resolve => {
+    //   setTimeout(resolve, 3000);
+    // });
+
     const nextPage = await api.get.getRecipes(nextRecipesPage.current);
     nextRecipesPage.current = nextPage.nextPage;
     setRecipes(prev => prev.concat(nextPage.recipes));
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      console.log(window.scrollY);
+      setShowScrollUpButton(window.scrollY > 1000);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="recipe-list-page">
@@ -78,6 +97,7 @@ const RecipeListPage = () => {
 
       <BottomPageFadeout />
       <AddButton onClick={() => navigate(`./new`, { relative: "path" })} />
+      <ScrollUpButton hidden={showScrollUpButton == false} />
     </div>
   );
 };

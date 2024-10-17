@@ -2,22 +2,28 @@ import { PropsWithChildren } from "react";
 import "./styles.less";
 
 type Type = "outlined" | "filled";
-
-const typesStyles: Record<Type, string> = {
-  filled: "button-filled",
-  outlined: "button-outlined",
-};
+type Shape = "rounded-square" | "round";
 
 interface ButtonProps extends PropsWithChildren {
   readonly type?: Type;
   readonly onClick?: () => void;
   readonly className?: string;
   readonly disableShadow?: boolean;
+  readonly shape?: Shape;
 }
 
-const Button = ({ onClick, children, disableShadow, className, type = "outlined" }: ButtonProps) => {
+const Button = ({
+  onClick,
+  children,
+  disableShadow,
+  className,
+  type = "outlined",
+  shape = "rounded-square",
+}: ButtonProps) => {
   return (
-    <button className={`${typesStyles[type]} ${disableShadow ? "" : "floating"} ${className}`} onClick={onClick}>
+    <button
+      className={`button-${type} button-shape-${shape} ${disableShadow ? "" : "floating"} ${className}`}
+      onClick={onClick}>
       {children}
     </button>
   );

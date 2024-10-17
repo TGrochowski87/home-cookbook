@@ -22,4 +22,21 @@
     margin-inline: auto;
     margin-block: 1rem;
   }
+
+  .scrollup-button {
+    width: 56px;
+    height: 56px;
+
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    padding: 8px;
+    z-index: 3;
+
+    transition: transform 200ms ease-out;
+  }
+
+  .scrollup-button.hidden {
+    transform: translateY(72px); // height + bottom
+  }
 }
