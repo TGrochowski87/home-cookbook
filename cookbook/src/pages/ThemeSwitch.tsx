@@ -1,5 +1,5 @@
 import { ThemeContext } from "context/ThemeContext";
-import Button from "components/Button";
+import Button from "components/buttons/Button";
 import { Moon, Sun } from "lucide-react";
 import { useContext } from "react";
 

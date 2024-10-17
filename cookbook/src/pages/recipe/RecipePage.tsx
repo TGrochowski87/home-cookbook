@@ -12,7 +12,7 @@ import { useAlerts } from "components/alert/AlertStack";
 import AddToShoppingListScreen from "./AddToShoppingListScreen";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import QuantifiableItemData from "models/QuantifiableItemData";
-import HomeButton from "components/HomeButton";
+import HomeButton from "components/buttons/HomeButton";
 
 interface CheckboxChecks {
   readonly ingredients: readonly number[];

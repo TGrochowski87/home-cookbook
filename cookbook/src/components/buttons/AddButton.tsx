@@ -1,4 +1,4 @@
-import Button from "components/Button";
+import Button from "components/buttons/Button";
 import PlusIcon from "components/icons/PlusIcon";
 import "./styles.less";
 

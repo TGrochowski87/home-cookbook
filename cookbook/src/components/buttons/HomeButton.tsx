@@ -1,4 +1,4 @@
-import Button from "components/Button";
+import Button from "components/buttons/Button";
 import { Home } from "lucide-react";
 import "./styles.less";
 import { useNavigate } from "react-router-dom";

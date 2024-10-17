@@ -13,7 +13,7 @@ import useShoppingListUpdateManagement from "./useShoppingListUpdateManagement";
 import "./styles.less";
 import axios from "axios";
 import { useAlerts } from "components/alert/AlertStack";
-import HomeButton from "components/HomeButton";
+import HomeButton from "components/buttons/HomeButton";
 
 export async function loader({ params }: any) {
   const shoppingList = await api.get.getShoppingList(params.id);
