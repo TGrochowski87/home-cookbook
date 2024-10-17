@@ -90,6 +90,8 @@ internal partial class CookbookContext : DbContext
 
       entity.ToTable("recipes");
 
+      entity.HasIndex(e => e.Name, "recipes_name");
+
       entity.Property(e => e.Id).HasColumnName("id");
       entity.Property(e => e.CategoryId).HasColumnName("category_id");
       entity.Property(e => e.Creationdate)

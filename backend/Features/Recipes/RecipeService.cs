@@ -57,12 +57,8 @@ internal class RecipeService : IRecipeService
       .CheckIf(data.Image.HasValue, () => SaveRecipeImage(id, data.Image.Value));
   }
 
-  public async Task<List<RecipeGet>> GetAll()
-  {
-    var recipes = await _recipeRepository.GetAll();
-    recipes.Sort((x, y) => string.Compare(x.Name, y.Name, StringComparison.CurrentCultureIgnoreCase));
-    return recipes;
-  }
+  public Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(Maybe<string> lastName, Maybe<int?> lastId, int pageSize) 
+    => _recipeRepository.GetMany(lastName, lastId, pageSize);
 
   public async Task<Result<RecipeDetailsGet, Error>> GetById(int id)
     => await _recipeRepository.GetById(id);

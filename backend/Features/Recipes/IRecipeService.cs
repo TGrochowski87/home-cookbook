@@ -4,7 +4,7 @@ namespace Cookbook.Features.Recipes;
 
 internal interface IRecipeService
 {
-  Task<List<RecipeGet>> GetAll();
+  Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(Maybe<string> lastName, Maybe<int?> lastId, int pageSize);
   
   Task<Result<RecipeDetailsGet, Error>> GetById(int id);
 

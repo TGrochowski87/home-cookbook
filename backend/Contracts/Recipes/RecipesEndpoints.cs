@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Cookbook.Features.Images;
+using Microsoft.AspNetCore.Http.Extensions;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace Cookbook.Contracts.Recipes;
@@ -14,7 +15,7 @@ public class RecipesEndpoints : IEndpointsDefinition
 {
   public void MapEndpoints(WebApplication app)
   {
-    app.MapGet("/recipes", GetAllRecipes)
+    app.MapGet("/recipes", GetRecipes)
       .WithTags("Recipes");
 
     app.MapGet("/recipes/{id:int}", GetRecipeById)
@@ -34,12 +35,24 @@ public class RecipesEndpoints : IEndpointsDefinition
       .AddFluentValidationAutoValidation();
   }
 
-  private static async Task<Ok<List<RecipeGetDto>>> GetAllRecipes(
-    [FromServices] IRecipeService recipeService)
+  private static async Task<Ok<GetRecipesResponseDto>> GetRecipes(
+    HttpRequest request,
+    [FromServices] IRecipeService recipeService,
+    [FromQuery] string? lastName, 
+    [FromQuery] int? lastId, 
+    [FromQuery] int pageSize = 20)
   {
-    var recipes = await recipeService.GetAll();
-    var recipeDtos = EndpointModelMapper.Map(recipes);
-    return TypedResults.Ok(recipeDtos);
+    var getRecipesResult = await recipeService.GetMany(lastName, lastId, pageSize);
+    var recipeDtos = EndpointModelMapper.Map(getRecipesResult.recipes);
+
+    var requestUrl = request.GetEncodedUrl();
+    var pathBase = requestUrl.Remove(requestUrl.IndexOf(request.Path));
+    var lastRecipeFromCurrentPage = getRecipesResult.recipes.Last();
+    var test = $"{pathBase}/recipes?lastName={lastRecipeFromCurrentPage.Name.Replace(' ', '+')}&lastId={lastRecipeFromCurrentPage.Id}";
+    var nextPageUrl = new Uri(test);
+    var response = new GetRecipesResponseDto(getRecipesResult.isLastPage ? null : nextPageUrl, recipeDtos);
+      
+    return TypedResults.Ok(response);
   }
 
   private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound<string>>> GetRecipeById(

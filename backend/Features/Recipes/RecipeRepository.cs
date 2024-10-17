@@ -69,15 +69,31 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     return UnitResult.Success<Error>();
   }
 
-  public async Task<List<RecipeGet>> GetAll()
+  public async Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(
+    Maybe<string> lastName, 
+    Maybe<int?> lastId, 
+    int pageSize)
   {
-    // TODO: Pagination
+    var lastNameValue = lastName.Or(string.Empty).Value;
+    var lastIdValue = lastId.Or(0).Value;
+    
     // TODO: Test all complex queries for possible performance issues.
     var entities = await context.Recipes
+      .OrderBy(r => r.Name)
+      .ThenBy(r => r.Id)
+      .Where(r => r.Name.CompareTo(lastNameValue) > 0 || (r.Name.CompareTo(lastNameValue) == 0 && r.Id > lastIdValue))
+      .Take(pageSize)
       .Select(r => new { r.Id, r.Name, r.Category, r.Tags, r.ImageSrc })
       .ToListAsync();
 
-    return entities
+    var lastRecipe = await context.Recipes
+      .OrderBy(r => r.Name)
+      .ThenBy(r => r.Id)
+      .LastOrDefaultAsync();
+    
+    
+    var isLastPage = lastRecipe is not null && entities.Last().Id == lastRecipe.Id;
+    var recipes = entities
       .Select(e
         => new RecipeGet(
           e.Id,
@@ -86,6 +102,8 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
           RepositoryModelMapper.Map(e.Tags),
           e.ImageSrc!))
       .ToList();
+
+    return (recipes, isLastPage);
   }
 
   public async Task<Result<RecipeDetailsGet, Error>> GetById(int id)
