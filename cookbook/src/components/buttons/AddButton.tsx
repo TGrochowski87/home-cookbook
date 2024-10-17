@@ -1,6 +1,6 @@
 import Button from "components/buttons/Button";
-import PlusIcon from "components/icons/PlusIcon";
 import "./styles.less";
+import { Plus } from "lucide-react";
 
 interface AddButtonProps {
   readonly onClick: () => void;
@@ -9,7 +9,7 @@ interface AddButtonProps {
 const AddButton = ({ onClick }: AddButtonProps) => {
   return (
     <Button className="add-button floating" type="filled" onClick={onClick}>
-      <PlusIcon thickness={8} />
+      <Plus width="100%" height="100%" />
     </Button>
   );
 };

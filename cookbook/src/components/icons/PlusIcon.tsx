@@ -4,6 +4,7 @@ interface PlusIconProps {
   readonly thickness?: number;
 }
 
+// TODO: This might not be needed actually. Can be changed to lucide icon.
 const PlusIcon = ({ width = "100%", height = "100%", thickness = 4 }: PlusIconProps) => {
   return (
     <svg width={width} height={height}>
