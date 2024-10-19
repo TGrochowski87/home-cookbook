@@ -4,7 +4,7 @@ import { CategoryGetDto, RecipeDetailsGetDto, TagGetDto } from "api/GET/DTOs";
 import { useNavigate } from "react-router-dom";
 import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
-import TagSet from "components/tag-set/TagSet";
+import TagSet, { TagSelection } from "components/tag-set/TagSet";
 import Button from "components/buttons/Button";
 import { useForm, Controller } from "react-hook-form";
 import { RecipeCreateDto } from "api/POST/DTOs";
@@ -144,7 +144,8 @@ const RecipeCreationForm = ({
               selection={{
                 disabled: false,
                 initiallySelected: recipe?.tags.map(t => t.id),
-                onSelectionChange: (selectedTagIds: (number | string)[]) => onChange(selectedTagIds),
+                onSelectionChange: (selectedTags: TagSelection[]) =>
+                  onChange(selectedTags.map(t => (t.id !== undefined ? t.id : t.name))),
               }}
             />
           )}

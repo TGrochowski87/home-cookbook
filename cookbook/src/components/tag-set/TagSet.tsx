@@ -7,6 +7,11 @@ import CreateTagButton from "./CreateTagButton";
 import TagSize from "./TagSize";
 import NewTag from "./NewTag";
 
+export interface TagSelection {
+  readonly id?: number;
+  readonly name: string;
+}
+
 interface TagSetProps {
   readonly tags: readonly TagGetDto[];
   readonly tagSize: TagSize;
@@ -15,7 +20,7 @@ interface TagSetProps {
   readonly selection?: {
     readonly disabled?: boolean;
     readonly initiallySelected?: readonly number[];
-    readonly onSelectionChange?: (selectedTagIds: (number | string)[]) => void;
+    readonly onSelectionChange?: (selectedTags: TagSelection[]) => void;
   };
   readonly tagCreationEnabled?: boolean;
 }
@@ -28,14 +33,17 @@ const TagSet = ({
   tagCreationEnabled = false,
   align = "center",
 }: TagSetProps) => {
-  const [selectedTags, setSelectedTags] = useState<readonly number[]>(selection.initiallySelected ?? []);
-  const [newTags, setNewTags] = useState<readonly string[]>([]);
+  const [selections, setSelections] = useState<readonly TagSelection[]>(
+    selection.initiallySelected ? tags.filter(t => selection.initiallySelected?.includes(t.id!)) : []
+  );
 
   useEffect(() => {
     if (selection.onSelectionChange) {
-      selection.onSelectionChange([...selectedTags, ...newTags]);
+      selection.onSelectionChange([...selections]);
     }
-  }, [selectedTags, newTags]);
+  }, [selections]);
+
+  const newTags = selections.filter(t => t.id === undefined).map(t => t.name);
 
   return (
     <div className="tag-set" style={{ justifyContent: align }}>
@@ -48,12 +56,12 @@ const TagSet = ({
             tag={tag}
             size={tagSize}
             disableShadow={disableShadow}
-            checked={selectedTags.includes(tag.id)}
+            checked={selections.find(t => t.id === tag.id) !== undefined}
             onCheckedChange={(checked: boolean) => {
               if (checked) {
-                setSelectedTags(prev => [...prev, tag.id]);
+                setSelections(prev => [...prev, { id: tag.id, name: tag.name }]);
               } else {
-                setSelectedTags(prev => prev.filter(id => id !== tag.id));
+                setSelections(prev => prev.filter(s => s.id !== tag.id));
               }
             }}
           />
@@ -61,19 +69,21 @@ const TagSet = ({
       )}
       {tagCreationEnabled && (
         <>
-          {newTags.map(tag => (
+          {newTags.map(tagName => (
             <NewTag
-              key={tag}
-              tagName={tag}
+              key={tagName}
+              tagName={tagName}
               size={tagSize}
-              onDelete={() => setNewTags(prev => prev.filter(t => t != tag))}
+              onDelete={() => {
+                setSelections(prev => prev.filter(s => s.name !== tagName));
+              }}
             />
           ))}
           <CreateTagButton
             size={tagSize}
             onCreate={(name: string) => {
               if (newTags.includes(name) === false) {
-                setNewTags(prev => [...prev, name]);
+                setSelections(prev => [...prev, { name }]);
               }
             }}
           />

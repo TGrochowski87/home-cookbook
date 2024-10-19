@@ -23,9 +23,11 @@ export const getTags = async (): Promise<TagGetDto[]> => {
   return response.data;
 };
 
-export const getRecipes = async (nextPageUrl?: string): Promise<GetRecipesResponseDto> => {
-  const url = nextPageUrl ?? `${baseUrl}/recipes`;
-  const response = await axios.get<GetRecipesResponseDto>(url);
+export type GetRecipesURL = { type: "Query"; query: string } | { type: "Whole"; url: string };
+
+export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponseDto> => {
+  const finalUrl = url.type === "Query" ? `${baseUrl}/recipes${url.query}` : url.url;
+  const response = await axios.get<GetRecipesResponseDto>(finalUrl);
   return response.data;
 };
 

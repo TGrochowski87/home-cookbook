@@ -1,13 +1,13 @@
 import SearchBar from "./search/SearchBar";
 import CategoryChip from "pages/recipes/search/CategoryChip";
 import "./styles.less";
-import { useEffect, useRef, useState } from "react";
+import { useDeferredValue, useEffect, useRef, useState } from "react";
 import api from "api/api";
 import { CategoryGetDto, GetRecipesResponseDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
-import { Form, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
+import { Form, useLoaderData, useLocation, useNavigate, useSearchParams, useSubmit } from "react-router-dom";
 import AddButton from "components/buttons/AddButton";
-import TagSet from "components/tag-set/TagSet";
+import TagSet, { TagSelection } from "components/tag-set/TagSet";
 import BottomPageFadeout from "components/BottomPageFadeout";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingIndicator from "components/LoadingIndicator";
@@ -19,11 +19,18 @@ interface LoaderResponse {
   readonly tags: TagGetDto[];
 }
 
-export async function loader(): Promise<LoaderResponse> {
+export async function loader({ request }: any): Promise<LoaderResponse> {
+  const url = new URL(request.url);
   const categories = await api.get.getCategories();
   const tags = await api.get.getTags();
-  const getRecipesResponse = await api.get.getRecipes();
+  const getRecipesResponse = await api.get.getRecipes({ type: "Query", query: url.search });
   return { getRecipesResponse, categories, tags };
+}
+
+interface QueryParams {
+  readonly name: string;
+  readonly category: string;
+  //
 }
 
 const RecipeListPage = () => {
@@ -34,7 +41,14 @@ const RecipeListPage = () => {
 
   const searchTimeoutId = useRef<number>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const submit = useSubmit();
+
+  const [query, setQuery] = useState<QueryParams>({
+    name: "",
+    category: "",
+  });
+  const initialTags = useRef<string[]>(searchParams.getAll("tags"));
 
   const fetchMoreRecipes = async () => {
     if (nextRecipesPage.current === null) {
@@ -45,11 +59,19 @@ const RecipeListPage = () => {
     //   setTimeout(resolve, 3000);
     // });
 
-    const nextPage = await api.get.getRecipes(nextRecipesPage.current);
+    const nextPage = await api.get.getRecipes({ type: "Whole", url: nextRecipesPage.current });
     nextRecipesPage.current = nextPage.nextPage;
     setRecipes(prev => prev.concat(nextPage.recipes));
   };
 
+  useEffect(() => {
+    setQuery({
+      name: searchParams.get("name") ?? "",
+      category: searchParams.get("category") ?? "",
+    });
+  }, []);
+
+  // Setup events
   useEffect(() => {
     const handleScroll = () => {
       setShowScrollUpButton(window.scrollY > 1000);
@@ -72,15 +94,32 @@ const RecipeListPage = () => {
             submit(event.target.form, { replace: true });
           }, 1000);
         }}>
-        <SearchBar />
+        <SearchBar
+          value={query.name}
+          setValue={(newValue: string) => setQuery(prev => ({ ...prev, name: newValue }))}
+        />
 
         <div className="category-list">
           {categories.map(category => (
-            <CategoryChip key={category.id} category={category} />
+            <CategoryChip
+              key={category.id}
+              category={category}
+              checked={query.category === category.name}
+              onChange={value => setQuery(prev => ({ ...prev, category: value }))}
+            />
           ))}
         </div>
 
-        <TagSet tags={tags} tagSize="big" selection={{ disabled: false }} />
+        <TagSet
+          tags={tags}
+          tagSize="big"
+          selection={{
+            disabled: false,
+            initiallySelected: tags.filter(t => initialTags.current.includes(t.name)).map(t => t.id),
+            onSelectionChange: (selectedTags: TagSelection[]) =>
+              setQuery(prev => ({ ...prev, tags: selectedTags.map(t => t.name) })),
+          }}
+        />
       </Form>
 
       <InfiniteScroll

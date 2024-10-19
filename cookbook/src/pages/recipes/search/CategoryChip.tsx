@@ -3,13 +3,22 @@ import "./styles.less";
 
 interface CategoryChipProps {
   readonly category: CategoryGetDto;
+  readonly checked: boolean;
+  readonly onChange: (value: string) => void;
 }
 
 // TODO: Consider Radix
-const CategoryChip = ({ category }: CategoryChipProps) => {
+const CategoryChip = ({ category, checked, onChange }: CategoryChipProps) => {
   return (
     <>
-      <input type="radio" name="category" id={category.name} value={category.name} />
+      <input
+        type="radio"
+        name="category"
+        id={category.name}
+        value={category.name}
+        checked={checked}
+        onChange={event => onChange(event.target.value)}
+      />
       <label
         className="category-chip block floating interactive-element"
         style={{ "--color": category.color }}
