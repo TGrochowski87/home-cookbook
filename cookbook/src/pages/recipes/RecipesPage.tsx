@@ -27,12 +27,6 @@ export async function loader({ request }: any): Promise<LoaderResponse> {
   return { getRecipesResponse, categories, tags };
 }
 
-interface QueryParams {
-  readonly name: string;
-  readonly category: string;
-  //
-}
-
 const RecipeListPage = () => {
   const { getRecipesResponse, categories, tags } = useLoaderData() as LoaderResponse;
   const [recipes, setRecipes] = useState<readonly RecipeGetDto[]>(getRecipesResponse.recipes);
@@ -44,11 +38,8 @@ const RecipeListPage = () => {
   const [searchParams] = useSearchParams();
   const submit = useSubmit();
 
-  const [query, setQuery] = useState<QueryParams>({
-    name: "",
-    category: "",
-  });
-  const initialTags = useRef<string[]>(searchParams.getAll("tags"));
+  // Radio button group needs a higher level state.
+  const [categorySelection, setCategorySelection] = useState<string>(searchParams.get("category") || "");
 
   const fetchMoreRecipes = async () => {
     if (nextRecipesPage.current === null) {
@@ -63,13 +54,6 @@ const RecipeListPage = () => {
     nextRecipesPage.current = nextPage.nextPage;
     setRecipes(prev => prev.concat(nextPage.recipes));
   };
-
-  useEffect(() => {
-    setQuery({
-      name: searchParams.get("name") ?? "",
-      category: searchParams.get("category") ?? "",
-    });
-  }, []);
 
   // Setup events
   useEffect(() => {
@@ -94,18 +78,15 @@ const RecipeListPage = () => {
             submit(event.target.form, { replace: true });
           }, 1000);
         }}>
-        <SearchBar
-          value={query.name}
-          setValue={(newValue: string) => setQuery(prev => ({ ...prev, name: newValue }))}
-        />
+        <SearchBar initialValue={searchParams.get("name") || ""} />
 
         <div className="category-list">
           {categories.map(category => (
             <CategoryChip
               key={category.id}
               category={category}
-              checked={query.category === category.name}
-              onChange={value => setQuery(prev => ({ ...prev, category: value }))}
+              checked={categorySelection === category.name}
+              onChange={setCategorySelection}
             />
           ))}
         </div>
@@ -115,9 +96,7 @@ const RecipeListPage = () => {
           tagSize="big"
           selection={{
             disabled: false,
-            initiallySelected: tags.filter(t => initialTags.current.includes(t.name)).map(t => t.id),
-            onSelectionChange: (selectedTags: TagSelection[]) =>
-              setQuery(prev => ({ ...prev, tags: selectedTags.map(t => t.name) })),
+            initiallySelected: tags.filter(t => searchParams.getAll("tags").includes(t.name)).map(t => t.id),
           }}
         />
       </Form>

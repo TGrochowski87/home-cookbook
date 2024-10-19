@@ -4,10 +4,9 @@ import "./styles.less";
 interface CategoryChipProps {
   readonly category: CategoryGetDto;
   readonly checked: boolean;
-  readonly onChange: (value: string) => void;
+  readonly onChange: (category: string) => void;
 }
 
-// TODO: Consider Radix
 const CategoryChip = ({ category, checked, onChange }: CategoryChipProps) => {
   return (
     <>
