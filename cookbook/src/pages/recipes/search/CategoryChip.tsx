@@ -23,6 +23,7 @@ const CategoryChip = ({ category, checked, onChange }: CategoryChipProps) => {
         style={{ "--color": category.color }}
         htmlFor={category.name}>
         {category.name}
+        <span dangerouslySetInnerHTML={{ __html: category.symbol }} />
       </label>
     </>
   );
