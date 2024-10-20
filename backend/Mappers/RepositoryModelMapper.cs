@@ -15,7 +15,7 @@ namespace Cookbook.Mappers;
 internal static class RepositoryModelMapper
 {
   public static Category Map(DataAccess.Category entity)
-    => new(entity.Id, entity.Name, entity.Color);
+    => new(entity.Id, entity.Name, entity.Color, entity.Symbol);
 
   public static List<Category> Map(IEnumerable<DataAccess.Category> entities)
     => entities.Select(Map).ToList();

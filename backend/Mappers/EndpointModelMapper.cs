@@ -19,7 +19,7 @@ namespace Cookbook.Mappers;
 internal static class EndpointModelMapper
 {
   public static CategoryGetDto Map(Category domainModel)
-    => new(domainModel.Id, domainModel.Name, domainModel.Color);
+    => new(domainModel.Id, domainModel.Name, domainModel.Color, domainModel.Symbol);
 
   public static List<CategoryGetDto> Map(IEnumerable<Category> domainModels)
     => domainModels.Select(Map).ToList();
