@@ -11,12 +11,18 @@ const CategoryChip = ({ category, checked, onChange }: CategoryChipProps) => {
   return (
     <>
       <input
-        type="radio"
+        type="checkbox"
         name="category"
         id={category.name}
         value={category.name}
         checked={checked}
-        onChange={event => onChange(event.target.value)}
+        onChange={event => {
+          if (checked) {
+            onChange("");
+          } else {
+            onChange(event.target.value);
+          }
+        }}
       />
       <label
         className="category-chip block floating interactive-element"
