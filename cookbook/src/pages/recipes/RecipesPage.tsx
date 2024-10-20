@@ -32,6 +32,7 @@ const RecipeListPage = () => {
   const [recipes, setRecipes] = useState<readonly RecipeGetDto[]>(getRecipesResponse.recipes);
   const nextRecipesPage = useRef<string | null>(getRecipesResponse.nextPage);
   const [showScrollUpButton, setShowScrollUpButton] = useState<boolean>(false);
+  const [nexPageLoading, setNextPageLoading] = useState<boolean>(false);
 
   const searchTimeoutId = useRef<number>();
   const navigate = useNavigate();
@@ -45,14 +46,16 @@ const RecipeListPage = () => {
     if (nextRecipesPage.current === null) {
       return;
     }
+    setNextPageLoading(true);
 
     // await new Promise(resolve => {
-    //   setTimeout(resolve, 3000);
+    //   setTimeout(resolve, 1000);
     // });
 
     const nextPage = await api.get.getRecipes({ type: "Whole", url: nextRecipesPage.current });
     nextRecipesPage.current = nextPage.nextPage;
     setRecipes(prev => prev.concat(nextPage.recipes));
+    setNextPageLoading(false);
   };
 
   useEffect(() => {
@@ -111,7 +114,13 @@ const RecipeListPage = () => {
         dataLength={recipes.length}
         next={fetchMoreRecipes}
         hasMore={nextRecipesPage.current !== null}
-        loader={<LoadingIndicator className="loading" />}>
+        loader={<LoadingIndicator className="loading" />}
+        endMessage={
+          <p style={{ textAlign: "center", margin: "0.5rem 0 1rem 0" }}>
+            {recipes.length === 0 ? "Żaden przepis nie spełnia kryteriów" : "Koniec listy przepisów"}
+          </p>
+        }>
+        {nexPageLoading && <LoadingIndicator className="loading" />}
         {recipes.map(recipe => (
           <RecipeListItem key={recipe.id} recipe={recipe} />
         ))}

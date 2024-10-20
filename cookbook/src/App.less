@@ -2,12 +2,6 @@
 @import "./common.less";
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
-.app {
-  background-color: #colors[background];
-  color: #colors[text];
-  min-height: 100dvh;
-}
-
 :root {
   // accent-color: var(--grass-9);
   caret-color: var(--grass-9);
@@ -32,6 +26,36 @@ select {
 * {
   box-sizing: border-box;
   margin: 0;
+}
+
+.app {
+  background-color: #colors[background];
+  color: #colors[text];
+  min-height: 100dvh;
+}
+
+.navigation-loading-overlay {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: grayscale(50%) blur(1px);
+  z-index: 10;
+
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  transition-delay: 0.5s;
+
+  > * {
+    margin: auto;
+    width: fit-content;
+  }
+}
+
+.navigation-loading-overlay.hidden {
+  visibility: hidden;
+  opacity: 0;
 }
 
 // Debug

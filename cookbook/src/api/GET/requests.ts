@@ -27,6 +27,11 @@ export type GetRecipesURL = { type: "Query"; query: string } | { type: "Whole"; 
 
 export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponseDto> => {
   const finalUrl = url.type === "Query" ? `${baseUrl}/recipes${url.query}` : url.url;
+
+  // await new Promise(resolve => {
+  //   setTimeout(resolve, 3000);
+  // });
+
   const response = await axios.get<GetRecipesResponseDto>(finalUrl);
   return response.data;
 };

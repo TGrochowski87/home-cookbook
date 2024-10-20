@@ -1,10 +1,11 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigation } from "react-router-dom";
 import "./App.less";
 import { useCallback, useLayoutEffect, useState } from "react";
 import { ThemeContext } from "context/ThemeContext";
+import LoadingIndicator from "components/LoadingIndicator";
 
 function App() {
-  // TODO: Likely temporary. Remove later.
+  const navigation = useNavigation();
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useLayoutEffect(() => {
@@ -35,6 +36,9 @@ function App() {
   return (
     <div className="app">
       <ThemeContext.Provider value={{ theme, switchTheme }}>
+        <div className={`navigation-loading-overlay ${navigation.state === "loading" ? "" : "hidden"}`}>
+          <LoadingIndicator />
+        </div>
         <Outlet />
       </ThemeContext.Provider>
     </div>
