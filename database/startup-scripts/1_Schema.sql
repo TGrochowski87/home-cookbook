@@ -1,7 +1,8 @@
 CREATE TABLE categories (
   id int PRIMARY KEY,
   name varchar(100) NOT NULL UNIQUE,
-  color varchar(7) NOT NULL
+  color varchar(7) NOT NULL,
+  symbol varchar(2000) NOT NULL
 );
 
 CREATE TABLE tags (

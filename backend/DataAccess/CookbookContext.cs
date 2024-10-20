@@ -49,6 +49,9 @@ internal partial class CookbookContext : DbContext
       entity.Property(e => e.Name)
         .HasMaxLength(100)
         .HasColumnName("name");
+      entity.Property(e => e.Symbol)
+        .HasMaxLength(2000)
+        .HasColumnName("symbol");
     });
 
     modelBuilder.Entity<List>(entity =>

@@ -8,5 +8,7 @@ internal partial class Category
 
   public string Color { get; set; } = null!;
 
+  public string Symbol { get; set; } = null!;
+
   public virtual ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
 }
