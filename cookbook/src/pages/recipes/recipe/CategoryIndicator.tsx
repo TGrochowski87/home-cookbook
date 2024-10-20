@@ -1,11 +1,11 @@
+import { CategoryGetDto } from "api/GET/DTOs";
 import { useState } from "react";
 
 interface CategoryIndicatorProps {
-  readonly categoryName: string;
-  readonly categoryColor: string;
+  readonly category: CategoryGetDto;
 }
 
-const CategoryIndicator = ({ categoryName, categoryColor }: CategoryIndicatorProps) => {
+const CategoryIndicator = ({ category }: CategoryIndicatorProps) => {
   const [show, setShow] = useState<boolean>(false);
 
   return (
@@ -13,13 +13,12 @@ const CategoryIndicator = ({ categoryName, categoryColor }: CategoryIndicatorPro
       className="category-indicator-interaction-space"
       onMouseEnter={() => setShow(true)}
       onMouseLeave={() => setShow(false)}
-      onTouchStart={event => {
-        setShow(prev => !prev);
-      }}
+      onTouchStart={() => setShow(prev => !prev)}
       onClick={event => event.stopPropagation()}>
       {/* @ts-ignore */}
-      <div style={{ "--color": categoryColor }} className={`category-indicator ${show ? "show" : ""}`}>
-        <p>{categoryName}</p>
+      <span className="svg-space" dangerouslySetInnerHTML={{ __html: category.symbol }} />
+      <div style={{ "--color": category.color }} className={`category-indicator ${show ? "show" : ""}`}>
+        <p>{category.name}</p>
       </div>
     </div>
   );

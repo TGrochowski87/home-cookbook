@@ -11,6 +11,10 @@
   grid-template-columns: min-content 1fr 24px;
   grid-template-rows: 20% 30% 50%;
 
+  // This prevents the blueish highlighting of the entire list item block on click.
+  // Especially important while clicking on category indicator.
+  -webkit-tap-highlight-color: transparent;
+
   font-size: 0.6rem;
 
   img {
@@ -21,7 +25,7 @@
     object-fit: cover;
     border-radius: #numeric[border-radius];
     border: 1px solid #00000020;
-    margin-right: 4px;
+    margin-right: 8px;
   }
 
   h2 {
@@ -50,7 +54,7 @@
   .category-indicator-interaction-space {
     position: absolute;
     right: 0;
-    padding: 8px 16px;
+    padding: 8px 20px;
     z-index: 2;
 
     display: flex;
@@ -58,26 +62,41 @@
     align-items: center;
   }
 
+  .svg-space {
+    position: absolute;
+    right: 12px;
+    z-index: 3;
+
+    svg {
+      color: #colors[text-green-background];
+      width: 16px;
+      height: 16px;
+    }
+  }
+
   .category-indicator {
-    --pseudo-element-width: 8px;
+    --pseudo-element-width: 12px;
 
     background: var(--color);
     position: relative;
     max-width: 0px;
-    height: 16px;
+    height: calc(var(--pseudo-element-width) * 2);
     padding: 1px 0;
 
     font-weight: 600;
 
-    transition: all 1s ease;
+    transition: all 1s ease-in-out;
     &.show {
-      max-width: 100px;
+      max-width: 200px;
     }
 
     p {
+      font-size: 0.9rem;
       width: 100%;
       overflow: hidden;
       white-space: nowrap;
+      margin-right: 16px;
+      color: #colors[text-green-background];
     }
 
     &::before {

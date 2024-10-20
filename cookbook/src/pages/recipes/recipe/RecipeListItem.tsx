@@ -18,10 +18,8 @@ const RecipeListItem = ({ recipe }: RecipeListItemProps) => {
       onClick={() => navigate(`./${recipe.id}`, { relative: "path" })}>
       <img src={recipe.imageSrc ?? BurgerPlaceHolder} />
       <h2>{recipe.name}</h2>
-      {/* TODO: Should this recipe.description really be here? */}
-      {/* <p>{recipe.description}</p> */}
       <TagSet tags={recipe.tags} tagSize="small" disableShadow align="start" />
-      <CategoryIndicator categoryColor={recipe.category.color} categoryName={recipe.category.name} />
+      <CategoryIndicator category={recipe.category} />
     </article>
   );
 };
