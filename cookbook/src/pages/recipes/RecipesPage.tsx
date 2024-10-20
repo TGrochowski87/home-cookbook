@@ -1,13 +1,13 @@
 import SearchBar from "./search/SearchBar";
 import CategoryChip from "pages/recipes/search/CategoryChip";
 import "./styles.less";
-import { useDeferredValue, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import api from "api/api";
 import { CategoryGetDto, GetRecipesResponseDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
-import { Form, useLoaderData, useLocation, useNavigate, useSearchParams, useSubmit } from "react-router-dom";
+import { Form, useLoaderData, useNavigate, useSearchParams, useSubmit } from "react-router-dom";
 import AddButton from "components/buttons/AddButton";
-import TagSet, { TagSelection } from "components/tag-set/TagSet";
+import TagSet from "components/tag-set/TagSet";
 import BottomPageFadeout from "components/BottomPageFadeout";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingIndicator from "components/LoadingIndicator";
@@ -54,6 +54,11 @@ const RecipeListPage = () => {
     nextRecipesPage.current = nextPage.nextPage;
     setRecipes(prev => prev.concat(nextPage.recipes));
   };
+
+  useEffect(() => {
+    setRecipes(getRecipesResponse.recipes);
+    nextRecipesPage.current = getRecipesResponse.nextPage;
+  }, [getRecipesResponse]);
 
   // Setup events
   useEffect(() => {
