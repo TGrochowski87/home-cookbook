@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Net;
+using System.Text;
 using Cookbook.Features.Recipes;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -38,19 +39,19 @@ public class RecipesEndpoints : IEndpointsDefinition
   private static async Task<Ok<GetRecipesResponseDto>> GetRecipes(
     HttpRequest request,
     [FromServices] IRecipeService recipeService,
-    [FromQuery] string? lastName, 
-    [FromQuery] int? lastId, 
-    [FromQuery] int pageSize = 20)
+    [AsParameters] GetRecipesQueryParamsDto queryParamsDto)
   {
-    var getRecipesResult = await recipeService.GetMany(lastName, lastId, pageSize);
+    var query = EndpointModelMapper.Map(queryParamsDto);
+    var getRecipesResult = await recipeService.GetMany(query);
     var recipeDtos = EndpointModelMapper.Map(getRecipesResult.recipes);
 
-    var requestUrl = request.GetEncodedUrl();
-    var pathBase = requestUrl.Remove(requestUrl.IndexOf(request.Path));
-    var lastRecipeFromCurrentPage = getRecipesResult.recipes.Last();
-    var test = $"{pathBase}/recipes?lastName={lastRecipeFromCurrentPage.Name.Replace(' ', '+')}&lastId={lastRecipeFromCurrentPage.Id}";
-    var nextPageUrl = new Uri(test);
-    var response = new GetRecipesResponseDto(getRecipesResult.isLastPage ? null : nextPageUrl, recipeDtos);
+    if (getRecipesResult.isLastPage)
+    {
+      return TypedResults.Ok(new GetRecipesResponseDto(null, recipeDtos));
+    }
+
+    var nextPageUrl = ConstructGetRecipesNextPageUrl(request, query, getRecipesResult.recipes.Last());
+    var response = new GetRecipesResponseDto(nextPageUrl, recipeDtos);
       
     return TypedResults.Ok(response);
   }
@@ -120,6 +121,39 @@ public class RecipesEndpoints : IEndpointsDefinition
           statusCode: (int?)error.StatusCode),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
+  }
+
+  private static Uri ConstructGetRecipesNextPageUrl(
+    HttpRequest request, 
+    GetRecipesQueryParams currentRequestQuery, 
+    RecipeGet lastRecipeFromCurrentPage)
+  {
+    var stringBuilder = new StringBuilder();
+    
+    var requestUrl = request.GetEncodedUrl();
+    var pathBase = requestUrl.Remove(requestUrl.IndexOf(request.Path));
+    stringBuilder.Append($"{pathBase}/recipes?");
+
+    if (currentRequestQuery.Filtering.HasValue)
+    {
+      if (currentRequestQuery.Filtering.Value.Name.HasValue)
+      {
+        stringBuilder.Append($"name={currentRequestQuery.Filtering.Value.Name.Value}&");
+      }
+      if (currentRequestQuery.Filtering.Value.Category.HasValue)
+      {
+        stringBuilder.Append($"category={currentRequestQuery.Filtering.Value.Category.Value}&");
+      }
+      if (currentRequestQuery.Filtering.Value.Tags.Length > 0)
+      {
+        stringBuilder.Append($"tags={string.Join(',', currentRequestQuery.Filtering.Value.Tags)}&");
+      }
+    }
+
+    stringBuilder.Append(
+      $"lastName={lastRecipeFromCurrentPage.Name.Replace(' ', '+')}&lastId={lastRecipeFromCurrentPage.Id}&pageSize={currentRequestQuery.Paging.PageSize}");
+    
+    return new Uri(stringBuilder.ToString());
   }
 
   private static string MimeTypeFromExtension(string extension)

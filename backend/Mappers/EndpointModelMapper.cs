@@ -124,4 +124,15 @@ internal static class EndpointModelMapper
       return new ShoppingListItemUpdate(dto.Id, dto.Name, Map(dto.Amount), dto.Checked);
     }
   }
+
+  public static GetRecipesQueryParams Map(GetRecipesQueryParamsDto dto)
+  {
+    var filtering = dto.Name != null || dto.Category != null || dto.Tags != null
+      ? new Filtering(dto.Name, dto.Category, dto.Tags ?? [])
+      : null;
+    
+    var paging = new Paging(dto.LastName ?? "", dto.LastId ?? 0, dto.PageSize);
+
+    return new GetRecipesQueryParams(filtering, paging);
+  }
 }

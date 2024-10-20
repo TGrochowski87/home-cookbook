@@ -45,44 +45,43 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       .Include(r => r.List)
       .ThenInclude(l => l.QuantifiableItems)
       .SingleOrDefaultAsync(r => r.Id == id);
-    if(recipe == null)
+    if (recipe == null)
     {
       return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
     }
-    
+
     recipe.Name = data.Name;
     recipe.CategoryId = data.CategoryId;
     recipe.Description = data.Description;
-    
+
     recipe.Tags.Clear();
     recipe.Tags = context.Tags.Where(t => data.TagIds.Contains(t.Id)).ToList();
-    
+
     recipe.List.QuantifiableItems.Clear();
     var listItems = RepositoryModelMapper.Map(data.Ingredients);
     foreach (var item in listItems)
     {
       recipe.List.QuantifiableItems.Add(item);
     }
-    
+
     recipe.Updatedate = DateTime.Now;
     await context.SaveChangesAsync();
     return UnitResult.Success<Error>();
   }
 
-  public async Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(
-    Maybe<string> lastName, 
-    Maybe<int?> lastId, 
-    int pageSize)
+  public async Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(GetRecipesQueryParams queryParams)
   {
-    var lastNameValue = lastName.Or(string.Empty).Value;
-    var lastIdValue = lastId.Or(0).Value;
-    
     // TODO: Test all complex queries for possible performance issues.
-    var entities = await context.Recipes
+    IQueryable<Recipe> query = context.Recipes
+      .Include(r => r.Category)
+      .Include(r => r.Tags)
       .OrderBy(r => r.Name)
-      .ThenBy(r => r.Id)
-      .Where(r => r.Name.CompareTo(lastNameValue) > 0 || (r.Name.CompareTo(lastNameValue) == 0 && r.Id > lastIdValue))
-      .Take(pageSize)
+      .ThenBy(r => r.Id);
+
+    ApplyFiltering(ref query, queryParams);
+    ApplyPaging(ref query, queryParams);
+    
+    var entities = await query
       .Select(r => new { r.Id, r.Name, r.Category, r.Tags, r.ImageSrc })
       .ToListAsync();
 
@@ -90,9 +89,8 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       .OrderBy(r => r.Name)
       .ThenBy(r => r.Id)
       .LastOrDefaultAsync();
+    var isLastPage = entities.Count == 0 || (lastRecipe is not null && entities.Last().Id == lastRecipe.Id);
     
-    
-    var isLastPage = lastRecipe is not null && entities.Last().Id == lastRecipe.Id;
     var recipes = entities
       .Select(e
         => new RecipeGet(
@@ -110,20 +108,20 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
   {
     var entity = await context.Recipes
       .Include(r => r.Category)
-      .Include(r =>r.Tags)
+      .Include(r => r.Tags)
       .Include(r => r.List)
       .ThenInclude(l => l.QuantifiableItems)
       .SingleOrDefaultAsync(r => r.Id == id);
-    
-    return entity is not null 
-      ? RepositoryModelMapper.Map(entity) 
+
+    return entity is not null
+      ? RepositoryModelMapper.Map(entity)
       : new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
   }
 
   public async Task<UnitResult<Error>> SetImageSource(int recipeId, string imageSrc)
   {
     var recipe = await context.Recipes.SingleOrDefaultAsync(r => r.Id == recipeId);
-    if(recipe == null)
+    if (recipe == null)
     {
       return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
     }
@@ -131,5 +129,37 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     recipe.ImageSrc = imageSrc;
     await context.SaveChangesAsync();
     return UnitResult.Success<Error>();
+  }
+
+  private static void ApplyFiltering(ref IQueryable<Recipe> query, GetRecipesQueryParams queryParams)
+  {
+    if (!queryParams.Filtering.HasValue)
+    {
+      return;
+    }
+
+    if (queryParams.Filtering.Value.Name.HasValue)
+    {
+      query = query.Where(r => r.Name.Contains(queryParams.Filtering.Value.Name.Value));
+    }
+    if (queryParams.Filtering.Value.Category.HasValue)
+    {
+      query = query.Where(r => r.Category.Name == queryParams.Filtering.Value.Category.Value);
+    }
+    if (queryParams.Filtering.Value.Tags.Length > 0)
+    {
+      query = query.Where(r => r.Tags
+        .Select(t => t.Name)
+        .Intersect(queryParams.Filtering.Value.Tags)
+        .Count() == queryParams.Filtering.Value.Tags.Length);
+    }
+  }
+
+  private static void ApplyPaging(ref IQueryable<Recipe> query, GetRecipesQueryParams queryParams)
+  {
+    query = query.Where(r => r.Name.CompareTo(queryParams.Paging.LastName) > 0 || 
+                             (r.Name.CompareTo(queryParams.Paging.LastName) == 0 && 
+                              r.Id > queryParams.Paging.LastId))
+      .Take(queryParams.Paging.PageSize);
   }
 }
