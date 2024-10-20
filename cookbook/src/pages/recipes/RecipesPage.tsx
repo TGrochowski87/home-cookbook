@@ -28,6 +28,7 @@ export async function loader({ request }: any): Promise<LoaderResponse> {
 }
 
 const RecipeListPage = () => {
+  const navigate = useNavigate();
   const { getRecipesResponse, categories, tags } = useLoaderData() as LoaderResponse;
   const [recipes, setRecipes] = useState<readonly RecipeGetDto[]>(getRecipesResponse.recipes);
   const nextRecipesPage = useRef<string | null>(getRecipesResponse.nextPage);
@@ -35,11 +36,11 @@ const RecipeListPage = () => {
   const [nexPageLoading, setNextPageLoading] = useState<boolean>(false);
 
   const searchTimeoutId = useRef<number>();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const submit = useSubmit();
 
-  // Radio button group needs a higher level state.
+  // Checkbox group needs a higher level state to be able to work as deselactable radio buttons.
+  // The inputs are not fully controlled as we read form status and submit in form's onChange event.
   const [categorySelection, setCategorySelection] = useState<string>(searchParams.get("category") || "");
 
   const fetchMoreRecipes = async () => {
@@ -58,6 +59,7 @@ const RecipeListPage = () => {
     setNextPageLoading(false);
   };
 
+  // Rerunning loader does not cause rerender, so we need a separate state to copy data to.
   useEffect(() => {
     setRecipes(getRecipesResponse.recipes);
     nextRecipesPage.current = getRecipesResponse.nextPage;
@@ -65,6 +67,7 @@ const RecipeListPage = () => {
 
   // Setup events
   useEffect(() => {
+    // Allow to scroll to top quickly when scrolled down
     const handleScroll = () => {
       setShowScrollUpButton(window.scrollY > 1000);
     };
@@ -81,8 +84,10 @@ const RecipeListPage = () => {
       <Form
         className="search-section"
         onChange={event => {
+          // This allows calling the API only after the user has finished setting up filters.
           clearTimeout(searchTimeoutId.current);
           searchTimeoutId.current = window.setTimeout(() => {
+            // This makes loader function run again.
             submit(event.target.form, { replace: true });
           }, 1000);
         }}>

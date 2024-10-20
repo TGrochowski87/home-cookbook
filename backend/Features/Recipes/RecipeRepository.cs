@@ -85,6 +85,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       .Select(r => new { r.Id, r.Name, r.Category, r.Tags, r.ImageSrc })
       .ToListAsync();
 
+    // If the last row is in this page or the page is empty, there are no more pages.
     var lastRecipe = await context.Recipes
       .OrderBy(r => r.Name)
       .ThenBy(r => r.Id)
@@ -155,8 +156,20 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     }
   }
 
+  /// <summary>
+  /// 'Keyset pagination' is used. It is better for infinite scrolling than 'offset pagination', because the latter has
+  /// to process all previous records before it can select the last bunch for a page. Here, the pagination is done
+  /// thought the 'where' clause which is very efficient if indexes are in place, as the first row is easily discoverable
+  /// and the record are already sorted.
+  ///
+  /// For multiple pagination keys a composite index must be in place.
+  ///
+  /// 'Keyset pagination' does not support random page access and it needs to know the previous records, but it is not
+  /// possible in 'infinite scrolling'.
+  /// </summary>
   private static void ApplyPaging(ref IQueryable<Recipe> query, GetRecipesQueryParams queryParams)
   {
+    // TODO: Create composite index.
     query = query.Where(r => r.Name.CompareTo(queryParams.Paging.LastName) > 0 || 
                              (r.Name.CompareTo(queryParams.Paging.LastName) == 0 && 
                               r.Id > queryParams.Paging.LastId))
