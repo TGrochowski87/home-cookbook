@@ -147,6 +147,7 @@ const RecipePage = () => {
         {/* @ts-ignore */}
         <div style={{ "--color": recipe.category.color }} className="category-indicator">
           <h3>{recipe.category.name}</h3>
+          <span className="svg-space" dangerouslySetInnerHTML={{ __html: recipe.category.symbol }} />
         </div>
       </header>
 

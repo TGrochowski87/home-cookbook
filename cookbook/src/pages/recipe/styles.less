@@ -24,7 +24,11 @@
     --element-height: 24px;
     --pseudo-element-width: calc(var(--element-height) / 2);
 
+    display: flex;
+
     background: var(--color);
+    color: #colors[text-green-background];
+
     position: relative;
     width: fit-content;
     height: var(--element-height);
@@ -32,6 +36,18 @@
 
     letter-spacing: 1px;
     line-height: var(--element-height);
+
+    .svg-space {
+      position: relative;
+      left: 6px;
+      z-index: 1;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        vertical-align: sub;
+      }
+    }
 
     &::before {
       content: "";
