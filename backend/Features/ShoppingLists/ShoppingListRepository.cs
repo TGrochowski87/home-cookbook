@@ -32,18 +32,21 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
 
   public async Task Remove(int id)
   {
-    var shoppingList = await context.ShoppingLists
+    var subListsListIds = await context.ShoppingLists
       .Include(sl => sl.ShoppingSublists)
-      .ThenInclude(ss => ss.List)
-      .SingleOrDefaultAsync(sl => sl.Id == id);
-    if (shoppingList is null)
+      .Where(sl => sl.Id == id)
+      .SelectMany(sl => sl.ShoppingSublists.Select(ss => ss.ListId))
+      .ToListAsync();
+    
+    if (subListsListIds.Count == 0)
     {
       return;
     }
     
-    context.Lists.RemoveRange(shoppingList.ShoppingSublists.Select(ss => ss.List));
-    context.ShoppingLists.Remove(shoppingList);
-    await context.SaveChangesAsync();
+    // Deleting by removing entities from DBSets by 'Remove' creates a separate DELETE call for every entity.
+    // These two expressions result in two DELETE calls.
+    await context.Lists.Where(l => subListsListIds.Contains(l.Id)).ExecuteDeleteAsync();
+    await context.ShoppingLists.Where(sl => sl.Id == id).ExecuteDeleteAsync();
   }
 
   public async Task<UnitResult<Error>> CreateSublist(int shoppingListId, int recipeId)

@@ -8,7 +8,7 @@ internal class CategoryRepository(CookbookContext context) : ICategoryRepository
 {
   public async Task<List<Category>> GetAll()
   {
-    var entities = await context.Categories.ToListAsync();
+    var entities = await context.Categories.AsNoTracking().ToListAsync();
     return RepositoryModelMapper.Map(entities);
   }
 }

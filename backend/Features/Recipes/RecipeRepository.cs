@@ -17,7 +17,6 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     context.Lists.Add(list);
     await context.SaveChangesAsync();
 
-    // TODO: Is this efficient? Is this how it should be done?
     var tags = context.Tags.Where(t => data.TagIds.Contains(t.Id)).ToList();
 
     // TODO: Possible to use mapper?
@@ -83,6 +82,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     
     var entities = await query
       .Select(r => new { r.Id, r.Name, r.Category, r.Tags, r.ImageSrc })
+      .AsNoTracking()
       .ToListAsync();
 
     // If the last row is in this page or the page is empty, there are no more pages.

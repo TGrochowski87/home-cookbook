@@ -30,7 +30,7 @@ internal class TagRepository(CookbookContext context) : ITagRepository
 
   public async Task<List<TagGet>> GetAll()
   {
-    var entities = await context.Tags.ToListAsync();
+    var entities = await context.Tags.AsNoTracking().ToListAsync();
     return RepositoryModelMapper.Map(entities);
   }
 }
