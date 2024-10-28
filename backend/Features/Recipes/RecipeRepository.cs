@@ -169,7 +169,6 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
   /// </summary>
   private static void ApplyPaging(ref IQueryable<Recipe> query, GetRecipesQueryParams queryParams)
   {
-    // TODO: Create composite index.
     query = query.Where(r => r.Name.CompareTo(queryParams.Paging.LastName) > 0 || 
                              (r.Name.CompareTo(queryParams.Paging.LastName) == 0 && 
                               r.Id > queryParams.Paging.LastId))

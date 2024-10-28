@@ -44,8 +44,8 @@ CREATE TABLE recipes (
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE
 );
 
-CREATE INDEX recipes_name
-  ON recipes(name);
+CREATE INDEX recipes_name_id
+  ON recipes(name, id);
 
 CREATE TABLE shopping_sublists (
   id SERIAL PRIMARY KEY,
