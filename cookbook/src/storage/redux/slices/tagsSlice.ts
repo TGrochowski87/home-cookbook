@@ -24,12 +24,18 @@ export const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getS
 export const tagsSlice = createSlice({
   name: "tags",
   initialState,
-  reducers: {},
+  reducers: {
+    invalidateTags: state => {
+      state.tags = [];
+    },
+  },
   extraReducers: builder => {
     builder.addCase(fetchTags.fulfilled, (state, action: PayloadAction<TagGetDto[]>) => {
       state.tags = action.payload;
     });
   },
 });
+
+export const { invalidateTags } = tagsSlice.actions;
 
 export default tagsSlice.reducer;

@@ -15,6 +15,8 @@ import QuantifiableItemData from "models/QuantifiableItemData";
 import RichTextArea from "components/rich-text-area/RichTextArea";
 import CategorySelect from "./category-select/CategorySelect";
 import mapper from "mapper";
+import { useAppDispatch } from "storage/redux/hooks";
+import { invalidateTags } from "storage/redux/slices/tagsSlice";
 
 export interface RecipeData {
   readonly name: string;
@@ -54,6 +56,7 @@ const RecipeCreationForm = ({
   onSubmitCallback,
   replaceOnNavigate = false,
 }: RecipeCreationFormProps) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { displayMessage } = useAlerts();
   const { register, handleSubmit, formState, control, setFocus, reset } = useForm<RecipeData>({
@@ -62,8 +65,13 @@ const RecipeCreationForm = ({
 
   const onSubmit = async (data: RecipeData): Promise<void> => {
     try {
-      await onSubmitCallback(mapper.map.toRecipeCreateDto(data));
+      const dto = mapper.map.toRecipeCreateDto(data);
+      await onSubmitCallback(dto);
       reset();
+      if (dto.newTags.length > 0) {
+        dispatch(invalidateTags());
+      }
+
       navigate(onSuccessNavigateTo, { replace: replaceOnNavigate });
     } catch (error) {
       if (axios.isAxiosError(error)) {
