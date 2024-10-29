@@ -1,7 +1,7 @@
 import { Outlet, useNavigation } from "react-router-dom";
 import "./App.less";
 import { useCallback, useLayoutEffect, useState } from "react";
-import { ThemeContext } from "context/ThemeContext";
+import { ThemeContext } from "storage/context/ThemeContext";
 import LoadingIndicator from "components/LoadingIndicator";
 
 function App() {

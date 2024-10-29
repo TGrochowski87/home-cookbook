@@ -1,4 +1,4 @@
-import { ThemeContext } from "context/ThemeContext";
+import { ThemeContext } from "storage/context/ThemeContext";
 import Button from "components/buttons/Button";
 import { Moon, Sun } from "lucide-react";
 import { useContext } from "react";

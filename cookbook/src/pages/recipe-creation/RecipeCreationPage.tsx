@@ -1,24 +1,22 @@
 import "./styles.less";
-import { CategoryGetDto, TagGetDto } from "api/GET/DTOs";
 import api from "api/api";
-import { useLoaderData } from "react-router-dom";
 import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import RecipeCreationForm from "components/recipe-creation-form/RecipeCreationForm";
+import { fetchCategories } from "storage/redux/slices/categoriesSlice";
+import { fetchTags } from "storage/redux/slices/tagsSlice";
+import store from "storage/redux/store";
+import { useAppSelector } from "storage/redux/hooks";
 
-interface LoaderResponse {
-  readonly categories: readonly CategoryGetDto[];
-  readonly tags: readonly TagGetDto[];
-}
-
-export async function loader(): Promise<LoaderResponse> {
-  const categories = await api.get.getCategories();
-  const tags = await api.get.getTags();
-  return { categories, tags };
+export async function loader(): Promise<void> {
+  store.dispatch(fetchCategories());
+  store.dispatch(fetchTags());
 }
 
 const RecipeCreationPage = () => {
-  const { categories, tags } = useLoaderData() as LoaderResponse;
+  const categories = useAppSelector(state => state.categories.categories);
+  const tags = useAppSelector(state => state.tags.tags);
+
   const { displayMessage } = useAlerts();
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {

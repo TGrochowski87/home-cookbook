@@ -3,7 +3,7 @@ import CategoryChip from "pages/recipes/search/CategoryChip";
 import "./styles.less";
 import { useEffect, useRef, useState } from "react";
 import api from "api/api";
-import { CategoryGetDto, GetRecipesResponseDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
+import { GetRecipesResponseDto, RecipeGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
 import { Form, useLoaderData, useNavigate, useSearchParams, useSubmit } from "react-router-dom";
 import AddButton from "components/buttons/AddButton";
@@ -12,24 +12,29 @@ import BottomPageFadeout from "components/BottomPageFadeout";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingIndicator from "components/LoadingIndicator";
 import ScrollUpButton from "./ScrollUpButton";
+import store from "storage/redux/store";
+import { fetchCategories } from "storage/redux/slices/categoriesSlice";
+import { useAppSelector } from "storage/redux/hooks";
+import { fetchTags } from "storage/redux/slices/tagsSlice";
 
 interface LoaderResponse {
   readonly getRecipesResponse: GetRecipesResponseDto;
-  readonly categories: readonly CategoryGetDto[];
-  readonly tags: TagGetDto[];
 }
 
 export async function loader({ request }: any): Promise<LoaderResponse> {
   const url = new URL(request.url);
-  const categories = await api.get.getCategories();
-  const tags = await api.get.getTags();
+  store.dispatch(fetchCategories());
+  store.dispatch(fetchTags());
   const getRecipesResponse = await api.get.getRecipes({ type: "Query", query: url.search });
-  return { getRecipesResponse, categories, tags };
+  return { getRecipesResponse };
 }
 
 const RecipeListPage = () => {
   const navigate = useNavigate();
-  const { getRecipesResponse, categories, tags } = useLoaderData() as LoaderResponse;
+  const { getRecipesResponse } = useLoaderData() as LoaderResponse;
+  const categories = useAppSelector(state => state.categories.categories);
+  const tags = useAppSelector(state => state.tags.tags);
+
   const [recipes, setRecipes] = useState<readonly RecipeGetDto[]>(getRecipesResponse.recipes);
   const nextRecipesPage = useRef<string | null>(getRecipesResponse.nextPage);
   const [showScrollUpButton, setShowScrollUpButton] = useState<boolean>(false);
