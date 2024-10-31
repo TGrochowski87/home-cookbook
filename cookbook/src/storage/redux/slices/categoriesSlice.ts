@@ -14,7 +14,7 @@ const initialState: State = {
 export const fetchCategories = createAsyncThunk("categories/fetchCategories", async (_args, { getState }) => {
   const currentState = getState() as RootState;
   if (currentState.categories.categories.length > 0) {
-    return initialState.categories;
+    return currentState.categories.categories;
   }
 
   const response = await api.get.getCategories();

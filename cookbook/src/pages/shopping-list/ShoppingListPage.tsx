@@ -14,6 +14,8 @@ import "./styles.less";
 import axios from "axios";
 import { useAlerts } from "components/alert/AlertStack";
 import HomeButton from "components/buttons/HomeButton";
+import { useAppDispatch } from "storage/redux/hooks";
+import { updateCachedShoppingList } from "storage/redux/slices/shoppingListsSlice";
 
 export async function loader({ params }: any) {
   const shoppingList = await api.get.getShoppingList(params.id);
@@ -22,6 +24,7 @@ export async function loader({ params }: any) {
 
 const ShoppingListPage = () => {
   const shoppingListFromLoader = useLoaderData() as ShoppingListDetailsGetDto;
+  const dispatch = useAppDispatch();
   const [shoppingList, setShoppingList] = useState<ShoppingList>(mapper.map.toShoppingList(shoppingListFromLoader));
 
   // We need to copy state to ref to be able to read it in useEffect's cleanup that will run only once on unmount.
@@ -30,7 +33,7 @@ const ShoppingListPage = () => {
   const shoppingListChanged = useRef<boolean>(false);
   const { displayMessage } = useAlerts();
 
-  const updateShoppingList: React.Dispatch<React.SetStateAction<ShoppingList>> = (
+  const updateShoppingListState: React.Dispatch<React.SetStateAction<ShoppingList>> = (
     newState: ShoppingList | ((prevState: ShoppingList) => ShoppingList)
   ) => {
     setShoppingList(newState);
@@ -38,7 +41,7 @@ const ShoppingListPage = () => {
     // This is better than useEffect because it actually runs only after performing some action.
     shoppingListChanged.current = true;
   };
-  const handle = useShoppingListUpdateManagement(updateShoppingList);
+  const handle = useShoppingListUpdateManagement(updateShoppingListState);
 
   const saveBeforeUnmount = async () => {
     if (shoppingListChanged.current === false) {
@@ -52,6 +55,7 @@ const ShoppingListPage = () => {
         mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
       );
       setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
+      dispatch(updateCachedShoppingList({ id: shoppingList.id, newData: updatedShoppingList }));
     } catch (error) {
       // TODO: Consider notifying through SignalR.
       if (axios.isAxiosError(error) && error.response?.status === 412) {
@@ -79,16 +83,19 @@ const ShoppingListPage = () => {
 
   // Send quick API call before page/browser closing.
   useEffect(() => {
-    const saveBeforeUnloadWithBeacon = () => {
+    const saveBeforeUnloadWithBeacon = async () => {
       if (shoppingListChanged.current === false || document.visibilityState !== "hidden") {
         return;
       }
 
-      api.put.updateShoppingListWithFetch(
+      const updatedShoppingList = await api.put.updateShoppingListWithFetch(
         shoppingList.id,
         shoppingList.updateDate,
         mapper.map.toShoppingListUpdateDto(shoppingList)
       );
+
+      // If the website has not been closed, update the store.
+      dispatch(updateCachedShoppingList({ id: shoppingList.id, newData: updatedShoppingList }));
     };
 
     // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.

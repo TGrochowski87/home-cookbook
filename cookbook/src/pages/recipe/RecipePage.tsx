@@ -1,4 +1,4 @@
-import { RecipeDetailsGetDto, ShoppingListGetDto } from "api/GET/DTOs";
+import { RecipeDetailsGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
@@ -13,6 +13,9 @@ import AddToShoppingListScreen from "./AddToShoppingListScreen";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import QuantifiableItemData from "models/QuantifiableItemData";
 import HomeButton from "components/buttons/HomeButton";
+import store from "storage/redux/store";
+import { fetchShoppingLists } from "storage/redux/slices/shoppingListsSlice";
+import { useAppSelector } from "storage/redux/hooks";
 
 interface CheckboxChecks {
   readonly ingredients: readonly number[];
@@ -21,19 +24,19 @@ interface CheckboxChecks {
 
 interface LoaderResponse {
   readonly recipe: RecipeDetailsGetDto;
-  readonly shoppingLists: readonly ShoppingListGetDto[];
 }
 
 // TODO: Implement redux
 export async function loader({ params }: any): Promise<LoaderResponse> {
   const recipe = await api.get.getRecipe(params.id);
-  const shoppingLists = await api.get.getShoppingLists();
-  return { recipe, shoppingLists };
+  store.dispatch(fetchShoppingLists());
+  return { recipe };
 }
 
 const RecipePage = () => {
   const { displayMessage } = useAlerts();
-  const { recipe, shoppingLists } = useLoaderData() as LoaderResponse;
+  const { recipe } = useLoaderData() as LoaderResponse;
+  const { shoppingLists } = useAppSelector(state => state.shoppingLists);
   const navigate = useNavigate();
 
   // This list needs to be created in this component as it is used for checkbox state caching mechanism.

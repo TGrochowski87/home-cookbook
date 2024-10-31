@@ -8,9 +8,10 @@ import { fetchTags } from "storage/redux/slices/tagsSlice";
 import store from "storage/redux/store";
 import { useAppSelector } from "storage/redux/hooks";
 
-export async function loader(): Promise<void> {
+export async function loader(): Promise<null> {
   store.dispatch(fetchCategories());
   store.dispatch(fetchTags());
+  return null;
 }
 
 const RecipeCreationPage = () => {

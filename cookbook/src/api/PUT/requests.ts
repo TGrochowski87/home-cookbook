@@ -26,7 +26,6 @@ export const updateShoppingList = async (
   resourceStateTimestamp: string,
   dto: ShoppingListUpdateDto
 ): Promise<ShoppingListDetailsGetDto> => {
-  console.log(resourceStateTimestamp);
   const url = `${baseUrl}/shopping-lists/${shoppingListId}`;
   const response = await axios.put(url, dto, {
     headers: {
@@ -40,16 +39,16 @@ export const updateShoppingList = async (
  * This version of updateShoppingListWithFetch is used when I need to just send the request without checking the response,
  * e.g. when unmounting component or losing focus on browser tab.
  */
-export const updateShoppingListWithFetch = (
+export const updateShoppingListWithFetch = async (
   shoppingListId: number,
   resourceStateTimestamp: string,
   dto: ShoppingListUpdateDto
-) => {
+): Promise<ShoppingListDetailsGetDto> => {
   const url = `${baseUrl}/shopping-lists/${shoppingListId}`;
   const bodyJsonString = JSON.stringify(dto);
 
   // The options are either fetch with keepalive or navigator.sendBeacon, but the latter is much more restrictive.
-  fetch(url, {
+  const response = await fetch(url, {
     method: "PUT",
     keepalive: true, // This allows the request to outlive the page.
     headers: {
@@ -58,4 +57,6 @@ export const updateShoppingListWithFetch = (
     },
     body: bodyJsonString,
   });
+
+  return response.json();
 };

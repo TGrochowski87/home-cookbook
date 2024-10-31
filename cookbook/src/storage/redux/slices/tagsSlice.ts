@@ -14,7 +14,7 @@ const initialState: State = {
 export const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getState }) => {
   const currentState = getState() as RootState;
   if (currentState.tags.tags.length > 0) {
-    return initialState.tags;
+    return currentState.tags.tags;
   }
 
   const response = await api.get.getTags();

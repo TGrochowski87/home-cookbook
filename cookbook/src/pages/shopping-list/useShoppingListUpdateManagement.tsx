@@ -17,15 +17,15 @@ interface UpdateHandler {
  * It gathers all the logic related to tracking updates to the shopping list.
  */
 const useShoppingListUpdateManagement = (
-  updateShoppingList: React.Dispatch<React.SetStateAction<ShoppingList>>
+  updateShoppingListState: React.Dispatch<React.SetStateAction<ShoppingList>>
 ): UpdateHandler => {
   const nameUpdate = (newName: string) => {
-    updateShoppingList(prev => ({ ...prev, name: newName }));
+    updateShoppingListState(prev => ({ ...prev, name: newName }));
   };
 
   const checkboxClick = (sublistId: number): ((item: QuantifiableItemData) => void) => {
     return (item: QuantifiableItemData) => {
-      updateShoppingList(prev => ({
+      updateShoppingListState(prev => ({
         ...prev,
         sublists: prev.sublists.map(sub =>
           sub.id === sublistId
@@ -37,7 +37,7 @@ const useShoppingListUpdateManagement = (
   };
 
   const sublistIncrementCount = (sublist: ShoppingListSublist) => {
-    updateShoppingList(prev => ({
+    updateShoppingListState(prev => ({
       ...prev,
       sublists: prev.sublists.map(s => (s.id === sublist.id ? { ...s, count: s.count + sublistCountChangeStep } : s)),
     }));
@@ -46,18 +46,18 @@ const useShoppingListUpdateManagement = (
   const sublistDecrementCount = async (sublist: ShoppingListSublist) => {
     // Dropping the count to 0 means removing the sublist.
     if (sublist.count === sublistCountChangeStep) {
-      updateShoppingList(prev => ({ ...prev, sublists: prev.sublists.filter(s => s.id !== sublist.id) }));
+      updateShoppingListState(prev => ({ ...prev, sublists: prev.sublists.filter(s => s.id !== sublist.id) }));
       return;
     }
 
-    updateShoppingList(prev => ({
+    updateShoppingListState(prev => ({
       ...prev,
       sublists: prev.sublists.map(s => (s.id === sublist.id ? { ...s, count: s.count - sublistCountChangeStep } : s)),
     }));
   };
 
   const listItemDelete = (item: QuantifiableItemData): void => {
-    updateShoppingList(prev => ({
+    updateShoppingListState(prev => ({
       ...prev,
       sublists: prev.sublists.map(sub =>
         sub.recipeId === null ? { ...sub, items: sub.items.filter(i => i.key !== item.key) } : sub
@@ -66,7 +66,7 @@ const useShoppingListUpdateManagement = (
   };
 
   const manualSublistItemsUpdate = (items: readonly QuantifiableItemData[]): void => {
-    updateShoppingList(prev => ({
+    updateShoppingListState(prev => ({
       ...prev,
       sublists: prev.sublists.map(sub => (sub.recipeId === null ? { ...sub, items } : sub)),
     }));
