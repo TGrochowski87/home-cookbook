@@ -23,8 +23,9 @@ interface LoaderResponse {
 
 export async function loader({ request }: any): Promise<LoaderResponse> {
   const url = new URL(request.url);
-  store.dispatch(fetchCategories());
-  store.dispatch(fetchTags());
+
+  await store.dispatch(fetchCategories()).unwrap();
+  await store.dispatch(fetchTags()).unwrap();
   const getRecipesResponse = await api.get.getRecipes({ type: "Query", query: url.search });
   return { getRecipesResponse };
 }

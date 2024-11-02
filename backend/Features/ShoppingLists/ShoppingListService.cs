@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Cookbook.Extensions;
 using Cookbook.Features.Common;
 using CSharpFunctionalExtensions;
 
@@ -37,8 +38,11 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
       .Bind(_ => shoppingListRepository.CreateSublist(shoppingListId, recipeId));
   }
 
-  public async Task<int> Create(string name) 
-    => await shoppingListRepository.Create(name);
+  public async Task<Result<ShoppingListDetails, Error>> Create(string name)
+  {
+    var shoppingListId = await shoppingListRepository.Create(name);
+    return await shoppingListRepository.GetById(shoppingListId);
+  }
 
   public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(
     int id, 

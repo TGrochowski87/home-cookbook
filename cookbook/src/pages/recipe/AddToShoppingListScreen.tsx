@@ -5,6 +5,8 @@ import Popup from "components/Popup";
 import { useAlerts } from "components/alert/AlertStack";
 import HighlightingList from "components/highlighting-list/HighlightingList";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "storage/redux/hooks";
+import { fetchShoppingListDetails } from "storage/redux/slices/shoppingListsSlice";
 
 interface AddToShoppingListScreenProps {
   readonly recipeId: number;
@@ -12,12 +14,14 @@ interface AddToShoppingListScreenProps {
 }
 
 const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListScreenProps) => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { displayMessage } = useAlerts();
 
   const listClickHandler = async (listId: number) => {
     try {
       await api.post.createShoppingListSublist(listId, recipeId);
+      dispatch(fetchShoppingListDetails({ id: listId, forceUpdate: true }));
       displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {

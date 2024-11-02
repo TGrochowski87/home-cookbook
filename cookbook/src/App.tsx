@@ -33,6 +33,10 @@ function App() {
     setTheme(prev => (prev === "light" ? "dark" : "light"));
   }, [setTheme]);
 
+  /**
+   * Loading indicator does not show when starting the website, because childrens' loaders are run before anything renders.
+   * TODO: Maybe handle this in the future, but it does not seem important.
+   */
   return (
     <div className="app">
       <ThemeContext.Provider value={{ theme, switchTheme }}>
@@ -46,4 +50,3 @@ function App() {
 }
 
 export default App;
-

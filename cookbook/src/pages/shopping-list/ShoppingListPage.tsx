@@ -1,7 +1,7 @@
 import { ShoppingListDetailsGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import TitledSection from "components/TitledSection";
-import { useLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import SublistTitle from "./SublistTitle";
 import QuantifiableItemsList from "components/quantifiable-items-list/QuantifiableItemsList";
 import { useEffect, useRef, useState } from "react";
@@ -14,18 +14,28 @@ import "./styles.less";
 import axios from "axios";
 import { useAlerts } from "components/alert/AlertStack";
 import HomeButton from "components/buttons/HomeButton";
-import { useAppDispatch } from "storage/redux/hooks";
-import { updateCachedShoppingList } from "storage/redux/slices/shoppingListsSlice";
+import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
+import {
+  fetchShoppingListDetails,
+  fetchShoppingLists,
+  updateCachedShoppingList,
+} from "storage/redux/slices/shoppingListsSlice";
+import store from "storage/redux/store";
 
-export async function loader({ params }: any) {
-  const shoppingList = await api.get.getShoppingList(params.id);
-  return shoppingList;
+export async function loader({ params }: any): Promise<null> {
+  // If this page is opened directly, i.e. not from shopping page, just get all shopping lists now to simplify the process.
+  await store.dispatch(fetchShoppingLists()).unwrap();
+  // TODO: Handle 404
+  await store.dispatch(fetchShoppingListDetails({ id: +params.id })).unwrap();
+  return null;
 }
 
 const ShoppingListPage = () => {
-  const shoppingListFromLoader = useLoaderData() as ShoppingListDetailsGetDto;
+  const { id } = useParams();
   const dispatch = useAppDispatch();
-  const [shoppingList, setShoppingList] = useState<ShoppingList>(mapper.map.toShoppingList(shoppingListFromLoader));
+  const { shoppingLists: shoppingListsFromCache } = useAppSelector(state => state.shoppingLists);
+  const shoppingListFromCache = shoppingListsFromCache.find(sl => sl.id === +id!) as ShoppingListDetailsGetDto;
+  const [shoppingList, setShoppingList] = useState<ShoppingList>(mapper.map.toShoppingList(shoppingListFromCache));
 
   // We need to copy state to ref to be able to read it in useEffect's cleanup that will run only once on unmount.
   const shoppingListRef = useRef<ShoppingList>(shoppingList);
@@ -55,7 +65,7 @@ const ShoppingListPage = () => {
         mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
       );
       setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
-      dispatch(updateCachedShoppingList({ id: shoppingList.id, newData: updatedShoppingList }));
+      dispatch(updateCachedShoppingList(updatedShoppingList));
     } catch (error) {
       // TODO: Consider notifying through SignalR.
       if (axios.isAxiosError(error) && error.response?.status === 412) {
@@ -95,7 +105,7 @@ const ShoppingListPage = () => {
       );
 
       // If the website has not been closed, update the store.
-      dispatch(updateCachedShoppingList({ id: shoppingList.id, newData: updatedShoppingList }));
+      dispatch(updateCachedShoppingList(updatedShoppingList));
     };
 
     // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.

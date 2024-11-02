@@ -28,8 +28,9 @@ interface LoaderResponse {
 
 // TODO: Implement redux
 export async function loader({ params }: any): Promise<LoaderResponse> {
+  // TODO: Handle 404
   const recipe = await api.get.getRecipe(params.id);
-  store.dispatch(fetchShoppingLists());
+  await store.dispatch(fetchShoppingLists()).unwrap();
   return { recipe };
 }
 

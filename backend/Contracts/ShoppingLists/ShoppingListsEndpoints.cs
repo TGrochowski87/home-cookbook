@@ -31,12 +31,14 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
       .AddFluentValidationAutoValidation();
   }
 
-  private static async Task<Created<int>> CreateShoppingList(
+  private static async Task<Created<ShoppingListDetailsGetDto>> CreateShoppingList(
     [FromServices] IShoppingListService shoppingListService,
     [FromBody] ShoppingListCreateDto dto)
   {
     var result = await shoppingListService.Create(dto.Name);
-    return TypedResults.Created((string?)null, result); // TODO: Consider proper URL
+
+    // NotFound ignored as it should not be possible.
+    return TypedResults.Created((string?)null, EndpointModelMapper.Map(result.Value)); // TODO: Consider proper URL
   }
 
   private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>> OverrideShoppingList(
