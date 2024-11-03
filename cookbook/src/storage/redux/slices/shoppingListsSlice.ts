@@ -29,6 +29,26 @@ const fetchShoppingLists = createAsyncThunk("shoppingLists/fetchShoppingLists", 
   return response;
 });
 
+/**
+ * To be used for filling shopping list data. Does not perform any reordering.
+ */
+const fetchShoppingListDetails = createAsyncThunk(
+  "shoppingLists/fetchShoppingListDetails",
+  async (id: number, { getState }) => {
+    const currentState = getState() as RootState;
+    const shoppingListInCache = currentState.shoppingLists.shoppingLists.find(sh => sh.id === id);
+    if (shoppingListInCache === undefined) {
+      throw Error("Shopping list was not found in storage.");
+    }
+    if (shoppingListInCache.sublists) {
+      return null;
+    }
+
+    const response = await api.get.getShoppingList(id);
+    return response;
+  }
+);
+
 const shoppingListsSlice = createSlice({
   name: "shoppingLists",
   initialState,
@@ -47,13 +67,6 @@ const shoppingListsSlice = createSlice({
       state.shoppingLists.splice(index, 1);
       state.shoppingLists.unshift(writablePayload);
     },
-    /**
-     * To be used for filling shopping list data. Does not perform any reordering.
-     */
-    overrideShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
-      const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
-      state.shoppingLists = state.shoppingLists.map(sl => (sl.id === writablePayload.id ? writablePayload : sl));
-    },
     addShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
       const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
 
@@ -62,9 +75,18 @@ const shoppingListsSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchShoppingLists.fulfilled, (state, action: PayloadAction<ShoppingListGetDto[]>) => {
-      state.shoppingLists = action.payload;
-    });
+    builder
+      .addCase(fetchShoppingLists.fulfilled, (state, action: PayloadAction<ShoppingListGetDto[]>) => {
+        state.shoppingLists = action.payload;
+      })
+      .addCase(fetchShoppingListDetails.fulfilled, (state, action: PayloadAction<ShoppingListDetailsGetDto | null>) => {
+        if (action.payload === null) {
+          return;
+        }
+
+        const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
+        state.shoppingLists = state.shoppingLists.map(sl => (sl.id === writablePayload.id ? writablePayload : sl));
+      });
   },
 });
 
@@ -72,6 +94,7 @@ export const shoppingListsActions = {
   ...shoppingListsSlice.actions,
   async: {
     fetchShoppingLists,
+    fetchShoppingListDetails,
   },
 };
 

@@ -22,8 +22,7 @@ export async function loader({ params }: any): Promise<null> {
   // If this page is opened directly, i.e. not from shopping page, just get all shopping lists now to simplify the process.
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   // TODO: Handle 404
-  const shoppingListDetails = await api.get.getShoppingList(+params.id);
-  store.dispatch(storeActions.shoppingLists.overrideShoppingList(shoppingListDetails));
+  await store.dispatch(storeActions.shoppingLists.async.fetchShoppingListDetails(+params.id)).unwrap();
   return null;
 }
 

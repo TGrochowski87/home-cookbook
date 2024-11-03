@@ -16,7 +16,7 @@ import RichTextArea from "components/rich-text-area/RichTextArea";
 import CategorySelect from "./category-select/CategorySelect";
 import mapper from "mapper";
 import { useAppDispatch } from "storage/redux/hooks";
-import { invalidateTags } from "storage/redux/slices/tagsSlice";
+import storeActions from "storage/redux/actions";
 
 export interface RecipeData {
   readonly name: string;
@@ -69,7 +69,7 @@ const RecipeCreationForm = ({
       await onSubmitCallback(dto);
       reset();
       if (dto.newTags.length > 0) {
-        dispatch(invalidateTags());
+        dispatch(storeActions.tags.invalidateTags());
       }
 
       navigate(onSuccessNavigateTo, { replace: replaceOnNavigate });

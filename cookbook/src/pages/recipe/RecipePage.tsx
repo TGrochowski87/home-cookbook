@@ -14,8 +14,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import QuantifiableItemData from "models/QuantifiableItemData";
 import HomeButton from "components/buttons/HomeButton";
 import store from "storage/redux/store";
-import { fetchShoppingLists } from "storage/redux/slices/shoppingListsSlice";
 import { useAppSelector } from "storage/redux/hooks";
+import storeActions from "storage/redux/actions";
 
 interface CheckboxChecks {
   readonly ingredients: readonly number[];
@@ -30,7 +30,7 @@ interface LoaderResponse {
 export async function loader({ params }: any): Promise<LoaderResponse> {
   // TODO: Handle 404
   const recipe = await api.get.getRecipe(params.id);
-  await store.dispatch(fetchShoppingLists()).unwrap();
+  await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   return { recipe };
 }
 
