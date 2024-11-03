@@ -5,8 +5,8 @@ import Popup from "components/Popup";
 import { useAlerts } from "components/alert/AlertStack";
 import HighlightingList from "components/highlighting-list/HighlightingList";
 import { useNavigate } from "react-router-dom";
+import storeActions from "storage/redux/actions";
 import { useAppDispatch } from "storage/redux/hooks";
-import { fetchShoppingListDetails } from "storage/redux/slices/shoppingListsSlice";
 
 interface AddToShoppingListScreenProps {
   readonly recipeId: number;
@@ -22,7 +22,8 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
     try {
       await api.post.createShoppingListSublist(listId, recipeId);
       // po prostu API call i nadpisanie stanu przez zwykły reducer. W zwykłym reducerze będzie sortowanie/wstawianie na początek listy.
-      dispatch(fetchShoppingListDetails({ id: listId, forceUpdate: true }));
+      const updatedShoppingList = await api.get.getShoppingList(listId);
+      dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
       displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {

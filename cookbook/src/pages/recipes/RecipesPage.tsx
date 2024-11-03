@@ -13,9 +13,8 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingIndicator from "components/LoadingIndicator";
 import ScrollUpButton from "./ScrollUpButton";
 import store from "storage/redux/store";
-import { fetchCategories } from "storage/redux/slices/categoriesSlice";
 import { useAppSelector } from "storage/redux/hooks";
-import { fetchTags } from "storage/redux/slices/tagsSlice";
+import storeActions from "storage/redux/actions";
 
 interface LoaderResponse {
   readonly getRecipesResponse: GetRecipesResponseDto;
@@ -24,8 +23,8 @@ interface LoaderResponse {
 export async function loader({ request }: any): Promise<LoaderResponse> {
   const url = new URL(request.url);
 
-  await store.dispatch(fetchCategories()).unwrap();
-  await store.dispatch(fetchTags()).unwrap();
+  await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
+  await store.dispatch(storeActions.tags.async.fetchTags()).unwrap();
   const getRecipesResponse = await api.get.getRecipes({ type: "Query", query: url.search });
   return { getRecipesResponse };
 }

@@ -19,7 +19,7 @@ const initialState: State = {
  * We get all shopping lists once. Expired ones get filtered out by API on GET call.
  * This should work fine as we update the storage on shopping list update/create.
  */
-export const fetchShoppingLists = createAsyncThunk("shoppingLists/fetchShoppingLists", async (_args, { getState }) => {
+const fetchShoppingLists = createAsyncThunk("shoppingLists/fetchShoppingLists", async (_args, { getState }) => {
   const currentState = getState() as RootState;
   if (currentState.shoppingLists.shoppingLists.length > 0) {
     return currentState.shoppingLists.shoppingLists;
@@ -29,28 +29,7 @@ export const fetchShoppingLists = createAsyncThunk("shoppingLists/fetchShoppingL
   return response;
 });
 
-/**
- * Fill shopping list's sublists.
- */
-export const fetchShoppingListDetails = createAsyncThunk<
-  ShoppingListDetailsGetDto,
-  { id: number; forceUpdate?: boolean }
->("shoppingLists/fetchShoppingListDetails", async ({ id, forceUpdate = false }, { getState }) => {
-  const currentState = getState() as RootState;
-  const shoppingListInCache = currentState.shoppingLists.shoppingLists.find(sh => sh.id === id);
-  if (shoppingListInCache === undefined) {
-    throw Error("Shopping list was not found in storage.");
-  }
-
-  if (shoppingListInCache.sublists && forceUpdate === false) {
-    return shoppingListInCache as ShoppingListDetailsGetDto;
-  }
-
-  const response = await api.get.getShoppingList(id);
-  return response;
-});
-
-export const shoppingListsSlice = createSlice({
+const shoppingListsSlice = createSlice({
   name: "shoppingLists",
   initialState,
   reducers: {
@@ -59,27 +38,41 @@ export const shoppingListsSlice = createSlice({
      */
     updateCachedShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
       const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
-      state.shoppingLists = state.shoppingLists.map(sl => (sl.id === writablePayload.id ? writablePayload : sl));
+      const index = state.shoppingLists.findIndex(sl => sl.id === writablePayload.id);
+      if (index === -1) {
+        throw Error("Shopping list was not found in storage.");
+      }
 
-      const index = state.shoppingLists.findIndex();
+      // Insert to the front as we sort by update date.
+      state.shoppingLists.splice(index, 1);
+      state.shoppingLists.unshift(writablePayload);
+    },
+    /**
+     * To be used for filling shopping list data. Does not perform any reordering.
+     */
+    overrideShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
+      const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
+      state.shoppingLists = state.shoppingLists.map(sl => (sl.id === writablePayload.id ? writablePayload : sl));
     },
     addShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
       const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
+
+      // Insert to the front as we sort by update date.
       state.shoppingLists.unshift(writablePayload);
     },
   },
   extraReducers: builder => {
-    builder
-      .addCase(fetchShoppingLists.fulfilled, (state, action: PayloadAction<ShoppingListGetDto[]>) => {
-        state.shoppingLists = action.payload;
-      })
-      .addCase(fetchShoppingListDetails.fulfilled, (state, action: PayloadAction<ShoppingListDetailsGetDto>) => {
-        const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
-        state.shoppingLists = state.shoppingLists.map(sl => (sl.id === writablePayload.id ? writablePayload : sl));
-      });
+    builder.addCase(fetchShoppingLists.fulfilled, (state, action: PayloadAction<ShoppingListGetDto[]>) => {
+      state.shoppingLists = action.payload;
+    });
   },
 });
 
-export const { updateCachedShoppingList, addShoppingList } = shoppingListsSlice.actions;
+export const shoppingListsActions = {
+  ...shoppingListsSlice.actions,
+  async: {
+    fetchShoppingLists,
+  },
+};
 
 export default shoppingListsSlice.reducer;

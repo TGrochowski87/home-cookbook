@@ -15,18 +15,15 @@ import axios from "axios";
 import { useAlerts } from "components/alert/AlertStack";
 import HomeButton from "components/buttons/HomeButton";
 import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
-import {
-  fetchShoppingListDetails,
-  fetchShoppingLists,
-  updateCachedShoppingList,
-} from "storage/redux/slices/shoppingListsSlice";
 import store from "storage/redux/store";
+import storeActions from "storage/redux/actions";
 
 export async function loader({ params }: any): Promise<null> {
   // If this page is opened directly, i.e. not from shopping page, just get all shopping lists now to simplify the process.
-  await store.dispatch(fetchShoppingLists()).unwrap();
+  await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   // TODO: Handle 404
-  await store.dispatch(fetchShoppingListDetails({ id: +params.id })).unwrap();
+  const shoppingListDetails = await api.get.getShoppingList(+params.id);
+  store.dispatch(storeActions.shoppingLists.overrideShoppingList(shoppingListDetails));
   return null;
 }
 
@@ -65,7 +62,7 @@ const ShoppingListPage = () => {
         mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
       );
       setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
-      dispatch(updateCachedShoppingList(updatedShoppingList));
+      dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
     } catch (error) {
       // TODO: Consider notifying through SignalR.
       if (axios.isAxiosError(error) && error.response?.status === 412) {
@@ -105,7 +102,7 @@ const ShoppingListPage = () => {
       );
 
       // If the website has not been closed, update the store.
-      dispatch(updateCachedShoppingList(updatedShoppingList));
+      dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
     };
 
     // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.

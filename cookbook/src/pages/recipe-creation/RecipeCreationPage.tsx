@@ -3,14 +3,13 @@ import api from "api/api";
 import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import RecipeCreationForm from "components/recipe-creation-form/RecipeCreationForm";
-import { fetchCategories } from "storage/redux/slices/categoriesSlice";
-import { fetchTags } from "storage/redux/slices/tagsSlice";
 import store from "storage/redux/store";
 import { useAppSelector } from "storage/redux/hooks";
+import storeActions from "storage/redux/actions";
 
 export async function loader(): Promise<null> {
-  store.dispatch(fetchCategories());
-  store.dispatch(fetchTags());
+  await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
+  await store.dispatch(storeActions.tags.async.fetchTags()).unwrap();
   return null;
 }
 

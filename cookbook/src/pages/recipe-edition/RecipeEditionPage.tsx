@@ -6,9 +6,8 @@ import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import RecipeCreationForm from "components/recipe-creation-form/RecipeCreationForm";
 import { useAppSelector } from "storage/redux/hooks";
-import { fetchCategories } from "storage/redux/slices/categoriesSlice";
-import { fetchTags } from "storage/redux/slices/tagsSlice";
 import store from "storage/redux/store";
+import storeActions from "storage/redux/actions";
 
 interface LoaderResponse {
   readonly recipe: RecipeDetailsGetDto;
@@ -16,8 +15,8 @@ interface LoaderResponse {
 
 export async function loader({ params }: any): Promise<LoaderResponse> {
   const recipe = await api.get.getRecipe(params.id);
-  store.dispatch(fetchCategories());
-  store.dispatch(fetchTags());
+  await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
+  await store.dispatch(storeActions.tags.async.fetchTags()).unwrap();
   return { recipe };
 }
 

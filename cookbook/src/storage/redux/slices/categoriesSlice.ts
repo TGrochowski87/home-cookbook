@@ -11,7 +11,7 @@ const initialState: State = {
   categories: [],
 };
 
-export const fetchCategories = createAsyncThunk("categories/fetchCategories", async (_args, { getState }) => {
+const fetchCategories = createAsyncThunk("categories/fetchCategories", async (_args, { getState }) => {
   const currentState = getState() as RootState;
   if (currentState.categories.categories.length > 0) {
     return currentState.categories.categories;
@@ -21,7 +21,7 @@ export const fetchCategories = createAsyncThunk("categories/fetchCategories", as
   return response;
 });
 
-export const categoriesSlice = createSlice({
+const categoriesSlice = createSlice({
   name: "categories",
   initialState,
   reducers: {},
@@ -31,5 +31,12 @@ export const categoriesSlice = createSlice({
     });
   },
 });
+
+export const categoriesActions = {
+  ...categoriesSlice.actions,
+  async: {
+    fetchCategories,
+  },
+};
 
 export default categoriesSlice.reducer;

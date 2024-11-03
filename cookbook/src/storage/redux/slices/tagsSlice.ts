@@ -11,7 +11,7 @@ const initialState: State = {
   tags: [],
 };
 
-export const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getState }) => {
+const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getState }) => {
   const currentState = getState() as RootState;
   if (currentState.tags.tags.length > 0) {
     return currentState.tags.tags;
@@ -21,7 +21,7 @@ export const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getS
   return response;
 });
 
-export const tagsSlice = createSlice({
+const tagsSlice = createSlice({
   name: "tags",
   initialState,
   reducers: {
@@ -36,6 +36,11 @@ export const tagsSlice = createSlice({
   },
 });
 
-export const { invalidateTags } = tagsSlice.actions;
+export const tagsActions = {
+  ...tagsSlice.actions,
+  async: {
+    fetchTags,
+  },
+};
 
 export default tagsSlice.reducer;
