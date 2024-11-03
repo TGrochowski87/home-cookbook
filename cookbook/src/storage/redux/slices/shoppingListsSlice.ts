@@ -60,10 +60,12 @@ export const shoppingListsSlice = createSlice({
     updateCachedShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
       const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
       state.shoppingLists = state.shoppingLists.map(sl => (sl.id === writablePayload.id ? writablePayload : sl));
+
+      const index = state.shoppingLists.findIndex();
     },
     addShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
       const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
-      state.shoppingLists.push(writablePayload);
+      state.shoppingLists.unshift(writablePayload);
     },
   },
   extraReducers: builder => {

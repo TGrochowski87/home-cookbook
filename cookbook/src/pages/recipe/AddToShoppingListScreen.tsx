@@ -21,6 +21,7 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
   const listClickHandler = async (listId: number) => {
     try {
       await api.post.createShoppingListSublist(listId, recipeId);
+      // po prostu API call i nadpisanie stanu przez zwykły reducer. W zwykłym reducerze będzie sortowanie/wstawianie na początek listy.
       dispatch(fetchShoppingListDetails({ id: listId, forceUpdate: true }));
       displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
     } catch (error) {
