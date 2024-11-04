@@ -93,7 +93,7 @@ const RecipeListPage = () => {
           clearTimeout(searchTimeoutId.current);
           searchTimeoutId.current = window.setTimeout(() => {
             // This makes loader function run again.
-            submit(event.target.form, { replace: true });
+            submit((event.target as HTMLFormElement).form, { replace: true });
           }, 1000);
         }}>
         <SearchBar initialValue={searchParams.get("name") || ""} />

@@ -1,34 +1,33 @@
 import "./styles.less";
-import { RecipeDetailsGetDto } from "api/GET/DTOs";
 import api from "api/api";
-import { useLoaderData } from "react-router-dom";
 import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import RecipeCreationForm from "components/recipe-creation-form/RecipeCreationForm";
-import { useAppSelector } from "storage/redux/hooks";
+import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import store from "storage/redux/store";
 import storeActions from "storage/redux/actions";
+import { useParams } from "react-router-dom";
 
-interface LoaderResponse {
-  readonly recipe: RecipeDetailsGetDto;
-}
-
-export async function loader({ params }: any): Promise<LoaderResponse> {
-  const recipe = await api.get.getRecipe(params.id);
+export async function loader({ params }: any): Promise<null> {
+  await store.dispatch(storeActions.recipes.async.fetchRecipe(+params.id)).unwrap();
   await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
   await store.dispatch(storeActions.tags.async.fetchTags()).unwrap();
-  return { recipe };
+  return null;
 }
 
 const RecipeEditionPage = () => {
-  const { recipe } = useLoaderData() as LoaderResponse;
+  const { id } = useParams();
+  const dispatch = useAppDispatch();
   const categories = useAppSelector(state => state.categories.categories);
   const tags = useAppSelector(state => state.tags.tags);
+  const { recipes } = useAppSelector(state => state.recipes);
+  const recipe = recipes[+id!];
 
   const { displayMessage } = useAlerts();
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
-    await api.put.updateRecipe(recipe.id, recipe.updateDate, dto);
+    const updatedRecipe = await api.put.updateRecipe(recipe.id, recipe.updateDate, dto);
+    dispatch(storeActions.recipes.setRecipeInCache(updatedRecipe));
     displayMessage({ type: "success", message: "Zmiany zostały zapisane.", fadeOutAfter: 5000 });
   };
 

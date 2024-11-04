@@ -1,7 +1,7 @@
 import { baseUrl } from "api/api";
 import { RecipeCreateDto } from "./DTOs";
 import axios from "axios";
-import { ShoppingListDetailsGetDto } from "api/GET/DTOs";
+import { RecipeDetailsGetDto, ShoppingListDetailsGetDto } from "api/GET/DTOs";
 
 export const createShoppingListSublist = async (shoppingListId: number, recipeId: number) => {
   const url = `${baseUrl}/shopping-lists/${shoppingListId}/sublists`;
@@ -15,7 +15,7 @@ export const createShoppingList = async (name: string): Promise<ShoppingListDeta
   return response.data;
 };
 
-export const createRecipe = async (recipe: RecipeCreateDto): Promise<void> => {
+export const createRecipe = async (recipe: RecipeCreateDto): Promise<RecipeDetailsGetDto> => {
   const formData = prepareRecipeFormData(recipe);
   const url = `${baseUrl}/recipes`;
   const response = await axios.post(url, formData, {

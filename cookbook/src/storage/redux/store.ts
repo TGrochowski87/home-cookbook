@@ -2,12 +2,14 @@ import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
 import categoriesSlice from "./slices/categoriesSlice";
 import tagsSlice from "./slices/tagsSlice";
 import shoppingListsSlice from "./slices/shoppingListsSlice";
+import recipesSlice from "./slices/recipesSlice";
 
 const store = configureStore({
   reducer: {
     categories: categoriesSlice,
     tags: tagsSlice,
     shoppingLists: shoppingListsSlice,
+    recipes: recipesSlice,
   },
   devTools: process.env.NODE_ENV !== "production",
 });

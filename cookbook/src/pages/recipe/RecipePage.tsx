@@ -1,6 +1,4 @@
-import { RecipeDetailsGetDto } from "api/GET/DTOs";
-import api from "api/api";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
 import "./styles.less";
 import TitledSection from "components/TitledSection";
@@ -22,23 +20,21 @@ interface CheckboxChecks {
   readonly checkboxesInDescription: readonly number[];
 }
 
-interface LoaderResponse {
-  readonly recipe: RecipeDetailsGetDto;
-}
-
 // TODO: Implement redux
-export async function loader({ params }: any): Promise<LoaderResponse> {
+export async function loader({ params }: any): Promise<null> {
   // TODO: Handle 404
-  const recipe = await api.get.getRecipe(params.id);
+  await store.dispatch(storeActions.recipes.async.fetchRecipe(+params.id)).unwrap();
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
-  return { recipe };
+  return null;
 }
 
 const RecipePage = () => {
-  const { displayMessage } = useAlerts();
-  const { recipe } = useLoaderData() as LoaderResponse;
-  const { shoppingLists } = useAppSelector(state => state.shoppingLists);
+  const { id } = useParams();
   const navigate = useNavigate();
+  const { displayMessage } = useAlerts();
+  const { shoppingLists } = useAppSelector(state => state.shoppingLists);
+  const { recipes } = useAppSelector(state => state.recipes);
+  const recipe = recipes[+id!];
 
   // This list needs to be created in this component as it is used for checkbox state caching mechanism.
   const [ingredients, setIngredients] = useState<ReadonlyArray<QuantifiableItemData>>(

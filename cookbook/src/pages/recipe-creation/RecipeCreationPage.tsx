@@ -4,7 +4,7 @@ import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import RecipeCreationForm from "components/recipe-creation-form/RecipeCreationForm";
 import store from "storage/redux/store";
-import { useAppSelector } from "storage/redux/hooks";
+import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
 
 export async function loader(): Promise<null> {
@@ -14,13 +14,15 @@ export async function loader(): Promise<null> {
 }
 
 const RecipeCreationPage = () => {
+  const dispatch = useAppDispatch();
   const categories = useAppSelector(state => state.categories.categories);
   const tags = useAppSelector(state => state.tags.tags);
 
   const { displayMessage } = useAlerts();
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
-    await api.post.createRecipe(dto);
+    const newRecipe = await api.post.createRecipe(dto);
+    dispatch(storeActions.recipes.setRecipeInCache(newRecipe));
     displayMessage({ type: "success", message: "Przepis został utworzony.", fadeOutAfter: 5000 });
   };
 
