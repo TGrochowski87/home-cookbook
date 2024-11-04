@@ -58,7 +58,7 @@ const RecipeListPage = () => {
     //   setTimeout(resolve, 1000);
     // });
 
-    const nextPage = await api.get.getRecipes({ type: "Whole", url: nextRecipesPage.current });
+    const nextPage = await api.get.getRecipes({ type: "FullUrl", url: nextRecipesPage.current });
     nextRecipesPage.current = nextPage.nextPage;
     setRecipes(prev => prev.concat(nextPage.recipes));
     setNextPageLoading(false);

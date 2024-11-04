@@ -23,7 +23,7 @@ export const getTags = async (): Promise<TagGetDto[]> => {
   return response.data;
 };
 
-export type GetRecipesURL = { type: "Query"; query: string } | { type: "Whole"; url: string };
+export type GetRecipesURL = { type: "Query"; query: string } | { type: "FullUrl"; url: string };
 
 export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponseDto> => {
   const finalUrl = url.type === "Query" ? `${baseUrl}/recipes${url.query}` : url.url;
