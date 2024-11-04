@@ -8,7 +8,7 @@ internal interface IRecipeService
   
   Task<Result<RecipeDetailsGet, Error>> GetById(int id);
 
-  Task<Result<int, Error>> Create(RecipeCreate data);
+  Task<Result<RecipeDetailsGet, Error>> Create(RecipeCreate data);
 
-  Task<UnitResult<Error>> Update(int id, DateTime resourceStateTimestampFromRequest, RecipeCreate data);
+  Task<Result<RecipeDetailsGet, Error>> Update(int id, DateTime resourceStateTimestampFromRequest, RecipeCreate data);
 }

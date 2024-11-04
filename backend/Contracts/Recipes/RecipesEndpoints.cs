@@ -71,15 +71,15 @@ public class RecipesEndpoints : IEndpointsDefinition
       });
   }
 
-  private static async Task<Results<Created<int>, NotFound<string>>> CreateRecipe(
+  private static async Task<Results<Created<RecipeDetailsGetDto>, NotFound<string>>> CreateRecipe(
     [FromServices] IRecipeService recipeService,
     [FromForm] RecipeCreateDto dto)
   {
     var recipeCreate = EndpointModelMapper.Map(dto);
     var result = await recipeService.Create(recipeCreate);
 
-    return result.Match<int, Results<Created<int>, NotFound<string>>, Error>(
-      recipeId => TypedResults.Created((string?)null, recipeId), // TODO: Consider proper URL
+    return result.Match<RecipeDetailsGet, Results<Created<RecipeDetailsGetDto>, NotFound<string>>, Error>(
+      value => TypedResults.Created((string?)null, EndpointModelMapper.Map(value)), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
@@ -87,7 +87,7 @@ public class RecipesEndpoints : IEndpointsDefinition
       });
   }
 
-  private static async Task<Results<NoContent, NotFound<string>, ProblemHttpResult>> OverrideRecipe(
+  private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound<string>, ProblemHttpResult>> OverrideRecipe(
     [FromServices] IRecipeService recipeService,
     [FromRoute] int id,
     [FromForm] RecipeCreateDto dto,
@@ -96,8 +96,8 @@ public class RecipesEndpoints : IEndpointsDefinition
     var recipeCreate = EndpointModelMapper.Map(dto);
     var result = await recipeService.Update(id, resourceStateTimestamp, recipeCreate);
 
-    return result.Match<Results<NoContent, NotFound<string>, ProblemHttpResult>, Error>(
-      () => TypedResults.NoContent(), // TODO: Consider proper URL
+    return result.Match<RecipeDetailsGet, Results<Ok<RecipeDetailsGetDto>, NotFound<string>, ProblemHttpResult>, Error>(
+      value => TypedResults.Ok(EndpointModelMapper.Map(value)), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),

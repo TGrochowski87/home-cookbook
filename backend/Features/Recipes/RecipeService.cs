@@ -28,7 +28,7 @@ internal class RecipeService : IRecipeService
     _sanitizer.AllowedAttributes.Add("class");
   }
 
-  public async Task<Result<int, Error>> Create(RecipeCreate data)
+  public async Task<Result<RecipeDetailsGet, Error>> Create(RecipeCreate data)
   {
     return await _tagService.CreateMany(data.NewTags)
       .ToResultAsync<List<int>, Error>()
@@ -38,10 +38,11 @@ internal class RecipeService : IRecipeService
         Description = _sanitizer.Sanitize(data.Description)
       })
       .Bind(updateData => _recipeRepository.Create(updateData).ToResultAsync<int, Error>())
-      .CheckIf(data.Image.HasValue, recipeId => SaveRecipeImage(recipeId, data.Image.Value));
+      .CheckIf(data.Image.HasValue, recipeId => SaveRecipeImage(recipeId, data.Image.Value))
+      .Bind(recipeId => _recipeRepository.GetById(recipeId));
   }
 
-  public async Task<UnitResult<Error>> Update(int id, DateTime resourceStateTimestampFromRequest, RecipeCreate data)
+  public async Task<Result<RecipeDetailsGet,Error>> Update(int id, DateTime resourceStateTimestampFromRequest, RecipeCreate data)
   {
     return await _recipeRepository.GetById(id)
       .Check(recipe =>
@@ -54,7 +55,8 @@ internal class RecipeService : IRecipeService
         Description = _sanitizer.Sanitize(data.Description)
       })
       .Bind(updateData => _recipeRepository.Update(id, updateData))
-      .CheckIf(data.Image.HasValue, () => SaveRecipeImage(id, data.Image.Value));
+      .CheckIf(data.Image.HasValue, () => SaveRecipeImage(id, data.Image.Value))
+      .Bind(() => _recipeRepository.GetById(id));
   }
 
   public async Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(GetRecipesQueryParams queryParams) 
