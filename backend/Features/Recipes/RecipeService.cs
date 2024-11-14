@@ -14,8 +14,9 @@ internal class RecipeService : IRecipeService
   private readonly IImageService _imageService;
 
   private readonly HtmlSanitizer _sanitizer;
+  private readonly ILogger<RecipeService> _logger;
 
-  public RecipeService(IRecipeRepository recipeRepository, ITagService tagService, IImageService imageService)
+  public RecipeService(IRecipeRepository recipeRepository, ITagService tagService, IImageService imageService, ILogger<RecipeService> logger)
   {
     _recipeRepository = recipeRepository;
     _tagService = tagService;
@@ -26,12 +27,15 @@ internal class RecipeService : IRecipeService
       AllowDataAttributes = true // TipTap uses data attributes.
     };
     _sanitizer.AllowedAttributes.Add("class");
+
+    _logger = logger;
   }
 
   public async Task<Result<RecipeDetailsGet, Error>> Create(RecipeCreate data)
   {
     return await _tagService.CreateMany(data.NewTags)
       .ToResultAsync<List<int>, Error>()
+      .Tap(newTagIds => _logger.LogInformation("Created new tags with IDs: {newTagIds}", string.Join(", ", newTagIds)))
       .Map(newTagIds => data with
       {
         TagIds = newTagIds.Concat(data.TagIds).ToList(),
@@ -49,6 +53,7 @@ internal class RecipeService : IRecipeService
         CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, recipe.UpdateDate))
       .Bind(_ => _tagService.CreateMany(data.NewTags)
         .ToResultAsync<List<int>, Error>())
+      .Tap(newTagIds => _logger.LogInformation("Created new tags with IDs: {newTagIds}", string.Join(", ", newTagIds)))
       .Map(newTagIds => data with
       {
         TagIds = newTagIds.Concat(data.TagIds).ToList(),
@@ -67,6 +72,7 @@ internal class RecipeService : IRecipeService
 
   private async Task<UnitResult<Error>> SaveRecipeImage(int recipeId, IFormFile image)
   {
+    _logger.LogInformation("Saving image for recipe of ID = {RecipeId}", recipeId);
     var imageName = await _imageService.Save(image, $"recipe-{recipeId}");
     var imageSrc = $"http://192.168.0.164:5212/recipes/images/{imageName}"; // TODO
     return await _recipeRepository.SetImageSource(recipeId, imageSrc);

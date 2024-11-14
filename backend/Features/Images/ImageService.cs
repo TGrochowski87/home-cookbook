@@ -19,7 +19,7 @@ internal class ImageService : IImageService
     var imageFormat = Path.GetExtension(image.FileName).ToLowerInvariant();
     
     var fileFullPath = $"{_storageLocation}{nameToBeSavedUnder}{imageFormat}";
-    using var fileStream = new FileStream(fileFullPath, FileMode.Create);
+    await using var fileStream = new FileStream(fileFullPath, FileMode.Create);
 
     await image.CopyToAsync(fileStream);
 

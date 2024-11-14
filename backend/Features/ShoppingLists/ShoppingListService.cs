@@ -5,7 +5,8 @@ using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;
 
-internal class ShoppingListService(IShoppingListRepository shoppingListRepository) : IShoppingListService
+internal class ShoppingListService(IShoppingListRepository shoppingListRepository, ILogger<ShoppingListService> logger)
+  : IShoppingListService
 {
   public async Task<List<ShoppingList>> GetAll()
   {
@@ -16,8 +17,13 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
     var overdueShoppingLists = groupedByExpirationStatus.FirstOrDefault(group => group.Key);
     if (overdueShoppingLists is not null)
     {
+      logger.LogInformation("Current time: {CurrentTime}", DateTime.Now.ToLocalTime());
       foreach (var shoppingList in overdueShoppingLists)
       {
+        logger.LogInformation(
+          "Removing overdue shopping list with ID = {ShoppingListId}. Creation date: {CreationDate}.", 
+          shoppingList.Id,
+          shoppingList.CreationDate.ToLocalTime());
         await shoppingListRepository.Remove(shoppingList.Id);
       }
     }
@@ -45,12 +51,13 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   }
 
   public async Task<Result<ShoppingListDetails, Error>> UpdateShoppingList(
-    int id, 
-    DateTime resourceStateTimestampFromRequest, 
+    int id,
+    DateTime resourceStateTimestampFromRequest,
     ShoppingListUpdate updateData)
   {
     return await shoppingListRepository.GetById(id)
-      .Check(shoppingList => CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
+      .Check(shoppingList =>
+        CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
       .Tap(() => shoppingListRepository.UpdateShoppingList(id, updateData)) // Update does not return any expected errors.
       .Bind(() => shoppingListRepository.GetById(id)); // Return updated object.
@@ -58,8 +65,8 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
 
   private static UnitResult<Error> VerifyRecipeIsNotOnShoppingList(ShoppingListDetails shoppingList, int recipeId)
   {
-    return shoppingList.Sublists.Any(sl => sl.RecipeId == recipeId) 
-      ? new Error(HttpStatusCode.Conflict, "Składniki przepisu już są na liście zakupów.") 
+    return shoppingList.Sublists.Any(sl => sl.RecipeId == recipeId)
+      ? new Error(HttpStatusCode.Conflict, "Składniki przepisu już są na liście zakupów.")
       : UnitResult.Success<Error>();
   }
 

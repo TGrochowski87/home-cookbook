@@ -42,12 +42,14 @@ public static class WebApplicationExtensions
 
       await next(context);
 
-      if(context.Response.StatusCode >= 200 &&  context.Response.StatusCode < 300)
+      if(context.Response.StatusCode is >= 200 and < 300)
       {
         transaction.Commit();
       }
       else
       {
+        var logger = context.RequestServices.GetRequiredService<ILogger<CookbookTransaction>>();
+        logger.LogWarning("Response status code is {StatusCode}. Rolling back transaction.", context.Response.StatusCode);
         transaction.Rollback();
       }  
     });

@@ -70,7 +70,6 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
 
   public async Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(GetRecipesQueryParams queryParams)
   {
-    // TODO: Test all complex queries for possible performance issues.
     IQueryable<Recipe> query = context.Recipes
       .Include(r => r.Category)
       .Include(r => r.Tags)
