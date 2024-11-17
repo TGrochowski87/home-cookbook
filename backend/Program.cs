@@ -3,6 +3,7 @@ using Cookbook.DataAccess;
 using Cookbook.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.HttpLogging;
+using OpenTelemetry.Metrics;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,24 @@ builder.Services.AddHttpLogging(logging =>
   logging.RequestBodyLogLimit = 4096;
   logging.ResponseBodyLogLimit = 4096;
 });
+
+builder.Services.AddOpenTelemetry()
+  .WithMetrics(builder =>
+  {
+    builder.AddPrometheusExporter();
+
+    builder.AddMeter("Microsoft.AspNetCore.Hosting",
+      "Microsoft.AspNetCore.Server.Kestrel");
+    builder.AddView("http.server.request.duration",
+      new ExplicitBucketHistogramConfiguration
+      {
+        Boundaries =
+        [
+          0, 0.005, 0.01, 0.025, 0.05,
+          0.075, 0.1, 0.25, 0.5, 0.75, 1, 2.5, 5, 7.5, 10
+        ]
+      });
+  });
 
 builder.Services.AddProblemDetails(options =>
 {
@@ -75,6 +94,8 @@ if (app.Environment.IsDevelopment())
 
 // TODO
 // app.UseAntiforgery();
+
+app.MapPrometheusScrapingEndpoint();
 
 app.AddAllEndpoints()
   .UsePerRequestTransaction()
