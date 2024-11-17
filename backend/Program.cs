@@ -4,9 +4,28 @@ using Cookbook.Extensions;
 using FluentValidation;
 using Microsoft.AspNetCore.HttpLogging;
 using OpenTelemetry.Metrics;
+using Serilog;
+using Serilog.Enrichers.Span;
+using Serilog.Exceptions;
+using Serilog.Sinks.Grafana.Loki;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Logging.ClearProviders();
+builder.Host.UseSerilog((context, loggerConfig) =>
+{
+  loggerConfig
+    .WriteTo.Console()
+    .WriteTo.Debug()
+    .Enrich.WithExceptionDetails()
+    .Enrich.With<ActivityEnricher>()
+    .WriteTo.GrafanaLoki(
+      uri: "http://192.168.0.164:3100", 
+      credentials: new LokiCredentials{Login = "admin", Password = "admin"}, 
+      labels: new []{new LokiLabel{Key = "app", Value = "Cookbook"}},
+      propertiesAsLabels: ["app"]);
+});
 
 builder.Logging.AddSimpleConsole(options =>
 {
@@ -46,7 +65,7 @@ builder.Services.AddProblemDetails(options =>
   {
     if (context.ProblemDetails.Extensions.ContainsKey("traceId") == false)
     {
-      context.ProblemDetails.Extensions.Add("traceId", Activity.Current?.Id ?? context.HttpContext.TraceIdentifier);
+      context.ProblemDetails.Extensions.Add("traceId", Activity.Current?.TraceId.ToString() ?? context.HttpContext.TraceIdentifier);
     }
   };
 });
