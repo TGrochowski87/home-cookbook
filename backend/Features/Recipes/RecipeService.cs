@@ -49,6 +49,8 @@ internal class RecipeService : IRecipeService
   public async Task<Result<RecipeDetailsGet,Error>> Update(int id, DateTime resourceStateTimestampFromRequest, RecipeCreate data)
   {
     return await _recipeRepository.GetById(id)
+      .Tap(recipe => _logger.LogInformation("Update date passed: {PassedUpdateDate}\nUpdate date from DB: {DBUpdateDate}", 
+        resourceStateTimestampFromRequest, recipe.UpdateDate))
       .Check(recipe =>
         CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, recipe.UpdateDate))
       .Bind(_ => _tagService.CreateMany(data.NewTags)

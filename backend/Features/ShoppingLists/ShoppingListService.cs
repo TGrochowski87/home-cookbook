@@ -56,6 +56,8 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
     ShoppingListUpdate updateData)
   {
     return await shoppingListRepository.GetById(id)
+      .Tap(shoppingList => logger.LogInformation("Update date passed: {PassedUpdateDate}\nUpdate date from DB: {DBUpdateDate}", 
+        resourceStateTimestampFromRequest, shoppingList.UpdateDate))
       .Check(shoppingList =>
         CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
       .Bind(shoppingList => ValidateShoppingListUpdateWithDbData(updateData, shoppingList))
