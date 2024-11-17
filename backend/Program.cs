@@ -5,9 +5,6 @@ using FluentValidation;
 using Microsoft.AspNetCore.HttpLogging;
 using OpenTelemetry.Metrics;
 using Serilog;
-using Serilog.Enrichers.Span;
-using Serilog.Exceptions;
-using Serilog.Sinks.Grafana.Loki;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,16 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, loggerConfig) =>
 {
-  loggerConfig
-    .WriteTo.Console()
-    .WriteTo.Debug()
-    .Enrich.WithExceptionDetails()
-    .Enrich.With<ActivityEnricher>()
-    .WriteTo.GrafanaLoki(
-      uri: "http://192.168.0.164:3100", 
-      credentials: new LokiCredentials{Login = "admin", Password = "admin"}, 
-      labels: new []{new LokiLabel{Key = "app", Value = "Cookbook"}},
-      propertiesAsLabels: ["app"]);
+  loggerConfig.ReadFrom.Configuration(context.Configuration);
 });
 
 builder.Logging.AddSimpleConsole(options =>
@@ -37,18 +25,19 @@ builder.Services.AddHttpLogging(logging =>
                           HttpLoggingFields.RequestBody | HttpLoggingFields.ResponsePropertiesAndHeaders |
                           HttpLoggingFields.ResponseBody | HttpLoggingFields.Duration;
   logging.MediaTypeOptions.AddText("application/json");
+  logging.CombineLogs = true;
   logging.RequestBodyLogLimit = 4096;
   logging.ResponseBodyLogLimit = 4096;
 });
 
 builder.Services.AddOpenTelemetry()
-  .WithMetrics(builder =>
+  .WithMetrics(config =>
   {
-    builder.AddPrometheusExporter();
+    config.AddPrometheusExporter();
 
-    builder.AddMeter("Microsoft.AspNetCore.Hosting",
+    config.AddMeter("Microsoft.AspNetCore.Hosting",
       "Microsoft.AspNetCore.Server.Kestrel");
-    builder.AddView("http.server.request.duration",
+    config.AddView("http.server.request.duration",
       new ExplicitBucketHistogramConfiguration
       {
         Boundaries =
@@ -61,7 +50,7 @@ builder.Services.AddOpenTelemetry()
 
 builder.Services.AddProblemDetails(options =>
 {
-  options.CustomizeProblemDetails = (context) =>
+  options.CustomizeProblemDetails = context =>
   {
     if (context.ProblemDetails.Extensions.ContainsKey("traceId") == false)
     {

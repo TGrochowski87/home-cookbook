@@ -19,6 +19,5 @@ scrape_configs:
   #     - targets: ["localhost:9090"]
 
   - job_name: "cookbook"
-    scrape_interval: 5s
     static_configs:
       - targets: ["192.168.0.164:5212"]
