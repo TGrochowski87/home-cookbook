@@ -30,13 +30,15 @@ builder.Services.AddHttpLogging(logging =>
   logging.ResponseBodyLogLimit = 4096;
 });
 
+builder.Services.AddMetrics();
 builder.Services.AddOpenTelemetry()
   .WithMetrics(config =>
   {
     config.AddPrometheusExporter();
 
     config.AddMeter("Microsoft.AspNetCore.Hosting",
-      "Microsoft.AspNetCore.Server.Kestrel");
+      "Microsoft.AspNetCore.Server.Kestrel",
+      "cookbook.crash.analytics");
     config.AddView("http.server.request.duration",
       new ExplicitBucketHistogramConfiguration
       {
@@ -109,5 +111,6 @@ if (app.Environment.IsDevelopment())
 app.MapPrometheusScrapingEndpoint();
 app.MapHealthChecks("health");
 app.AddAllEndpoints()
+  .UseCrashAnalytics()
   .UsePerRequestTransaction()
   .Run();

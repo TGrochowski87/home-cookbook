@@ -1,7 +1,7 @@
-﻿using Cookbook.Contracts;
+﻿using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using Cookbook.Contracts;
 using Cookbook.DataAccess;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 
 namespace Cookbook.Extensions;
 
@@ -52,6 +52,35 @@ public static class WebApplicationExtensions
         logger.LogWarning("Response status code is {StatusCode}. Rolling back transaction.", context.Response.StatusCode);
         transaction.Rollback();
       }  
+    });
+
+    return app;
+  }
+
+  /// <summary>
+  /// TODO
+  /// </summary>
+  /// <param name="app"></param>
+  /// <returns></returns>
+  public static WebApplication UseCrashAnalytics(this WebApplication app)
+  {
+    app.Use(async (context, next) =>
+    {
+      try
+      {
+        await next(context);
+      }
+      catch (Exception)
+      {
+        var meterFactory = context.RequestServices.GetRequiredService<IMeterFactory>();
+        var meter = meterFactory.Create("cookbook.crash.analytics");
+        meter.CreateCounter<int>("unhandled_exceptions_counter").Add(1, tags: new []
+        {
+          new KeyValuePair<string, object?>("TraceId", Activity.Current?.TraceId.ToString() ?? context.TraceIdentifier)
+        });
+        
+        throw;
+      }
     });
 
     return app;
