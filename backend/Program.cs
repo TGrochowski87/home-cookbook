@@ -48,6 +48,9 @@ builder.Services.AddOpenTelemetry()
       });
   });
 
+builder.Services.AddHealthChecks()
+  .AddDbContextCheck<CookbookContext>();
+
 builder.Services.AddProblemDetails(options =>
 {
   options.CustomizeProblemDetails = context =>
@@ -104,7 +107,7 @@ if (app.Environment.IsDevelopment())
 // app.UseAntiforgery();
 
 app.MapPrometheusScrapingEndpoint();
-
+app.MapHealthChecks("health");
 app.AddAllEndpoints()
   .UsePerRequestTransaction()
   .Run();
