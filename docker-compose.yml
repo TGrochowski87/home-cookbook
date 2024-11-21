@@ -24,7 +24,7 @@ services:
       - "3000:3000"
     volumes:
       - ./grafana/data:/var/lib/grafana
-    environment:
-      - GF_INSTALL_PLUGINS=grafana-clock-panel, grafana-simple-json-datasource
+    env_file:
+      - ./grafana/grafana.env
     depends_on:
       - prometheus

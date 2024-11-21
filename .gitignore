@@ -5,3 +5,5 @@ Dockerfile.dev
 prometheus/data
 grafana/data
 loki/data
+
+*.env
