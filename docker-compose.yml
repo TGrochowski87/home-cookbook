@@ -1,4 +1,24 @@
 services:
+  db:
+    image: tgrochowski87/cookbook-db-dev
+    restart: always
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./database/db.env
+    volumes:
+      - /var/lib/postgresql/data
+
+  api:
+    image: tgrochowski87/cookbook-api
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./api/appsettings.json:/app/appsettings.json
+    depends_on:
+      - db
+
   prometheus:
     image: prom/prometheus
     restart: always
@@ -7,6 +27,8 @@ services:
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - ./prometheus/data:/prometheus
+    depends_on:
+      - api
 
   loki:
     image: grafana/loki
@@ -16,6 +38,8 @@ services:
     volumes:
       - ./loki/loki-config.yaml:/etc/loki/loki-config.yaml
       - ./loki/data:/loki
+    depends_on:
+      - api
 
   grafana:
     image: grafana/grafana
@@ -27,4 +51,6 @@ services:
     env_file:
       - ./grafana/grafana.env
     depends_on:
+      - api
+      - loki
       - prometheus
