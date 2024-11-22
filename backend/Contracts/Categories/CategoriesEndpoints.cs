@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Cookbook.Contracts.Categories;
 
+// TODO: Consider putting contracts under Features/
 public class CategoriesEndpoints : IEndpointsDefinition
 {
   public void MapEndpoints(WebApplication app)
