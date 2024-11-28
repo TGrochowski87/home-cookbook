@@ -377,3 +377,6 @@ yarn-error.log*
 
 # Project-specific
 uploads/
+
+# Custom publish folder
+published/
