@@ -69,9 +69,9 @@ builder.Services.AddSwaggerGen(options => { options.SupportNonNullableReferenceT
 
 builder.Services.AddCors(options =>
 {
-  options.AddPolicy("dev", policy =>
+  options.AddPolicy("cors", policy =>
   {
-    policy.WithOrigins("http://192.168.0.164:5173")
+    policy.WithOrigins(builder.Configuration.GetRequiredSection("AllowedOrigins").Get<string[]>()!)
       .AllowAnyMethod()
       .AllowAnyHeader()
       .AllowCredentials();
@@ -100,10 +100,7 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
-if (app.Environment.IsDevelopment())
-{
-  app.UseCors("dev");
-}
+app.UseCors("cors");
 
 // TODO
 // app.UseAntiforgery();
