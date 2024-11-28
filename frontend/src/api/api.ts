@@ -3,7 +3,7 @@ import * as POST from "./POST/requests";
 import * as PUT from "./PUT/requests";
 import * as DELETE from "./DELETE/requests";
 
-export const baseUrl = "http://192.168.0.164:5212";
+export const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const api = {
   baseUrl,
