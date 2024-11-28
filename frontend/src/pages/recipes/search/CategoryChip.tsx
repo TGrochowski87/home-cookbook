@@ -26,7 +26,7 @@ const CategoryChip = ({ category, checked, onChange }: CategoryChipProps) => {
       />
       <label
         className="category-chip block floating interactive-element"
-        style={{ "--color": category.color }}
+        style={{ "--color": category.color } as React.CSSProperties}
         htmlFor={category.name}>
         {category.name}
         <span dangerouslySetInnerHTML={{ __html: category.symbol }} />

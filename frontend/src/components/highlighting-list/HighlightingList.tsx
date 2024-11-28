@@ -25,7 +25,7 @@ const HighlightingList = <T extends { readonly key: string | number }>({
    * These two hooks are used for enabling highlighting only after a short time of holding the touch.
    * Highlighting should not hijack every page scrolling attempt.
    */
-  const timeoutId = useRef<number>();
+  const timeoutId = useRef<ReturnType<typeof setTimeout>>();
   const [highlightingActive, setHighlightingActive] = useState<boolean>(false);
 
   const handleTouchStart = (key: T["key"]) => {

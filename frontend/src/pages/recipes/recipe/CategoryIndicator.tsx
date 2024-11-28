@@ -15,9 +15,10 @@ const CategoryIndicator = ({ category }: CategoryIndicatorProps) => {
       onMouseLeave={() => setShow(false)}
       onTouchStart={() => setShow(prev => !prev)}
       onClick={event => event.stopPropagation()}>
-      {/* @ts-ignore */}
       <span className="svg-space" dangerouslySetInnerHTML={{ __html: category.symbol }} />
-      <div style={{ "--color": category.color }} className={`category-indicator ${show ? "show" : ""}`}>
+      <div
+        style={{ "--color": category.color } as React.CSSProperties}
+        className={`category-indicator ${show ? "show" : ""}`}>
         <p>{category.name}</p>
       </div>
     </div>
