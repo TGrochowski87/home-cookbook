@@ -6,4 +6,7 @@ prometheus/data
 grafana/data
 loki/data
 
+api/
+web/
+prometheus/web.yml
 *.env
