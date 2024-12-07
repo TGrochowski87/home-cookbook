@@ -1,11 +1,10 @@
-﻿using Cookbook.Features.Categories;
+﻿using Cookbook.Domain.Categories;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cookbook.Contracts.Categories;
 
-// TODO: Consider putting contracts under Features/
 public class CategoriesEndpoints : IEndpointsDefinition
 {
   public void MapEndpoints(WebApplication app)

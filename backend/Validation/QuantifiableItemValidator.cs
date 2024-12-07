@@ -1,4 +1,5 @@
 ﻿using Cookbook.Contracts.Common;
+using Cookbook.Contracts.Recipes;
 using FluentValidation;
 
 namespace Cookbook.Validation;

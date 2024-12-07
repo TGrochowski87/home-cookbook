@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Cookbook.Contracts.Common;
+using Microsoft.AspNetCore.Mvc;
 
-namespace Cookbook.Contracts.Common;
+namespace Cookbook.Contracts.Recipes;
 
 public class QuantifiableItemCreateDto
 {

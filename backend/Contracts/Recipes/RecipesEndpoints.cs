@@ -1,12 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Text;
-using Cookbook.Features.Recipes;
+using Cookbook.Domain.Images;
+using Cookbook.Domain.Recipes;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Cookbook.Features.Images;
 using Microsoft.AspNetCore.Http.Extensions;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 

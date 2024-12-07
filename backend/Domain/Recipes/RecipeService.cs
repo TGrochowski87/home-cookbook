@@ -1,0 +1,82 @@
+﻿using Cookbook.Domain.Common;
+using Cookbook.Domain.Images;
+using Cookbook.Domain.Tags;
+using Cookbook.Extensions;
+using CSharpFunctionalExtensions;
+using Ganss.Xss;
+
+namespace Cookbook.Domain.Recipes;
+
+internal class RecipeService : IRecipeService
+{
+  private readonly IRecipeRepository _recipeRepository;
+  private readonly ITagService _tagService;
+  private readonly IImageService _imageService;
+
+  private readonly HtmlSanitizer _sanitizer;
+  private readonly ILogger<RecipeService> _logger;
+
+  public RecipeService(IRecipeRepository recipeRepository, ITagService tagService, IImageService imageService, ILogger<RecipeService> logger)
+  {
+    _recipeRepository = recipeRepository;
+    _tagService = tagService;
+    _imageService = imageService;
+
+    _sanitizer = new HtmlSanitizer
+    {
+      AllowDataAttributes = true // TipTap uses data attributes.
+    };
+    _sanitizer.AllowedAttributes.Add("class");
+
+    _logger = logger;
+  }
+
+  public async Task<Result<RecipeDetailsGet, Error>> Create(RecipeCreate data)
+  {
+    return await _tagService.CreateMany(data.NewTags)
+      .ToResultAsync<List<int>, Error>()
+      .Tap(newTagIds => _logger.LogInformation("Created new tags with IDs: {newTagIds}", string.Join(", ", newTagIds)))
+      .Map(newTagIds => data with
+      {
+        TagIds = newTagIds.Concat(data.TagIds).ToList(),
+        Description = _sanitizer.Sanitize(data.Description)
+      })
+      .Bind(updateData => _recipeRepository.Create(updateData).ToResultAsync<int, Error>())
+      .CheckIf(data.Image.HasValue, recipeId => SaveRecipeImage(recipeId, data.Image.Value))
+      .Bind(recipeId => _recipeRepository.GetById(recipeId));
+  }
+
+  public async Task<Result<RecipeDetailsGet,Error>> Update(int id, DateTime resourceStateTimestampFromRequest, RecipeCreate data)
+  {
+    return await _recipeRepository.GetById(id)
+      .Tap(recipe => _logger.LogInformation("Update date passed: {PassedUpdateDate}\nUpdate date from DB: {DBUpdateDate}", 
+        resourceStateTimestampFromRequest, recipe.UpdateDate))
+      .Check(recipe =>
+        CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, recipe.UpdateDate))
+      .Bind(_ => _tagService.CreateMany(data.NewTags)
+        .ToResultAsync<List<int>, Error>())
+      .Tap(newTagIds => _logger.LogInformation("Created new tags with IDs: {newTagIds}", string.Join(", ", newTagIds)))
+      .Map(newTagIds => data with
+      {
+        TagIds = newTagIds.Concat(data.TagIds).ToList(),
+        Description = _sanitizer.Sanitize(data.Description)
+      })
+      .Bind(updateData => _recipeRepository.Update(id, updateData))
+      .CheckIf(data.Image.HasValue, () => SaveRecipeImage(id, data.Image.Value))
+      .Bind(() => _recipeRepository.GetById(id));
+  }
+
+  public async Task<(List<RecipeGet> recipes, bool isLastPage)> GetMany(GetRecipesQueryParams queryParams) 
+    => await _recipeRepository.GetMany(queryParams);
+
+  public async Task<Result<RecipeDetailsGet, Error>> GetById(int id)
+    => await _recipeRepository.GetById(id);
+
+  private async Task<UnitResult<Error>> SaveRecipeImage(int recipeId, IFormFile image)
+  {
+    _logger.LogInformation("Saving image for recipe of ID = {RecipeId}", recipeId);
+    var imageName = await _imageService.Save(image, $"recipe-{recipeId}");
+    var imageSrc = $"http://192.168.0.164:5212/recipes/images/{imageName}"; // TODO
+    return await _recipeRepository.SetImageSource(recipeId, imageSrc);
+  }
+}

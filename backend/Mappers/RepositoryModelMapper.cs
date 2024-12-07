@@ -1,14 +1,14 @@
 ﻿using Cookbook.DataAccess;
-using Cookbook.Features.Common.Models;
-using Cookbook.Features.Recipes;
-using Cookbook.Features.ShoppingLists;
-using Cookbook.Features.Tags;
-using Category = Cookbook.Features.Categories.Category;
-using QuantifiableItemGet = Cookbook.Features.Common.Models.QuantifiableItemGet;
+using Cookbook.Domain.Common.Models;
+using Cookbook.Domain.Recipes;
+using Cookbook.Domain.ShoppingLists;
+using Cookbook.Domain.Tags;
+using Category = Cookbook.Domain.Categories.Category;
+using QuantifiableItemGet = Cookbook.Domain.Common.Models.QuantifiableItemGet;
 using Recipe = Cookbook.DataAccess.Recipe;
-using ShoppingList = Cookbook.Features.ShoppingLists.ShoppingList;
-using ShoppingSublist = Cookbook.Features.ShoppingLists.ShoppingSublist;
-using TagGet = Cookbook.Features.Tags.TagGet;
+using ShoppingList = Cookbook.Domain.ShoppingLists.ShoppingList;
+using ShoppingSublist = Cookbook.Domain.ShoppingLists.ShoppingSublist;
+using TagGet = Cookbook.Domain.Tags.TagGet;
 
 namespace Cookbook.Mappers;
 

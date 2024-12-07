@@ -1,4 +1,4 @@
-﻿using Cookbook.Features.Tags;
+﻿using Cookbook.Domain.Tags;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
