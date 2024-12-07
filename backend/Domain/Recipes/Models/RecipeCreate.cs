@@ -2,7 +2,7 @@
 using Cookbook.Domain.Tags;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Domain.Recipes;
+namespace Cookbook.Domain.Recipes.Models;
 
 internal record RecipeCreate(
   string Name,

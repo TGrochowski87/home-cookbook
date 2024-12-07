@@ -1,5 +1,6 @@
 ﻿using Cookbook.Domain.Common;
 using Cookbook.Domain.Images;
+using Cookbook.Domain.Recipes.Models;
 using Cookbook.Domain.Tags;
 using Cookbook.Extensions;
 using CSharpFunctionalExtensions;

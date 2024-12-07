@@ -3,6 +3,7 @@ using System.Net;
 using System.Text;
 using Cookbook.Domain.Images;
 using Cookbook.Domain.Recipes;
+using Cookbook.Domain.Recipes.Models;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;

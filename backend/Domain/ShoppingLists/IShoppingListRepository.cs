@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using Cookbook.Domain.ShoppingLists.Models;
+using CSharpFunctionalExtensions;
 
 namespace Cookbook.Domain.ShoppingLists;
 

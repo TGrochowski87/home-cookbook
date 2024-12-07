@@ -1,7 +1,7 @@
 ﻿using Cookbook.Domain.Common.Models;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Domain.ShoppingLists;
+namespace Cookbook.Domain.ShoppingLists.Models;
 
 internal record ShoppingListUpdate(string Name, List<ShoppingSublistUpdate> Sublists);
 

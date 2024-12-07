@@ -1,4 +1,6 @@
-﻿namespace Cookbook.Domain.Categories;
+﻿using Cookbook.Domain.Categories.Models;
+
+namespace Cookbook.Domain.Categories;
 
 internal class CategoryService(ICategoryRepository categoryRepository) : ICategoryService
 {

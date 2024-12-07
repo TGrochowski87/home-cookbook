@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Cookbook.DataAccess;
+using Cookbook.Domain.Recipes.Models;
 using Cookbook.Mappers;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;

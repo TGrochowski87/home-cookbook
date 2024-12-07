@@ -1,8 +1,10 @@
 ﻿using System.Net;
 using Cookbook.DataAccess;
+using Cookbook.Domain.ShoppingLists.Models;
 using Cookbook.Mappers;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using ShoppingList = Cookbook.Domain.ShoppingLists.Models.ShoppingList;
 
 namespace Cookbook.Domain.ShoppingLists;
 

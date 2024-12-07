@@ -1,6 +1,7 @@
 ﻿using Cookbook.DataAccess;
 using Cookbook.Mappers;
 using Microsoft.EntityFrameworkCore;
+using Category = Cookbook.Domain.Categories.Models.Category;
 
 namespace Cookbook.Domain.Categories;
 

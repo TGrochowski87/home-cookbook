@@ -1,9 +1,9 @@
-﻿using Cookbook.Domain.Categories;
+﻿using Cookbook.Domain.Categories.Models;
 using Cookbook.Domain.Common.Models;
 using Cookbook.Domain.Tags;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Domain.Recipes;
+namespace Cookbook.Domain.Recipes.Models;
 
 internal record RecipeDetailsGet(
   int Id, 

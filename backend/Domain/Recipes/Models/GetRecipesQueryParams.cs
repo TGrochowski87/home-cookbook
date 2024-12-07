@@ -1,6 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 
-namespace Cookbook.Domain.Recipes;
+namespace Cookbook.Domain.Recipes.Models;
 
 public record GetRecipesQueryParams(Maybe<Filtering> Filtering, Paging Paging);
 
