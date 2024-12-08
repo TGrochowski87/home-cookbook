@@ -7,9 +7,8 @@ internal static class CommonResourceValidator
 {
   public static UnitResult<Error> VerifyResourceStateNotOutdated(DateTime resourceStateTimestampFromRequest, DateTime resourceUpdateDate)
   {
-    // TODO: I am actually not using these messages on UI. Change to english.
     return resourceUpdateDate > resourceStateTimestampFromRequest 
-      ? new Error(HttpStatusCode.PreconditionFailed, "Zasób został w międzyczasie zmodyfikowany.") 
+      ? new Error(HttpStatusCode.PreconditionFailed, "The resource has been modified in the meantime.") 
       : UnitResult.Success<Error>();
   }
 }

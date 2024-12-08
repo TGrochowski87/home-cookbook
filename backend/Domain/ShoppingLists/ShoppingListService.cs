@@ -68,7 +68,7 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   private static UnitResult<Error> VerifyRecipeIsNotOnShoppingList(ShoppingListDetails shoppingList, int recipeId)
   {
     return shoppingList.Sublists.Any(sl => sl.RecipeId == recipeId)
-      ? new Error(HttpStatusCode.Conflict, "Składniki przepisu już są na liście zakupów.")
+      ? new Error(HttpStatusCode.Conflict, "The recipe's ingredients are already on the shopping list.")
       : UnitResult.Success<Error>();
   }
 
@@ -80,7 +80,7 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
     if (updateData.Sublists.Any(slUpdate => slUpdate.Id == manualListId) == false)
     {
       return new Error(HttpStatusCode.BadRequest,
-        "Manualna podlista nie może zostać usunięta z listy zakupów.");
+        "The custom sublist cannot be removed from the shopping list.");
     }
 
     var existentSublistIds = updateData.Sublists.Select(sl => sl.Id).ToList();
@@ -92,14 +92,14 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
     {
       if (existentSublistIds.Contains(sublistUpdate.Id) == false)
       {
-        return new Error(HttpStatusCode.NotFound, $"Podlista o ID = {sublistUpdate.Id} nie istnieje.");
+        return new Error(HttpStatusCode.NotFound, $"The sublist of ID = {sublistUpdate.Id} does not exist."); 
       }
 
       foreach (var itemUpdate in sublistUpdate.Items.Where(item => item.Id.HasValue))
       {
         if (existentItemIds.Contains((int)itemUpdate.Id.Value!) == false)
         {
-          return new Error(HttpStatusCode.NotFound, $"Przedmiot o ID = {itemUpdate.Id} nie istnieje.");
+          return new Error(HttpStatusCode.NotFound, $"The item of ID = {itemUpdate.Id} does not exist.");
         }
       }
     }

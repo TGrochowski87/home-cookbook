@@ -28,7 +28,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     
     return entity != null 
       ? RepositoryModelMapper.Map<ShoppingListDetails>(entity) 
-      : new Error(HttpStatusCode.NotFound, "Lista o podanym ID nie istnieje.");
+      : new Error(HttpStatusCode.NotFound, $"The list of ID = {id} does not exist.");
   }
 
   public async Task Remove(int id)
@@ -58,7 +58,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       .SingleOrDefaultAsync(r => r.Id == recipeId);
     if (recipe is null)
     {
-      return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
+      return new Error(HttpStatusCode.NotFound, $"The recipe of ID = {recipeId} does not exist.");
     }
 
     var list = new List

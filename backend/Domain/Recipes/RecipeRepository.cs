@@ -47,7 +47,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       .SingleOrDefaultAsync(r => r.Id == id);
     if (recipe == null)
     {
-      return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
+      return new Error(HttpStatusCode.NotFound, $"The recipe of ID = {id} does not exist.");
     }
 
     recipe.Name = data.Name;
@@ -116,7 +116,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
 
     return entity is not null
       ? RepositoryModelMapper.Map(entity)
-      : new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
+      : new Error(HttpStatusCode.NotFound, $"The recipe of ID = {id} does not exist.");
   }
 
   public async Task<UnitResult<Error>> SetImageSource(int recipeId, string imageSrc)
@@ -124,7 +124,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     var recipe = await context.Recipes.SingleOrDefaultAsync(r => r.Id == recipeId);
     if (recipe == null)
     {
-      return new Error(HttpStatusCode.NotFound, "Przepis o podanym ID nie istnieje.");
+      return new Error(HttpStatusCode.NotFound, $"The recipe of ID = {recipeId} does not exist.");
     }
 
     recipe.ImageSrc = imageSrc;
