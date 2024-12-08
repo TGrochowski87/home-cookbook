@@ -20,7 +20,6 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
 
     var tags = context.Tags.Where(t => data.TagIds.Contains(t.Id)).ToList();
 
-    // TODO: Possible to use mapper?
     var newRecipe = new Recipe
     {
       Name = data.Name,

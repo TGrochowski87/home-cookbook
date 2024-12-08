@@ -28,12 +28,12 @@ public class RecipesEndpoints : IEndpointsDefinition
 
     app.MapPost("/recipes", CreateRecipe)
       .WithTags("Recipes")
-      .DisableAntiforgery() // TODO
+      .DisableAntiforgery()
       .AddFluentValidationAutoValidation();
 
     app.MapPut("/recipes/{id:int}", OverrideRecipe)
       .WithTags("Recipes")
-      .DisableAntiforgery() // TODO
+      .DisableAntiforgery()
       .AddFluentValidationAutoValidation();
   }
 

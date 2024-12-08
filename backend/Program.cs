@@ -97,11 +97,11 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI();
 }
 
+// TODO
 // app.UseHttpsRedirection();
 
 app.UseCors("cors");
 
-// TODO
 // app.UseAntiforgery();
 
 app.MapPrometheusScrapingEndpoint();
