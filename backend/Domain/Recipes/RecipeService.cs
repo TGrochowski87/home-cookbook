@@ -77,7 +77,7 @@ internal class RecipeService : IRecipeService
   {
     _logger.LogInformation("Saving image for recipe of ID = {RecipeId}", recipeId);
     var imageName = await _imageService.Save(image, $"recipe-{recipeId}");
-    var imageSrc = $"http://192.168.0.164:5212/recipes/images/{imageName}"; // TODO
+    var imageSrc = $"/recipes/images/{imageName}";
     return await _recipeRepository.SetImageSource(recipeId, imageSrc);
   }
 }

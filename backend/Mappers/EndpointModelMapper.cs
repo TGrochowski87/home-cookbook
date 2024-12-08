@@ -4,9 +4,7 @@ using Cookbook.Contracts.Recipes;
 using Cookbook.Contracts.ShoppingLists;
 using Cookbook.Contracts.Tags;
 using Cookbook.Domain.Common.Models;
-using Cookbook.Domain.Recipes;
 using Cookbook.Domain.Recipes.Models;
-using Cookbook.Domain.ShoppingLists;
 using Cookbook.Domain.ShoppingLists.Models;
 using Cookbook.Domain.Tags;
 using CSharpFunctionalExtensions;
@@ -32,16 +30,16 @@ internal static class EndpointModelMapper
   public static List<TagGetDto> Map(IEnumerable<TagGet> domainModels)
     => domainModels.Select(Map).ToList();
 
-  public static RecipeGetDto Map(RecipeGet domainModel)
+  public static RecipeGetDto Map(RecipeGet domainModel, string imageSrcBaseUrl)
     => new(
       domainModel.Id,
       domainModel.Name,
       Map(domainModel.Category),
       Map(domainModel.Tags),
-      domainModel.ImageSrc.GetValueOrDefault());
+      domainModel.ImageSrc.HasValue ? $"{imageSrcBaseUrl}/{domainModel.ImageSrc.Value}" : null);
 
-  public static List<RecipeGetDto> Map(IEnumerable<RecipeGet> domainModels)
-    => domainModels.Select(Map).ToList();
+  public static List<RecipeGetDto> Map(IEnumerable<RecipeGet> domainModels, string imageSrcBaseUrl)
+    => domainModels.Select(dm => Map(dm, imageSrcBaseUrl)).ToList();
 
   public static ShoppingListGetDto Map(ShoppingList domainModel)
     => new(domainModel.Id, domainModel.Name, domainModel.CreationDate, domainModel.UpdateDate);
@@ -62,18 +60,18 @@ internal static class EndpointModelMapper
   public static List<QuantifiableItemGetDto> Map(IEnumerable<QuantifiableItemGet> domainModels) 
     => domainModels.Select(Map).ToList();
 
-  public static RecipeDetailsGetDto Map(RecipeDetailsGet domainModel)
-    => new(
+  public static RecipeDetailsGetDto Map(RecipeDetailsGet domainModel, string imageSrcBaseUrl) =>
+    new(
       domainModel.Id,
       domainModel.Name,
       Map(domainModel.Category),
       Map(domainModel.Tags),
-      domainModel.ImageSrc.GetValueOrDefault(),
+      domainModel.ImageSrc.HasValue ? $"{imageSrcBaseUrl}/{domainModel.ImageSrc.Value}" : null,
       domainModel.Description,
       Map(domainModel.Ingredients),
       domainModel.CreationDate,
       domainModel.UpdateDate);
-  
+
   public static ShoppingSublistGetDto Map(ShoppingSublist domainModel) => 
     new(domainModel.Id, domainModel.Name, domainModel.RecipeId.GetValueOrDefault(), domainModel.Count, Map(domainModel.Items));
   

@@ -1,12 +1,9 @@
-﻿using CSharpFunctionalExtensions;
-using System.Net;
+﻿using System.Net;
 
 namespace Cookbook;
 
-// TODO: Is the exception needed?
-internal class Error(HttpStatusCode statusCode, string message, Exception? exception = null)
+internal class Error(HttpStatusCode statusCode, string message)
 {
   public HttpStatusCode StatusCode { get; } = statusCode;
   public string Message { get; } = message;
-  public Maybe<Exception> Exception { get; } = exception ?? Maybe<Exception>.None;
 }

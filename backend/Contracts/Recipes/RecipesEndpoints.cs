@@ -4,11 +4,11 @@ using System.Text;
 using Cookbook.Domain.Images;
 using Cookbook.Domain.Recipes;
 using Cookbook.Domain.Recipes.Models;
+using Cookbook.Extensions;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Http.Extensions;
 using SharpGrip.FluentValidation.AutoValidation.Endpoints.Extensions;
 
 namespace Cookbook.Contracts.Recipes;
@@ -44,7 +44,7 @@ public class RecipesEndpoints : IEndpointsDefinition
   {
     var query = EndpointModelMapper.Map(queryParamsDto);
     var getRecipesResult = await recipeService.GetMany(query);
-    var recipeDtos = EndpointModelMapper.Map(getRecipesResult.recipes);
+    var recipeDtos = EndpointModelMapper.Map(getRecipesResult.recipes, request.GetBaseUrl());
 
     if (getRecipesResult.isLastPage)
     {
@@ -58,13 +58,14 @@ public class RecipesEndpoints : IEndpointsDefinition
   }
 
   private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound<string>>> GetRecipeById(
+    HttpRequest request,
     [FromServices] IRecipeService recipeService,
     [FromRoute] int id)
   {
     var recipe = await recipeService.GetById(id);
     
     return recipe.Match<RecipeDetailsGet, Results<Ok<RecipeDetailsGetDto>, NotFound<string>>, Error>(
-      value => TypedResults.Ok(EndpointModelMapper.Map(value)),
+      value => TypedResults.Ok(EndpointModelMapper.Map(value, request.GetBaseUrl())),
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
@@ -73,6 +74,7 @@ public class RecipesEndpoints : IEndpointsDefinition
   }
 
   private static async Task<Results<Created<RecipeDetailsGetDto>, NotFound<string>>> CreateRecipe(
+    HttpRequest request,
     [FromServices] IRecipeService recipeService,
     [FromForm] RecipeCreateDto dto)
   {
@@ -80,7 +82,7 @@ public class RecipesEndpoints : IEndpointsDefinition
     var result = await recipeService.Create(recipeCreate);
 
     return result.Match<RecipeDetailsGet, Results<Created<RecipeDetailsGetDto>, NotFound<string>>, Error>(
-      value => TypedResults.Created((string?)null, EndpointModelMapper.Map(value)), // TODO: Consider proper URL
+      value => TypedResults.Created((string?)null, EndpointModelMapper.Map(value, request.GetBaseUrl())), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
@@ -89,6 +91,7 @@ public class RecipesEndpoints : IEndpointsDefinition
   }
 
   private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound<string>, ProblemHttpResult>> OverrideRecipe(
+    HttpRequest request,
     [FromServices] IRecipeService recipeService,
     [FromRoute] int id,
     [FromForm] RecipeCreateDto dto,
@@ -98,7 +101,7 @@ public class RecipesEndpoints : IEndpointsDefinition
     var result = await recipeService.Update(id, resourceStateTimestamp, recipeCreate);
 
     return result.Match<RecipeDetailsGet, Results<Ok<RecipeDetailsGetDto>, NotFound<string>, ProblemHttpResult>, Error>(
-      value => TypedResults.Ok(EndpointModelMapper.Map(value)), // TODO: Consider proper URL
+      value => TypedResults.Ok(EndpointModelMapper.Map(value, request.GetBaseUrl())), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
@@ -130,9 +133,8 @@ public class RecipesEndpoints : IEndpointsDefinition
     RecipeGet lastRecipeFromCurrentPage)
   {
     var stringBuilder = new StringBuilder();
-    
-    var requestUrl = request.GetEncodedUrl();
-    var pathBase = requestUrl.Remove(requestUrl.IndexOf(request.Path));
+
+    var pathBase = request.GetBaseUrl();
     stringBuilder.Append($"{pathBase}/recipes?");
 
     if (currentRequestQuery.Filtering.HasValue)

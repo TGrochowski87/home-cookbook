@@ -78,7 +78,6 @@ builder.Services.AddCors(options =>
   });
 });
 
-// TODO: Add caching
 builder.Services
   // .AddAntiforgery()
   .AddDbContext<CookbookContext>()
