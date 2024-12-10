@@ -82,7 +82,7 @@ public class RecipesEndpoints : IEndpointsDefinition
     var result = await recipeService.Create(recipeCreate);
 
     return result.Match<RecipeDetailsGet, Results<Created<RecipeDetailsGetDto>, NotFound<string>, BadRequest<string>>, Error>(
-      value => TypedResults.Created((string?)null, EndpointModelMapper.Map(value, request.GetBaseUrl())), // TODO: Consider proper URL
+      value => TypedResults.Created((string?)null, EndpointModelMapper.Map(value, request.GetBaseUrl())),
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
@@ -102,7 +102,7 @@ public class RecipesEndpoints : IEndpointsDefinition
     var result = await recipeService.Update(id, resourceStateTimestamp, recipeCreate);
 
     return result.Match<RecipeDetailsGet, Results<Ok<RecipeDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>, Error>(
-      value => TypedResults.Ok(EndpointModelMapper.Map(value, request.GetBaseUrl())), // TODO: Consider proper URL
+      value => TypedResults.Ok(EndpointModelMapper.Map(value, request.GetBaseUrl())),
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),

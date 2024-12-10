@@ -39,7 +39,7 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     var result = await shoppingListService.Create(dto.Name);
 
     // NotFound ignored as it should not be possible.
-    return TypedResults.Created((string?)null, EndpointModelMapper.Map(result.Value)); // TODO: Consider proper URL
+    return TypedResults.Created((string?)null, EndpointModelMapper.Map(result.Value));
   }
 
   private static async Task<Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>> OverrideShoppingList(
