@@ -30,38 +30,46 @@ public static class WebApplicationExtensions
   }
 
   /// <summary>
-  /// TODO
+  /// Wraps all requests in a transaction.
+  /// It gets rolled back on non-200 responses.
   /// </summary>
-  /// <param name="app"></param>
-  /// <returns></returns>
+  /// <param name="app">The WebApplication instance to add this middleware to.</param>
+  /// <returns>The WebApplication instance with transaction middleware added.</returns>
   public static WebApplication UsePerRequestTransaction(this WebApplication app)
   {
     app.Use(async (context, next) =>
     {
       using var transaction = new CookbookTransaction(context.RequestServices.GetRequiredService<CookbookContext>());
 
-      await next(context);
+      try
+      {
+        await next(context);
 
-      if(context.Response.StatusCode is >= 200 and < 300)
-      {
-        transaction.Commit();
+        if(context.Response.StatusCode is >= 200 and < 300)
+        {
+          transaction.Commit();
+        }
+        else
+        {
+          LogAndRollbackTransaction(context, transaction);
+        }  
       }
-      else
+      catch (Exception)
       {
-        var logger = context.RequestServices.GetRequiredService<ILogger<CookbookTransaction>>();
-        logger.LogWarning("Response status code is {StatusCode}. Rolling back transaction.", context.Response.StatusCode);
-        transaction.Rollback();
-      }  
+        LogAndRollbackTransaction(context, transaction);
+        throw;
+      }
     });
 
     return app;
   }
 
   /// <summary>
-  /// TODO
+  /// Adds a meter that counts unhandled exceptions.
+  /// This can later be used by Grafana for alerting purposes.
   /// </summary>
-  /// <param name="app"></param>
-  /// <returns></returns>
+  /// <param name="app">The WebApplication instance to add meter to.</param>
+  /// <returns>he WebApplication instance with meter added.</returns>
   public static WebApplication UseCrashAnalytics(this WebApplication app)
   {
     app.Use(async (context, next) =>
@@ -84,5 +92,12 @@ public static class WebApplicationExtensions
     });
 
     return app;
+  }
+
+  private static void LogAndRollbackTransaction(HttpContext context, CookbookTransaction transaction)
+  {
+    var logger = context.RequestServices.GetRequiredService<ILogger<CookbookTransaction>>();
+    logger.LogWarning("Response status code is {StatusCode}. Rolling back transaction.", context.Response.StatusCode);
+    transaction.Rollback();
   }
 }
