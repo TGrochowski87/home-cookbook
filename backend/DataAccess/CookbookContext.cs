@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EntityFramework.Exceptions.PostgreSQL;
+using Microsoft.EntityFrameworkCore;
 
 namespace Cookbook.DataAccess;
 
@@ -28,7 +29,8 @@ internal partial class CookbookContext : DbContext
   public virtual DbSet<Tag> Tags { get; set; }
 
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    => optionsBuilder.UseNpgsql("Name=ConnectionStrings:Cookbook");
+    => optionsBuilder.UseNpgsql("Name=ConnectionStrings:Cookbook")
+      .UseExceptionProcessor();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {

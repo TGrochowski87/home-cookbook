@@ -1,29 +1,47 @@
-﻿using Cookbook.DataAccess;
+﻿using System.Net;
+using Cookbook.DataAccess;
 using Cookbook.Mappers;
+using CSharpFunctionalExtensions;
+using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cookbook.Domain.Tags;
 
 internal class TagRepository(CookbookContext context) : ITagRepository
 {
-  public async Task<int> Create(TagCreate tag)
+  public async Task<Result<int, Error>> Create(TagCreate tag)
   {
     var newTag = RepositoryModelMapper.Map(tag);
 
-    // TODO: Handle unique constraint violation
     context.Tags.Add(newTag);
-    await context.SaveChangesAsync();
+    
+    try
+    {
+      await context.SaveChangesAsync();
+    }
+    catch (UniqueConstraintException)
+    {
+      return new Error(HttpStatusCode.BadRequest, $"A tag with name '{tag.Name}' already exists.");
+    }
 
     return newTag.Id;
   }
 
-  public async Task<List<int>> CreateMany(List<TagCreate> tags)
+  public async Task<Result<List<int>,Error>> CreateMany(List<TagCreate> tags)
   {
     var newTags = tags.Select(RepositoryModelMapper.Map).ToList();
 
-    // TODO: Handle unique constraint violation
     context.Tags.AddRange(newTags);
-    await context.SaveChangesAsync();
+    
+    try
+    {
+      await context.SaveChangesAsync();
+    }
+    catch (UniqueConstraintException e)
+    {
+      var constrainViolatingName = (e.Entries[0].Entity as Tag)?.Name;
+      return new Error(HttpStatusCode.BadRequest, $"A tag with name '{constrainViolatingName}' already exists.");
+    }
 
     return newTags.Select(t => t.Id).ToList();
   }

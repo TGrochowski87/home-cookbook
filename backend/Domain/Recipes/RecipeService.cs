@@ -35,7 +35,6 @@ internal class RecipeService : IRecipeService
   public async Task<Result<RecipeDetailsGet, Error>> Create(RecipeCreate data)
   {
     return await _tagService.CreateMany(data.NewTags)
-      .ToResultAsync<List<int>, Error>()
       .Tap(newTagIds => _logger.LogInformation("Created new tags with IDs: {newTagIds}", string.Join(", ", newTagIds)))
       .Map(newTagIds => data with
       {
@@ -54,8 +53,7 @@ internal class RecipeService : IRecipeService
         resourceStateTimestampFromRequest, recipe.UpdateDate))
       .Check(recipe =>
         CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, recipe.UpdateDate))
-      .Bind(_ => _tagService.CreateMany(data.NewTags)
-        .ToResultAsync<List<int>, Error>())
+      .Bind(_ => _tagService.CreateMany(data.NewTags))
       .Tap(newTagIds => _logger.LogInformation("Created new tags with IDs: {newTagIds}", string.Join(", ", newTagIds)))
       .Map(newTagIds => data with
       {

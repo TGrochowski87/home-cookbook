@@ -1,10 +1,12 @@
-﻿namespace Cookbook.Domain.Tags;
+﻿using CSharpFunctionalExtensions;
+
+namespace Cookbook.Domain.Tags;
 
 internal interface ITagRepository
 {
   Task<List<TagGet>> GetAll();
 
-  Task<int> Create(TagCreate tag);
+  Task<Result<int, Error>> Create(TagCreate tag);
   
-  Task<List<int>> CreateMany(List<TagCreate> tags);
+  Task<Result<List<int>,Error>> CreateMany(List<TagCreate> tags);
 }

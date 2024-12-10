@@ -73,7 +73,7 @@ public class RecipesEndpoints : IEndpointsDefinition
       });
   }
 
-  private static async Task<Results<Created<RecipeDetailsGetDto>, NotFound<string>>> CreateRecipe(
+  private static async Task<Results<Created<RecipeDetailsGetDto>, NotFound<string>, BadRequest<string>>> CreateRecipe(
     HttpRequest request,
     [FromServices] IRecipeService recipeService,
     [FromForm] RecipeCreateDto dto)
@@ -81,16 +81,17 @@ public class RecipesEndpoints : IEndpointsDefinition
     var recipeCreate = EndpointModelMapper.Map(dto);
     var result = await recipeService.Create(recipeCreate);
 
-    return result.Match<RecipeDetailsGet, Results<Created<RecipeDetailsGetDto>, NotFound<string>>, Error>(
+    return result.Match<RecipeDetailsGet, Results<Created<RecipeDetailsGetDto>, NotFound<string>, BadRequest<string>>, Error>(
       value => TypedResults.Created((string?)null, EndpointModelMapper.Map(value, request.GetBaseUrl())), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        HttpStatusCode.BadRequest => TypedResults.BadRequest(error.Message),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
   }
 
-  private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound<string>, ProblemHttpResult>> OverrideRecipe(
+  private static async Task<Results<Ok<RecipeDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>> OverrideRecipe(
     HttpRequest request,
     [FromServices] IRecipeService recipeService,
     [FromRoute] int id,
@@ -100,11 +101,12 @@ public class RecipesEndpoints : IEndpointsDefinition
     var recipeCreate = EndpointModelMapper.Map(dto);
     var result = await recipeService.Update(id, resourceStateTimestamp, recipeCreate);
 
-    return result.Match<RecipeDetailsGet, Results<Ok<RecipeDetailsGetDto>, NotFound<string>, ProblemHttpResult>, Error>(
+    return result.Match<RecipeDetailsGet, Results<Ok<RecipeDetailsGetDto>, NotFound<string>, BadRequest<string>, ProblemHttpResult>, Error>(
       value => TypedResults.Ok(EndpointModelMapper.Map(value, request.GetBaseUrl())), // TODO: Consider proper URL
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+        HttpStatusCode.BadRequest => TypedResults.BadRequest(error.Message),
         HttpStatusCode.PreconditionFailed => TypedResults.Problem(statusCode: (int)HttpStatusCode.PreconditionFailed, detail: error.Message),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
