@@ -7,11 +7,11 @@ import RecipeCreationPage, { loader as recipeCreationPageLoader } from "pages/re
 import RecipeEditionPage, { loader as recipeEditionPageLoader } from "pages/recipe-edition/RecipeEditionPage";
 import ShoppingListPage, { loader as shoppingListPageLoader } from "pages/shopping-list/ShoppingListPage";
 import ShoppingPage, { loader as shoppingPageLoader } from "pages/shopping-lists/ShoppingPage";
+import ErrorHandler from "./ErrorHandler";
 
-// TODO: global error boundry
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<App />}>
+    <Route path="/" element={<App />} errorElement={<ErrorHandler />}>
       <Route index element={<Navigate replace to="/recipes" />} />
       <Route element={<MainPageLayout />}>
         <Route path="/recipes" element={<RecipesPage />} loader={recipesPageLoader} />

@@ -20,7 +20,7 @@ function App() {
    * useLayoutEffect as it needs to happen before the first render.
    */
   useLayoutEffect(() => {
-    let defaultDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const defaultDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
     if (defaultDarkMode) {
       setTheme("dark");
