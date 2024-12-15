@@ -67,7 +67,7 @@ const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) 
   return (
     <div className="rich-text-area">
       <EditorContent editor={editor} />
-      {editable && <Toolbar editor={editor} />}
+      {editor && editable && <Toolbar editor={editor} />}
     </div>
   );
 };

@@ -59,7 +59,6 @@ const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
   );
 };
 
-// TODO: Consider moving all private functions below components in other folders as well.
 const calculateTimeUntilDeletion = (originalCreationDate: string): number => {
   const creationDate = new Date(originalCreationDate);
   const creationDatePlus30Days = new Date(originalCreationDate);

@@ -3,9 +3,7 @@ import Button from "components/buttons/Button";
 import { Moon, Sun } from "lucide-react";
 import { useContext } from "react";
 
-interface ThemeButtonProps {}
-
-const ThemeSwitch = ({}: ThemeButtonProps) => {
+const ThemeSwitch = () => {
   const { theme, switchTheme } = useContext(ThemeContext);
 
   return (

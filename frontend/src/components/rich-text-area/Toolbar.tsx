@@ -75,14 +75,10 @@ const toggleActions: Record<MultiToggle | SingleToggle, (editor: Editor, ...para
 };
 
 interface ToolbarProps {
-  readonly editor: Editor | null;
+  readonly editor: Editor;
 }
 
 const Toolbar = ({ editor }: ToolbarProps) => {
-  if (!editor) {
-    return null;
-  }
-
   const [highlightColor, setHighlightColor] = useState<string>(highlightColors[0]);
   const [headingLevel, setHeadingLevel] = useState<number>(1);
 

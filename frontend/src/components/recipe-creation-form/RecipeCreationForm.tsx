@@ -36,17 +36,6 @@ interface RecipeCreationFormProps {
   readonly onSubmitCallback: (dto: RecipeCreateDto) => Promise<void>;
 }
 
-const getDefaultFormValues = (recipe?: RecipeDetailsGetDto): RecipeData => {
-  return {
-    name: recipe?.name ?? "",
-    categoryId: recipe?.category.id ?? undefined,
-    image: undefined,
-    tags: recipe?.tags.map(t => t.id) ?? [],
-    ingredients: recipe?.ingredients.map(i => ({ ...i, key: i.id, checked: false })) ?? [],
-    description: recipe?.description ?? "",
-  };
-};
-
 // TODO: Confirmation on leaving with pending changes
 const RecipeCreationForm = ({
   recipe,
@@ -196,6 +185,17 @@ const RecipeCreationForm = ({
       </Button>
     </div>
   );
+};
+
+const getDefaultFormValues = (recipe?: RecipeDetailsGetDto): RecipeData => {
+  return {
+    name: recipe?.name ?? "",
+    categoryId: recipe?.category.id ?? undefined,
+    image: undefined,
+    tags: recipe?.tags.map(t => t.id) ?? [],
+    ingredients: recipe?.ingredients.map(i => ({ ...i, key: i.id, checked: false })) ?? [],
+    description: recipe?.description ?? "",
+  };
 };
 
 export default RecipeCreationForm;
