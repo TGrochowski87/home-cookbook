@@ -16,7 +16,7 @@ const ErrorHandler = () => {
     } else if (error.response?.status === 500) {
       emoji = String.raw`(╯°□°）╯︵ ┻━┻`;
       message = "Serwer zwrócił nieoczekiwany błąd. Powiadomienie powinno zostać wysłane.";
-    } else if (error.response?.status === 403) {
+    } else if (error.response?.status === 404) {
       emoji = String.raw`¯\_(ツ)_/¯`;
       message = "Serwer nie znalazł oczekiwanego zasobu.";
     } else {

@@ -27,6 +27,7 @@ const RecipeEditionPage = () => {
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
     const updatedRecipe = await api.put.updateRecipe(recipe.id, recipe.updateDate, dto);
+    sessionStorage.removeItem(`checks-recipe-${recipe.id}`);
     dispatch(storeActions.recipes.setRecipeInCache(updatedRecipe));
     displayMessage({ type: "success", message: "Zmiany zostały zapisane.", fadeOutAfter: 5000 });
   };

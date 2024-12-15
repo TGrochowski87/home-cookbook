@@ -16,6 +16,7 @@ import { useAppSelector } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
 
 interface CheckboxChecks {
+  readonly recipeStateTimestamp: string;
   readonly ingredients: readonly number[];
   readonly checkboxesInDescription: readonly number[];
 }
@@ -52,6 +53,7 @@ const RecipePage = () => {
     if (richTextArea === undefined) {
       return;
     }
+
     const checkboxes = [...richTextArea.getElementsByTagName("input")];
     const indexesOfChecked = [];
     for (let i = 0; i < checkboxes.length; i++) {
@@ -61,12 +63,71 @@ const RecipePage = () => {
     }
 
     const checksObject: CheckboxChecks = {
+      recipeStateTimestamp: recipe.updateDate,
       ingredients: ingredientChecks.current,
       checkboxesInDescription: indexesOfChecked,
     };
 
-    // TODO: Clear session storage on recipe edit.
+    // If nothing is currently checked, make sure there is no empty entry in session storage.
+    if (checksObject.checkboxesInDescription.length === 0 && checksObject.ingredients.length === 0) {
+      sessionStorage.removeItem(`checks-recipe-${recipe.id}`);
+      return;
+    }
+
     sessionStorage.setItem(`checks-recipe-${recipe.id}`, JSON.stringify(checksObject));
+  };
+
+  const readCheckboxStateFromSessionStorage = () => {
+    const cachedChecks = sessionStorage.getItem(`checks-recipe-${recipe.id}`);
+    if (cachedChecks === null) {
+      return;
+    }
+
+    const checks = JSON.parse(cachedChecks) as CheckboxChecks;
+
+    // If recipe has been updated by someone else since the last time the checks were cached, clear them.
+    // They also get cleared after confirming the edit.
+    // TODO: If I allow recipe deletion one day, make sure to clear unnecessary session storage entries.
+    if (checks.recipeStateTimestamp !== recipe.updateDate) {
+      sessionStorage.removeItem(`checks-recipe-${recipe.id}`);
+      displayMessage({
+        type: "info",
+        message: "Wyczyszczono zapisane zaznaczenia, ponieważ przepis został zmodyfikowany.",
+        fadeOutAfter: 5000,
+      });
+      return;
+    }
+
+    setIngredients(prev => prev.map(i => (checks.ingredients.includes(i.key as number) ? { ...i, checked: true } : i)));
+
+    /**
+     * TipTap does not provide any event that fires after the text content is loaded, so the best I can do is
+     * retrying a bunch of times.
+     */
+    let retryCount = 0;
+    const intervalId = setInterval(() => {
+      if (retryCount == 10) {
+        clearInterval(intervalId);
+        return;
+      }
+
+      const richTextArea = document.getElementsByClassName("rich-text-area-editor")[0] as HTMLDivElement;
+      if (richTextArea === undefined) {
+        retryCount++;
+        return;
+      }
+
+      const checkboxes = [...richTextArea.getElementsByTagName("input")];
+      checks.checkboxesInDescription.forEach(i => {
+        /**
+         * TipTap's checkboxes' HTML in read-only mode do not change at all on click, but somehow they get checked
+         * when this attribute is provided.
+         */
+        checkboxes[i].setAttribute("checked", "true");
+      });
+
+      clearInterval(intervalId);
+    }, 100);
   };
 
   /**
@@ -83,43 +144,7 @@ const RecipePage = () => {
    * It must be useLayoutEffect as normal useEffect fires after rich-text-area-editor is already removed from the DOM.
    */
   useLayoutEffect(() => {
-    const cachedChecks = sessionStorage.getItem(`checks-recipe-${recipe.id}`);
-    if (cachedChecks) {
-      const checks = JSON.parse(cachedChecks) as CheckboxChecks;
-
-      setIngredients(prev =>
-        prev.map(i => (checks.ingredients.includes(i.key as number) ? { ...i, checked: true } : i))
-      );
-
-      /**
-       * TipTap does not provide any event that fires after the text content is loaded, so the best I can do is
-       * retrying a bunch of times.
-       */
-      let retryCount = 0;
-      const intervalId = setInterval(() => {
-        if (retryCount == 10) {
-          clearInterval(intervalId);
-          return;
-        }
-
-        const richTextArea = document.getElementsByClassName("rich-text-area-editor")[0] as HTMLDivElement;
-        if (richTextArea === undefined) {
-          retryCount++;
-          return;
-        }
-
-        const checkboxes = [...richTextArea.getElementsByTagName("input")];
-        checks.checkboxesInDescription.forEach(i => {
-          /**
-           * TipTap's checkboxes' HTML in read-only mode do not change at all on click, but somehow they get checked
-           * when this attribute is provided.
-           */
-          checkboxes[i].setAttribute("checked", "true");
-        });
-
-        clearInterval(intervalId);
-      }, 100);
-    }
+    readCheckboxStateFromSessionStorage();
 
     return () => {
       cacheCheckboxChecksInSessionStorage();
