@@ -19,22 +19,28 @@ const initialState: State = {
  * We get all shopping lists once. Expired ones get filtered out by API on GET call.
  * This should work fine as we update the storage on shopping list update/create.
  */
-const fetchShoppingLists = createAsyncThunk("shoppingLists/fetchShoppingLists", async (_args, { getState }) => {
-  const currentState = getState() as RootState;
-  if (currentState.shoppingLists.shoppingLists.length > 0) {
-    return currentState.shoppingLists.shoppingLists;
-  }
+const fetchShoppingLists = createAsyncThunk(
+  "shoppingLists/fetchShoppingLists",
+  async (_args, { getState, rejectWithValue }) => {
+    const currentState = getState() as RootState;
+    if (currentState.shoppingLists.shoppingLists.length > 0) {
+      return currentState.shoppingLists.shoppingLists;
+    }
 
-  const response = await api.get.getShoppingLists();
-  return response;
-});
+    try {
+      return await api.get.getShoppingLists();
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
 
 /**
  * To be used for filling shopping list data. Does not perform any reordering.
  */
 const fetchShoppingListDetails = createAsyncThunk(
   "shoppingLists/fetchShoppingListDetails",
-  async (id: number, { getState }) => {
+  async (id: number, { getState, rejectWithValue }) => {
     const currentState = getState() as RootState;
     const shoppingListInCache = currentState.shoppingLists.shoppingLists.find(sh => sh.id === id);
     if (shoppingListInCache === undefined) {
@@ -44,8 +50,11 @@ const fetchShoppingListDetails = createAsyncThunk(
       return null;
     }
 
-    const response = await api.get.getShoppingList(id);
-    return response;
+    try {
+      return await api.get.getShoppingList(id);
+    } catch (error) {
+      return rejectWithValue(error);
+    }
   }
 );
 

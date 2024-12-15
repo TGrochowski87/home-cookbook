@@ -12,15 +12,18 @@ const initialState: State = {
   recipes: {},
 };
 
-const fetchRecipe = createAsyncThunk("recipes/fetchRecipe", async (id: number, { getState }) => {
+const fetchRecipe = createAsyncThunk("recipes/fetchRecipe", async (id: number, { getState, rejectWithValue }) => {
   const currentState = getState() as RootState;
   if (currentState.recipes.recipes[id] !== undefined) {
     return null;
   }
 
-  // TODO: Handle 404.
-  const response = await api.get.getRecipe(id);
-  return response;
+  try {
+    return await api.get.getRecipe(id);
+  } catch (error) {
+    // Without this, redux swallows the original error and returns barely any information.
+    return rejectWithValue(error);
+  }
 });
 
 const recipesSlice = createSlice({

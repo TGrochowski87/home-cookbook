@@ -75,7 +75,6 @@ const RecipeCreationForm = ({
       navigate(onSuccessNavigateTo, { replace: replaceOnNavigate });
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // TODO: Consider some helper for handling different status codes.
         switch (error.response?.status) {
           case 400:
             displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
@@ -93,8 +92,6 @@ const RecipeCreationForm = ({
       } else {
         throw error;
       }
-
-      // TODO: ErrorBoundry for unexpected errors.
     }
   };
 

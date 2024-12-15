@@ -20,9 +20,7 @@ interface CheckboxChecks {
   readonly checkboxesInDescription: readonly number[];
 }
 
-// TODO: Implement redux
 export async function loader({ params }: any): Promise<null> {
-  // TODO: Handle 404
   await store.dispatch(storeActions.recipes.async.fetchRecipe(+params.id)).unwrap();
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   return null;

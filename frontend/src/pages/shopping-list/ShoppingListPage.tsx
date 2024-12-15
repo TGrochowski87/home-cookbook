@@ -21,7 +21,6 @@ import storeActions from "storage/redux/actions";
 export async function loader({ params }: any): Promise<null> {
   // If this page is opened directly, i.e. not from shopping page, just get all shopping lists now to simplify the process.
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
-  // TODO: Handle 404
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingListDetails(+params.id)).unwrap();
   return null;
 }
@@ -63,7 +62,6 @@ const ShoppingListPage = () => {
       setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
       dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
     } catch (error) {
-      // TODO: Consider notifying through SignalR.
       if (axios.isAxiosError(error) && error.response?.status === 412) {
         displayMessage({
           type: "error",

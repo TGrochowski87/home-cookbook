@@ -1,27 +1,37 @@
-import { CircleHelp, CircleX } from "lucide-react";
+import { isAxiosError } from "axios";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 const ErrorHandler = () => {
-  const error = useRouteError() as object;
+  const error = useRouteError();
   let message = "";
-  let icon = <CircleX />;
+  let emoji = "";
 
   if (isRouteErrorResponse(error) && error.status === 404) {
-    icon = <CircleHelp />;
+    emoji = String.raw`¯\_(ツ)_/¯`;
     message = "Nie znaleziono strony.";
-  } else if ((error as { code: string }).code === "ERR_NETWORK") {
-    message =
-      "Nie udało się nawiązać połączenia z serwerem. Powiadomienie o zdarzeniu najprawdopodobniej nie zostało wysłane.";
-  } else if ((error as { code: string }).code === "ERR_BAD_RESPONSE") {
-    message = "Serwer zwrócił nieoczekiwany błąd. Powiadomienie powinno zostać wysłane.";
+  } else if (isAxiosError(error)) {
+    if (error.response === undefined) {
+      emoji = String.raw`(╯°□°）╯︵ ┻━┻`;
+      message = "Nie udało się nawiązać połączenia z serwerem.";
+    } else if (error.response?.status === 500) {
+      emoji = String.raw`(╯°□°）╯︵ ┻━┻`;
+      message = "Serwer zwrócił nieoczekiwany błąd. Powiadomienie powinno zostać wysłane.";
+    } else if (error.response?.status === 403) {
+      emoji = String.raw`¯\_(ツ)_/¯`;
+      message = "Serwer nie znalazł oczekiwanego zasobu.";
+    } else {
+      emoji = String.raw`(ಥ﹏ಥ)`;
+      message = "Coś poszło bardzo nie tak.";
+    }
   } else {
-    message = "Coś poszło bardzo nie tak. Powiadomienie o zdarzeniu najprawdopodobniej nie zostało wysłane.";
+    emoji = String.raw`(ಥ﹏ಥ)`;
+    message = "Coś poszło bardzo nie tak.";
   }
 
   return (
     <div className="error-page">
       <div className="error-info">
-        {icon}
+        <p>{emoji}</p>
         <p>{message}</p>
       </div>
     </div>

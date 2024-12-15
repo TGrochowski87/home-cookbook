@@ -9,10 +9,6 @@ import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
 
 export async function loader(): Promise<null> {
-  /**
-   * TODO: This loader gets called before the ShoppingList.tsx useEffect that updates the shopping list in component cleanup.
-   * Maybe it will get fixed in the meantime, while implementing redux.
-   */
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   return null;
 }

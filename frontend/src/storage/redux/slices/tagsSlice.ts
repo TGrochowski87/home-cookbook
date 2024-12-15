@@ -11,14 +11,17 @@ const initialState: State = {
   tags: [],
 };
 
-const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getState }) => {
+const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getState, rejectWithValue }) => {
   const currentState = getState() as RootState;
   if (currentState.tags.tags.length > 0) {
     return currentState.tags.tags;
   }
 
-  const response = await api.get.getTags();
-  return response;
+  try {
+    return await api.get.getTags();
+  } catch (error) {
+    return rejectWithValue(error);
+  }
 });
 
 const tagsSlice = createSlice({

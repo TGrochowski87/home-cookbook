@@ -11,14 +11,17 @@ const initialState: State = {
   categories: [],
 };
 
-const fetchCategories = createAsyncThunk("categories/fetchCategories", async (_args, { getState }) => {
+const fetchCategories = createAsyncThunk("categories/fetchCategories", async (_args, { getState, rejectWithValue }) => {
   const currentState = getState() as RootState;
   if (currentState.categories.categories.length > 0) {
     return currentState.categories.categories;
   }
 
-  const response = await api.get.getCategories();
-  return response;
+  try {
+    return await api.get.getCategories();
+  } catch (error) {
+    return rejectWithValue(error);
+  }
 });
 
 const categoriesSlice = createSlice({
