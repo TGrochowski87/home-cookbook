@@ -19,7 +19,7 @@ interface TagSetProps {
   readonly disableShadow?: boolean;
   readonly selection?: {
     readonly disabled?: boolean;
-    readonly initiallySelected?: readonly number[];
+    readonly initiallySelected?: readonly string[];
     readonly onSelectionChange?: (selectedTags: TagSelection[]) => void;
   };
   readonly tagCreationEnabled?: boolean;
@@ -33,15 +33,19 @@ const TagSet = ({
   tagCreationEnabled = false,
   align = "center",
 }: TagSetProps) => {
-  const [selections, setSelections] = useState<readonly TagSelection[]>(
-    selection.initiallySelected ? tags.filter(t => selection.initiallySelected?.includes(t.id!)) : []
-  );
+  const [selections, setSelections] = useState<readonly TagSelection[]>([]);
 
   useEffect(() => {
     if (selection.onSelectionChange) {
       selection.onSelectionChange([...selections]);
     }
   }, [selections]);
+
+  useEffect(() => {
+    if (selection.initiallySelected) {
+      setSelections(setInitialSelections(selection.initiallySelected, tags));
+    }
+  }, [selection.initiallySelected]);
 
   const newTags = selections.filter(t => t.id === undefined).map(t => t.name);
 
@@ -82,7 +86,7 @@ const TagSet = ({
           <CreateTagButton
             size={tagSize}
             onCreate={(name: string) => {
-              if (newTags.includes(name) === false) {
+              if (newTags.includes(name) === false && tags.find(t => t.name === name) === undefined) {
                 setSelections(prev => [...prev, { name }]);
               }
             }}
@@ -91,6 +95,14 @@ const TagSet = ({
       )}
     </div>
   );
+};
+
+const setInitialSelections = (initialSelections: readonly string[], tags: readonly TagGetDto[]): TagSelection[] => {
+  const selections: TagSelection[] = initialSelections.map(selection => ({
+    name: selection,
+    id: tags.find(t => t.name === selection)?.id,
+  }));
+  return selections;
 };
 
 export default TagSet;

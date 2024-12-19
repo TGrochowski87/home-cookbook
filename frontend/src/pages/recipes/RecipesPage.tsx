@@ -114,7 +114,7 @@ const RecipeListPage = () => {
           tagSize="big"
           selection={{
             disabled: false,
-            initiallySelected: tags.filter(t => searchParams.getAll("tags").includes(t.name)).map(t => t.id),
+            initiallySelected: tags.filter(t => searchParams.getAll("tags").includes(t.name)).map(t => t.name),
           }}
         />
       </Form>

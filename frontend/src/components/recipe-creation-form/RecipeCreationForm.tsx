@@ -17,6 +17,7 @@ import CategorySelect from "./category-select/CategorySelect";
 import mapper from "mapper";
 import { useAppDispatch } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
+import { useEffect, useState } from "react";
 
 export interface RecipeData {
   readonly name: string;
@@ -48,9 +49,10 @@ const RecipeCreationForm = ({
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { displayMessage } = useAlerts();
-  const { register, handleSubmit, formState, control, setFocus, reset } = useForm<RecipeData>({
+  const { register, handleSubmit, formState, control, setFocus, reset, getValues } = useForm<RecipeData>({
     defaultValues: getDefaultFormValues(recipe),
   });
+  const [initiallySelectedTags, setInitiallySelectedTags] = useState<string[] | undefined>([]);
 
   const onSubmit = async (data: RecipeData): Promise<void> => {
     try {
@@ -83,6 +85,27 @@ const RecipeCreationForm = ({
       }
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (formState.isDirty && formState.isSubmitted === false) {
+        sessionStorage.setItem("pendingCreate", JSON.stringify(getValues()));
+      } else {
+        sessionStorage.removeItem("pendingCreate");
+      }
+    };
+  }, [formState.isDirty, formState.isSubmitted]);
+
+  useEffect(() => {
+    if (formState.defaultValues?.tags === undefined) {
+      return;
+    }
+
+    const selectedTags: string[] = formState.defaultValues.tags.map(tag =>
+      typeof tag === "number" ? tags.find(t => t.id === tag)!.name : tag!
+    );
+    setInitiallySelectedTags(selectedTags);
+  }, [formState.defaultValues]);
 
   return (
     <div className="recipe-creation-form">
@@ -137,7 +160,7 @@ const RecipeCreationForm = ({
               tagCreationEnabled
               selection={{
                 disabled: false,
-                initiallySelected: recipe?.tags.map(t => t.id),
+                initiallySelected: initiallySelectedTags,
                 onSelectionChange: (selectedTags: TagSelection[]) =>
                   onChange(selectedTags.map(t => (t.id !== undefined ? t.id : t.name))),
               }}
@@ -175,7 +198,7 @@ const RecipeCreationForm = ({
 
       <Button
         onClick={handleSubmit(onSubmit, error => {
-          console.log(error);
+          console.error(error);
           if (error.name?.type !== "required" && error.categoryId?.type === "required") {
             setFocus("categoryId");
           }
@@ -188,13 +211,38 @@ const RecipeCreationForm = ({
 };
 
 const getDefaultFormValues = (recipe?: RecipeDetailsGetDto): RecipeData => {
+  if (recipe === undefined) {
+    const pendingCreate = sessionStorage.getItem("pendingCreate");
+
+    if (pendingCreate && window.confirm("Przywrócić ostatni stan formularza?")) {
+      const data = JSON.parse(pendingCreate) as RecipeData;
+      return {
+        name: data.name,
+        categoryId: data.categoryId,
+        image: data.image,
+        tags: data.tags,
+        ingredients: data.ingredients,
+        description: data.description,
+      };
+    } else {
+      return {
+        name: "",
+        categoryId: undefined,
+        image: undefined,
+        tags: [],
+        ingredients: [],
+        description: "",
+      };
+    }
+  }
+
   return {
-    name: recipe?.name ?? "",
-    categoryId: recipe?.category.id ?? undefined,
+    name: recipe.name,
+    categoryId: recipe.category.id,
     image: undefined,
-    tags: recipe?.tags.map(t => t.id) ?? [],
-    ingredients: recipe?.ingredients.map(i => ({ ...i, key: i.id, checked: false })) ?? [],
-    description: recipe?.description ?? "",
+    tags: recipe.tags.map(t => t.id),
+    ingredients: recipe.ingredients.map(i => ({ ...i, key: i.id, checked: false })),
+    description: recipe.description,
   };
 };
 
