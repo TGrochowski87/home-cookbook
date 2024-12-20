@@ -51,3 +51,8 @@ export const getShoppingList = async (id: number): Promise<ShoppingListDetailsGe
   const response = await axios.get<ShoppingListDetailsGetDto>(url);
   return response.data;
 };
+
+export const getImage = async (url: string): Promise<Blob> => {
+  const response = await axios.get(url, { responseType: "blob" });
+  return response.data;
+};

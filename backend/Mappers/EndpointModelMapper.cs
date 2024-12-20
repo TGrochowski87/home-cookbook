@@ -36,7 +36,7 @@ internal static class EndpointModelMapper
       domainModel.Name,
       Map(domainModel.Category),
       Map(domainModel.Tags),
-      domainModel.ImageSrc.HasValue ? $"{imageSrcBaseUrl}/{domainModel.ImageSrc.Value}" : null);
+      domainModel.ImageSrc.HasValue ? $"{imageSrcBaseUrl}{domainModel.ImageSrc.Value}" : null);
 
   public static List<RecipeGetDto> Map(IEnumerable<RecipeGet> domainModels, string imageSrcBaseUrl)
     => domainModels.Select(dm => Map(dm, imageSrcBaseUrl)).ToList();
@@ -66,7 +66,7 @@ internal static class EndpointModelMapper
       domainModel.Name,
       Map(domainModel.Category),
       Map(domainModel.Tags),
-      domainModel.ImageSrc.HasValue ? $"{imageSrcBaseUrl}/{domainModel.ImageSrc.Value}" : null,
+      domainModel.ImageSrc.HasValue ? $"{imageSrcBaseUrl}{domainModel.ImageSrc.Value}" : null,
       domainModel.Description,
       Map(domainModel.Ingredients),
       domainModel.CreationDate,

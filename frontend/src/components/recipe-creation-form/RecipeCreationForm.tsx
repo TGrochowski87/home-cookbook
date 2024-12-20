@@ -26,6 +26,7 @@ export interface RecipeData {
   readonly tags: ReadonlyArray<number | string>;
   readonly ingredients: ReadonlyArray<QuantifiableItemData>;
   readonly description: string;
+  readonly dummyForInitialDirty?: string;
 }
 
 export const EmptyRecipeCreationFormValues: RecipeData = {
@@ -44,22 +45,25 @@ interface RecipeCreationFormProps {
   readonly replaceOnNavigate?: boolean;
   readonly onSubmitCallback: (dto: RecipeCreateDto) => Promise<void>;
   readonly initialValues: RecipeData;
+  readonly pendingChangesLocalStorageKey: string;
+  readonly initiallyDirty?: boolean;
 }
 
-// TODO: Confirmation on leaving with pending changes
 const RecipeCreationForm = ({
   categories,
   tags,
   onSuccessNavigateTo,
   onSubmitCallback,
   initialValues,
+  pendingChangesLocalStorageKey,
   replaceOnNavigate = false,
+  initiallyDirty = false,
 }: RecipeCreationFormProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { displayMessage } = useAlerts();
-  const { register, handleSubmit, formState, control, setFocus, reset, getValues } = useForm<RecipeData>({
-    defaultValues: { ...initialValues, image: undefined }, // Binary data is not serializable.
+  const { register, handleSubmit, formState, control, setFocus, reset, getValues, setValue } = useForm<RecipeData>({
+    defaultValues: { ...initialValues, dummyForInitialDirty: "" },
   });
 
   const onSubmit = async (data: RecipeData): Promise<void> => {
@@ -98,9 +102,9 @@ const RecipeCreationForm = ({
   useEffect(() => {
     return () => {
       if (formState.isDirty && formState.isSubmitted === false) {
-        localStorage.setItem("pendingCreate", JSON.stringify(getValues()));
+        localStorage.setItem(pendingChangesLocalStorageKey, JSON.stringify(getValues()));
       } else {
-        localStorage.removeItem("pendingCreate");
+        localStorage.removeItem(pendingChangesLocalStorageKey);
       }
     };
   }, [formState.isDirty, formState.isSubmitted]);
@@ -110,12 +114,12 @@ const RecipeCreationForm = ({
     const savePendingChanges = () => {
       // Save the pending changes on every case of losing focus by the website.
       if (formState.isDirty && formState.isSubmitted === false && document.visibilityState === "hidden") {
-        localStorage.setItem("pendingCreate", JSON.stringify(getValues()));
+        localStorage.setItem(pendingChangesLocalStorageKey, JSON.stringify(getValues()));
         return;
       }
 
       // If the page has not been closed and it regained focus, remove the storage entry.
-      localStorage.removeItem("pendingCreate");
+      localStorage.removeItem(pendingChangesLocalStorageKey);
     };
 
     // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.
@@ -126,6 +130,16 @@ const RecipeCreationForm = ({
       document.removeEventListener("visibilitychange", savePendingChanges);
     };
   }, [formState.isDirty, formState.isSubmitted]);
+
+  /**
+   * The purpose of this effect and the property is to be able to make the form dirty right away after pending changes have been loaded.
+   * This way we can load, leave the page, come back and load the pending changes again.
+   */
+  useEffect(() => {
+    if (initiallyDirty) {
+      setValue("dummyForInitialDirty", "dirty", { shouldDirty: true });
+    }
+  }, []);
 
   return (
     <div className="recipe-creation-form">
@@ -229,6 +243,8 @@ const RecipeCreationForm = ({
         className="save-button">
         zapisz
       </Button>
+
+      <input hidden {...register("dummyForInitialDirty")}></input>
     </div>
   );
 };

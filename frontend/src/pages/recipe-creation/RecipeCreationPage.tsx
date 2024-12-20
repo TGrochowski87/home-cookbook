@@ -17,13 +17,17 @@ export async function loader(): Promise<null> {
   return null;
 }
 
+const pendingChangesLocalStorageKey = "pendingCreate";
+
 const RecipeCreationPage = () => {
   const dispatch = useAppDispatch();
   const categories = useAppSelector(state => state.categories.categories);
   const tags = useAppSelector(state => state.tags.tags);
+
   const { displayMessage } = useAlerts();
 
   const [initialFormData, setInitialFormData] = useState<RecipeData>();
+  const [pendingChangesLoaded, setPendingChangesLoaded] = useState<boolean>(false);
   const firstRender = useRef<boolean>(true);
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
@@ -40,11 +44,12 @@ const RecipeCreationPage = () => {
     firstRender.current = false;
 
     // An option to load the unsaved changes from the last session.
-    const pendingCreate = localStorage.getItem("pendingCreate");
+    const pendingCreate = localStorage.getItem(pendingChangesLocalStorageKey);
     if (pendingCreate && window.confirm("Przywrócić ostatni stan formularza?")) {
       const data = JSON.parse(pendingCreate) as RecipeData;
-      setInitialFormData(data);
-      localStorage.removeItem("pendingCreate");
+      setInitialFormData({ ...data, image: undefined }); // Binary data is not serializable.
+      setPendingChangesLoaded(true);
+      localStorage.removeItem(pendingChangesLocalStorageKey);
     } else {
       setInitialFormData(EmptyRecipeCreationFormValues);
     }
@@ -60,6 +65,8 @@ const RecipeCreationPage = () => {
           onSuccessNavigateTo="/recipes"
           onSubmitCallback={onSubmitCallback}
           initialValues={initialFormData}
+          pendingChangesLocalStorageKey={pendingChangesLocalStorageKey}
+          initiallyDirty={pendingChangesLoaded}
         />
       )}
     </div>
