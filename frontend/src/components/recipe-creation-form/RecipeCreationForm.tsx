@@ -1,6 +1,6 @@
 import Input from "components/Input";
 import "./styles.less";
-import { CategoryGetDto, RecipeDetailsGetDto, TagGetDto } from "api/GET/DTOs";
+import { CategoryGetDto, TagGetDto } from "api/GET/DTOs";
 import { useNavigate } from "react-router-dom";
 import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
@@ -17,7 +17,7 @@ import CategorySelect from "./category-select/CategorySelect";
 import mapper from "mapper";
 import { useAppDispatch } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export interface RecipeData {
   readonly name: string;
@@ -28,31 +28,39 @@ export interface RecipeData {
   readonly description: string;
 }
 
+export const EmptyRecipeCreationFormValues: RecipeData = {
+  name: "",
+  categoryId: undefined,
+  image: undefined,
+  tags: [],
+  ingredients: [],
+  description: "",
+};
+
 interface RecipeCreationFormProps {
-  readonly recipe?: RecipeDetailsGetDto;
   readonly categories: readonly CategoryGetDto[];
   readonly tags: readonly TagGetDto[];
   readonly onSuccessNavigateTo: string;
   readonly replaceOnNavigate?: boolean;
   readonly onSubmitCallback: (dto: RecipeCreateDto) => Promise<void>;
+  readonly initialValues: RecipeData;
 }
 
 // TODO: Confirmation on leaving with pending changes
 const RecipeCreationForm = ({
-  recipe,
   categories,
   tags,
   onSuccessNavigateTo,
   onSubmitCallback,
+  initialValues,
   replaceOnNavigate = false,
 }: RecipeCreationFormProps) => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { displayMessage } = useAlerts();
   const { register, handleSubmit, formState, control, setFocus, reset, getValues } = useForm<RecipeData>({
-    defaultValues: getDefaultFormValues(recipe),
+    defaultValues: { ...initialValues, image: undefined }, // Binary data is not serializable.
   });
-  const [initiallySelectedTags, setInitiallySelectedTags] = useState<string[] | undefined>([]);
 
   const onSubmit = async (data: RecipeData): Promise<void> => {
     try {
@@ -86,26 +94,38 @@ const RecipeCreationForm = ({
     }
   };
 
+  // Save pending changes to local storage on unmount.
   useEffect(() => {
     return () => {
       if (formState.isDirty && formState.isSubmitted === false) {
-        sessionStorage.setItem("pendingCreate", JSON.stringify(getValues()));
+        localStorage.setItem("pendingCreate", JSON.stringify(getValues()));
       } else {
-        sessionStorage.removeItem("pendingCreate");
+        localStorage.removeItem("pendingCreate");
       }
     };
   }, [formState.isDirty, formState.isSubmitted]);
 
+  // Handle saving pending changes on closing the page.
   useEffect(() => {
-    if (formState.defaultValues?.tags === undefined) {
-      return;
-    }
+    const savePendingChanges = () => {
+      // Save the pending changes on every case of losing focus by the website.
+      if (formState.isDirty && formState.isSubmitted === false && document.visibilityState === "hidden") {
+        localStorage.setItem("pendingCreate", JSON.stringify(getValues()));
+        return;
+      }
 
-    const selectedTags: string[] = formState.defaultValues.tags.map(tag =>
-      typeof tag === "number" ? tags.find(t => t.id === tag)!.name : tag!
-    );
-    setInitiallySelectedTags(selectedTags);
-  }, [formState.defaultValues]);
+      // If the page has not been closed and it regained focus, remove the storage entry.
+      localStorage.removeItem("pendingCreate");
+    };
+
+    // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
+    document.addEventListener("visibilitychange", savePendingChanges);
+
+    return () => {
+      document.removeEventListener("visibilitychange", savePendingChanges);
+    };
+  }, [formState.isDirty, formState.isSubmitted]);
 
   return (
     <div className="recipe-creation-form">
@@ -160,9 +180,12 @@ const RecipeCreationForm = ({
               tagCreationEnabled
               selection={{
                 disabled: false,
-                initiallySelected: initiallySelectedTags,
-                onSelectionChange: (selectedTags: TagSelection[]) =>
-                  onChange(selectedTags.map(t => (t.id !== undefined ? t.id : t.name))),
+                initiallySelected: initialValues?.tags.map(tag =>
+                  typeof tag === "number" ? tags.find(t => t.id === tag)!.name : tag!
+                ),
+                onSelectionChange: (selectedTags: TagSelection[]) => {
+                  onChange(selectedTags.map(t => (t.id !== undefined ? t.id : t.name)));
+                },
               }}
             />
           )}
@@ -208,42 +231,6 @@ const RecipeCreationForm = ({
       </Button>
     </div>
   );
-};
-
-const getDefaultFormValues = (recipe?: RecipeDetailsGetDto): RecipeData => {
-  if (recipe === undefined) {
-    const pendingCreate = sessionStorage.getItem("pendingCreate");
-
-    if (pendingCreate && window.confirm("Przywrócić ostatni stan formularza?")) {
-      const data = JSON.parse(pendingCreate) as RecipeData;
-      return {
-        name: data.name,
-        categoryId: data.categoryId,
-        image: data.image,
-        tags: data.tags,
-        ingredients: data.ingredients,
-        description: data.description,
-      };
-    } else {
-      return {
-        name: "",
-        categoryId: undefined,
-        image: undefined,
-        tags: [],
-        ingredients: [],
-        description: "",
-      };
-    }
-  }
-
-  return {
-    name: recipe.name,
-    categoryId: recipe.category.id,
-    image: undefined,
-    tags: recipe.tags.map(t => t.id),
-    ingredients: recipe.ingredients.map(i => ({ ...i, key: i.id, checked: false })),
-    description: recipe.description,
-  };
 };
 
 export default RecipeCreationForm;

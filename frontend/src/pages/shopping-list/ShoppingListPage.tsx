@@ -103,6 +103,7 @@ const ShoppingListPage = () => {
     };
 
     // Check for visibilitychange instead of onbeforeunload as per MDN recommendation.
+    // https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon
     document.addEventListener("visibilitychange", saveBeforeUnloadWithBeacon);
 
     return () => {

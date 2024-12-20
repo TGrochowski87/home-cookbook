@@ -33,19 +33,15 @@ const TagSet = ({
   tagCreationEnabled = false,
   align = "center",
 }: TagSetProps) => {
-  const [selections, setSelections] = useState<readonly TagSelection[]>([]);
+  const [selections, setSelections] = useState<readonly TagSelection[]>(
+    selection.initiallySelected ? mapInitialSelections(selection.initiallySelected, tags) : []
+  );
 
   useEffect(() => {
     if (selection.onSelectionChange) {
       selection.onSelectionChange([...selections]);
     }
   }, [selections]);
-
-  useEffect(() => {
-    if (selection.initiallySelected) {
-      setSelections(setInitialSelections(selection.initiallySelected, tags));
-    }
-  }, [selection.initiallySelected]);
 
   const newTags = selections.filter(t => t.id === undefined).map(t => t.name);
 
@@ -97,7 +93,7 @@ const TagSet = ({
   );
 };
 
-const setInitialSelections = (initialSelections: readonly string[], tags: readonly TagGetDto[]): TagSelection[] => {
+const mapInitialSelections = (initialSelections: readonly string[], tags: readonly TagGetDto[]): TagSelection[] => {
   const selections: TagSelection[] = initialSelections.map(selection => ({
     name: selection,
     id: tags.find(t => t.name === selection)?.id,

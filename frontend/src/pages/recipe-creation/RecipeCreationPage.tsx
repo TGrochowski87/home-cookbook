@@ -2,10 +2,14 @@ import "./styles.less";
 import api from "api/api";
 import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
-import RecipeCreationForm from "components/recipe-creation-form/RecipeCreationForm";
+import RecipeCreationForm, {
+  EmptyRecipeCreationFormValues,
+  RecipeData,
+} from "components/recipe-creation-form/RecipeCreationForm";
 import store from "storage/redux/store";
 import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
+import { useEffect, useRef, useState } from "react";
 
 export async function loader(): Promise<null> {
   await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
@@ -17,8 +21,10 @@ const RecipeCreationPage = () => {
   const dispatch = useAppDispatch();
   const categories = useAppSelector(state => state.categories.categories);
   const tags = useAppSelector(state => state.tags.tags);
-
   const { displayMessage } = useAlerts();
+
+  const [initialFormData, setInitialFormData] = useState<RecipeData>();
+  const firstRender = useRef<boolean>(true);
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
     const newRecipe = await api.post.createRecipe(dto);
@@ -26,15 +32,36 @@ const RecipeCreationPage = () => {
     displayMessage({ type: "success", message: "Przepis został utworzony.", fadeOutAfter: 5000 });
   };
 
+  useEffect(() => {
+    // This logic must be run only once.
+    if (firstRender.current === false) {
+      return;
+    }
+    firstRender.current = false;
+
+    // An option to load the unsaved changes from the last session.
+    const pendingCreate = localStorage.getItem("pendingCreate");
+    if (pendingCreate && window.confirm("Przywrócić ostatni stan formularza?")) {
+      const data = JSON.parse(pendingCreate) as RecipeData;
+      setInitialFormData(data);
+      localStorage.removeItem("pendingCreate");
+    } else {
+      setInitialFormData(EmptyRecipeCreationFormValues);
+    }
+  }, []);
+
   return (
     <div className="page recipe-creation-page">
       <h1>Nowy przepis</h1>
-      <RecipeCreationForm
-        categories={categories}
-        tags={tags}
-        onSuccessNavigateTo="/recipes"
-        onSubmitCallback={onSubmitCallback}
-      />
+      {initialFormData && (
+        <RecipeCreationForm
+          categories={categories}
+          tags={tags}
+          onSuccessNavigateTo="/recipes"
+          onSubmitCallback={onSubmitCallback}
+          initialValues={initialFormData}
+        />
+      )}
     </div>
   );
 };
