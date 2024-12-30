@@ -27,7 +27,7 @@ const EditableQuantifiableItemsList = ({
   leftSideAction,
   rightSideAction,
 }: EditableQuantifiableItemsListProps) => {
-  const { register, handleSubmit, reset, watch } = useForm<FormData>();
+  const { register, handleSubmit, reset, watch, setFocus } = useForm<FormData>();
   const { displayMessage } = useAlerts();
 
   const onSubmit = (data: FormData) => {
@@ -44,6 +44,7 @@ const EditableQuantifiableItemsList = ({
     }
 
     setItems([...items, newItem]);
+    setFocus("name");
     reset();
   };
 
