@@ -13,8 +13,8 @@ const errorMessages: Record<FileUploadError, string> = {
 };
 
 interface ThumbnailProps {
-  readonly image: Blob | undefined;
-  readonly setImage: (image: Blob | undefined) => void;
+  readonly image: Blob | null;
+  readonly setImage: (image: Blob | null) => void;
 }
 
 const Thumbnail = ({ image, setImage }: ThumbnailProps) => {
@@ -26,7 +26,7 @@ const Thumbnail = ({ image, setImage }: ThumbnailProps) => {
         {image ? (
           <>
             <img src={URL.createObjectURL(image as Blob) ?? placehoder} />
-            <button className="discard-button" type="button" onClick={() => setImage(undefined)}>
+            <button className="discard-button" type="button" onClick={() => setImage(null)}>
               <CrossCircledIcon />
             </button>
           </>

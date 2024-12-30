@@ -19,10 +19,12 @@ import { useAppDispatch } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
 import { useEffect } from "react";
 
+// It is important to use null instead of undefined.
+// https://react-hook-form.com/docs/useform#defaultValues
 export interface RecipeData {
   readonly name: string;
-  readonly categoryId: number | undefined;
-  readonly image: Blob | undefined;
+  readonly categoryId: number | null;
+  readonly image: Blob | null;
   readonly tags: ReadonlyArray<number | string>;
   readonly ingredients: ReadonlyArray<QuantifiableItemData>;
   readonly description: string;
@@ -31,8 +33,8 @@ export interface RecipeData {
 
 export const EmptyRecipeCreationFormValues: RecipeData = {
   name: "",
-  categoryId: undefined,
-  image: undefined,
+  categoryId: null,
+  image: null,
   tags: [],
   ingredients: [],
   description: "",
@@ -179,7 +181,7 @@ const RecipeCreationForm = ({
         control={control}
         name="image"
         render={({ field: { value, onChange } }) => (
-          <Thumbnail image={value} setImage={(image: Blob | undefined) => onChange(image)} />
+          <Thumbnail image={value} setImage={(image: Blob | null) => onChange(image)} />
         )}
       />
 
