@@ -14,24 +14,32 @@ const CreateTagButton = ({ onCreate, size }: NewTagProps) => {
   const [isInInputMode, setIsInInputMode] = useState<boolean>(false);
   const [input, setInput] = useState<string>("");
 
+  const submitHandler = () => {
+    setIsInInputMode(false);
+    if (input) {
+      onCreate(input.trim());
+    }
+    setInput("");
+  };
+
   return isInInputMode ? (
-    <WidthAdjustingInput
-      className="floating tag-chip-interactive tag-creation"
-      minWidth="15ch"
-      autoFocus
-      maxLength={20}
-      value={input}
-      onChange={event => {
-        setInput(event.target.value);
-      }}
-      onBlur={() => {
-        setIsInInputMode(false);
-        if (input) {
-          onCreate(input.trim());
-        }
-        setInput("");
-      }}
-    />
+    <form
+      onSubmit={event => {
+        event.preventDefault();
+        submitHandler();
+      }}>
+      <WidthAdjustingInput
+        className="floating tag-chip-interactive tag-creation"
+        minWidth="15ch"
+        autoFocus
+        maxLength={20}
+        value={input}
+        onChange={event => {
+          setInput(event.target.value);
+        }}
+        onBlur={() => submitHandler()}
+      />
+    </form>
   ) : (
     <Button className={`tag-chip tag-chip-interactive ${size} tag-creation`} onClick={() => setIsInInputMode(true)}>
       nowy tag <PlusIcon width="16px" height="16px" thickness={2} />
