@@ -1,6 +1,9 @@
 @import "../../../variables.less";
+
 @import "@radix-ui/colors/red.css";
 @import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/sage.css";
+@import "@radix-ui/colors/sage-dark.css";
 
 .thumbnail-space {
   width: 100%;
@@ -24,7 +27,6 @@
     align-self: center;
     border-radius: #numeric[big-border-radius];
     border: 3px solid #colors[primary];
-    overflow: hidden;
 
     .input-space {
       width: 100%;
@@ -41,19 +43,21 @@
     }
 
     .discard-button {
+      background: none;
       padding: 0;
       border: none;
 
       width: 32px;
       height: 32px;
       position: absolute;
-      right: 4px;
-      top: 4px;
+      right: -16px;
+      top: -16px;
       border-radius: 50px;
       cursor: pointer;
 
       svg {
-        color: rgb(211, 0, 0);
+        fill: whitesmoke;
+        color: var(--red-9);
         width: 100%;
         height: 100%;
       }

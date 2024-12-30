@@ -1,9 +1,8 @@
 import * as Select from "@radix-ui/react-select";
-// TODO: Remove @radix-ui/react-icons from the project
-import { ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import SelectItem from "./SelectItem";
 import { CategoryGetDto } from "api/GET/DTOs";
 import { forwardRef } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 interface CustomSelectProps {
   readonly categories: readonly CategoryGetDto[];
@@ -18,7 +17,7 @@ const CategorySelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
         <Select.Trigger ref={ref} className="input category-select-trigger floating" aria-label="Food">
           <Select.Value placeholder="Kategoria..." />
           <Select.Icon className="category-select-icon">
-            <ChevronDownIcon />
+            <ChevronDown />
           </Select.Icon>
         </Select.Trigger>
 
@@ -35,7 +34,7 @@ const CategorySelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
             className="category-select-content floating"
             position="popper">
             <Select.ScrollUpButton className="category-select-scroll-button">
-              <ChevronUpIcon />
+              <ChevronUp />
             </Select.ScrollUpButton>
             <Select.Viewport className="category-select-viewport">
               {categories.map(category => (
@@ -45,7 +44,7 @@ const CategorySelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
               ))}
             </Select.Viewport>
             <Select.ScrollDownButton className="category-select-scroll-button">
-              <ChevronDownIcon />
+              <ChevronDown />
             </Select.ScrollDownButton>
           </Select.Content>
         </Select.Portal>

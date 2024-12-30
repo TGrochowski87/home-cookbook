@@ -2,8 +2,8 @@ import placehoder from "assets/burger-placeholder.jpg";
 import ThumbnailSelection from "./ThumbnailSelection";
 import { useState } from "react";
 import { ErrorCode as FileUploadError } from "react-dropzone";
-import { CrossCircledIcon } from "@radix-ui/react-icons";
 import "./styles.less";
+import { CircleX } from "lucide-react";
 
 const errorMessages: Record<FileUploadError, string> = {
   "file-invalid-type": "Nieobsługiwany format pliku.",
@@ -27,7 +27,7 @@ const Thumbnail = ({ image, setImage }: ThumbnailProps) => {
           <>
             <img src={URL.createObjectURL(image as Blob) ?? placehoder} />
             <button className="discard-button" type="button" onClick={() => setImage(null)}>
-              <CrossCircledIcon />
+              <CircleX />
             </button>
           </>
         ) : (

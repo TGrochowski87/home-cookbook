@@ -1,5 +1,5 @@
-import { CheckIcon } from "@radix-ui/react-icons";
 import * as Select from "@radix-ui/react-select";
+import { Check } from "lucide-react";
 import { PropsWithChildren } from "react";
 
 interface SelectItemProps extends PropsWithChildren {
@@ -11,7 +11,7 @@ const SelectItem = ({ value, children }: SelectItemProps) => {
     <Select.Item className="category-select-item" value={value}>
       <Select.ItemText>{children}</Select.ItemText>
       <Select.ItemIndicator className="category-select-item-indicator">
-        <CheckIcon />
+        <Check />
       </Select.ItemIndicator>
     </Select.Item>
   );

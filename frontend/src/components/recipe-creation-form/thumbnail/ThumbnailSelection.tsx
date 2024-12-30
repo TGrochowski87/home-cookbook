@@ -1,8 +1,8 @@
-import { UploadIcon } from "@radix-ui/react-icons";
 import Dropzone, { FileRejection } from "react-dropzone";
 import "./styles.less";
 
 import { ErrorCode as FileUploadError } from "react-dropzone";
+import { Upload } from "lucide-react";
 
 interface ThumbnailSelectionProps {
   readonly setImage: (image: Blob) => void;
@@ -31,7 +31,7 @@ const ThumbnailSelection = ({ setImage, setFileUploadErrors }: ThumbnailSelectio
       {({ getRootProps, getInputProps }) => (
         <div className="input-space" {...getRootProps()}>
           <input {...getInputProps()} />
-          <UploadIcon />
+          <Upload />
         </div>
       )}
     </Dropzone>
