@@ -10,7 +10,7 @@ const ShoppingList = ({ listData }: ShoppingListProps) => {
 
   return (
     <article
-      className="shopping-list block floating interactive-element"
+      className={`shopping-list block floating interactive-element ${listData.autoDelete ? "" : "persistent"}`}
       onClick={() => navigate(`/shopping-lists/${listData.id}`)}>
       <h2>{listData.name}</h2>
       <div className="dates-row">

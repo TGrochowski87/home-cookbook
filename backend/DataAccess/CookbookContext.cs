@@ -147,6 +147,7 @@ internal partial class CookbookContext : DbContext
       entity.ToTable("shopping_lists");
 
       entity.Property(e => e.Id).HasColumnName("id");
+      entity.Property(e => e.Autodelete).HasColumnName("autodelete");
       entity.Property(e => e.Creationdate)
         .HasColumnType("timestamp without time zone")
         .HasColumnName("creationdate");

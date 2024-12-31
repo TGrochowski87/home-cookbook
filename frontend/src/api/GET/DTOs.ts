@@ -45,6 +45,7 @@ export interface Amount {
 export interface ShoppingListGetDto {
   readonly id: number;
   readonly name: string;
+  readonly autoDelete: boolean;
   readonly creationDate: string;
   readonly updateDate: string;
 }

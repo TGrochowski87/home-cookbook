@@ -104,6 +104,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     var shoppingList = new DataAccess.ShoppingList
     {
       Name = name,
+      Autodelete = true,
       ShoppingSublists = [manualSublist],
       Creationdate = DateTime.Now,
       Updatedate = DateTime.Now,

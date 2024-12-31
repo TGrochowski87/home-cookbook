@@ -31,7 +31,7 @@ internal static class RepositoryModelMapper
     => entities.Select(Map).ToList();
 
   public static ShoppingList Map(DataAccess.ShoppingList entity)
-    => new(entity.Id, entity.Name, entity.Creationdate, entity.Updatedate);
+    => new(entity.Id, entity.Name, entity.Autodelete, entity.Creationdate, entity.Updatedate);
   
   public static List<ShoppingList> Map(IEnumerable<DataAccess.ShoppingList> entities)
     => entities.Select(Map).ToList();
@@ -66,7 +66,13 @@ internal static class RepositoryModelMapper
     => entities.Select(Map).ToList();
 
   public static ShoppingListDetails Map<T>(DataAccess.ShoppingList entity) where T : ShoppingListDetails
-    => new(entity.Id, entity.Name, entity.Creationdate, entity.Updatedate, Map(entity.ShoppingSublists));
+    => new(
+      entity.Id, 
+      entity.Name, 
+      entity.Autodelete, 
+      entity.Creationdate, 
+      entity.Updatedate, 
+      Map(entity.ShoppingSublists));
 
   public static QuantifiableItem Map(QuantifiableItemCreate domainModel) => new()
   {

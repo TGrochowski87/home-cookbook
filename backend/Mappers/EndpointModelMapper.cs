@@ -42,7 +42,7 @@ internal static class EndpointModelMapper
     => domainModels.Select(dm => Map(dm, imageSrcBaseUrl)).ToList();
 
   public static ShoppingListGetDto Map(ShoppingList domainModel)
-    => new(domainModel.Id, domainModel.Name, domainModel.CreationDate, domainModel.UpdateDate);
+    => new(domainModel.Id, domainModel.Name, domainModel.AutoDelete, domainModel.CreationDate, domainModel.UpdateDate);
 
   public static List<ShoppingListGetDto> Map(IEnumerable<ShoppingList> domainModels)
     => domainModels.Select(Map).ToList();
@@ -82,6 +82,7 @@ internal static class EndpointModelMapper
     => new(
       domainModel.Id, 
       domainModel.Name, 
+      domainModel.AutoDelete,
       domainModel.CreationDate, 
       domainModel.UpdateDate, 
       Map(domainModel.Sublists));

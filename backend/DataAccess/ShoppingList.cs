@@ -6,6 +6,8 @@ internal partial class ShoppingList
 
   public string Name { get; set; } = null!;
 
+  public bool Autodelete { get; set; }
+
   public DateTime Creationdate { get; set; }
 
   public DateTime Updatedate { get; set; }

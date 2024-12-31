@@ -1,5 +1,8 @@
 @import "../../variables.less";
 
+@import "@radix-ui/colors/indigo.css";
+@import "@radix-ui/colors/indigo-dark.css";
+
 .shopping-page {
   .shopping-list {
     margin-bottom: 16px;
@@ -20,5 +23,9 @@
 
       font-size: 0.9em;
     }
+  }
+
+  .shopping-list.persistent {
+    border: 2px solid var(--indigo-9);
   }
 }

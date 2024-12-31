@@ -27,6 +27,7 @@ CREATE TABLE quantifiable_items (
 CREATE TABLE shopping_lists (
   id SERIAL PRIMARY KEY,
   name varchar(100) NOT NULL,
+  autoDelete boolean NOT NULL,
   creationDate timestamp NOT NULL,
   updateDate timestamp NOT NULL
 );

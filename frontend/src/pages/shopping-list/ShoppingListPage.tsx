@@ -85,7 +85,7 @@ const ShoppingListPage = () => {
     };
   }, []);
 
-  // Send quick API call before page/browser closing.
+  // Send quick API call before page/browser closes.
   useEffect(() => {
     const saveBeforeUnloadWithBeacon = async () => {
       if (shoppingListChanged.current === false || document.visibilityState !== "hidden") {

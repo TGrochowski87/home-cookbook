@@ -8,10 +8,14 @@ namespace Cookbook.Domain.ShoppingLists;
 internal class ShoppingListService(IShoppingListRepository shoppingListRepository, ILogger<ShoppingListService> logger)
   : IShoppingListService
 {
+  const int _daysTillExpiration = 14;
+  
   public async Task<List<ShoppingList>> GetAll()
   {
     var shoppingLists = await shoppingListRepository.GetAll();
-    var groupedByExpirationStatus = shoppingLists.GroupBy(sl => DateTime.Now > sl.CreationDate.AddMonths(1)).ToList();
+    var groupedByExpirationStatus = shoppingLists
+      .GroupBy(sl => sl.AutoDelete && DateTime.Now > sl.CreationDate.AddDays(_daysTillExpiration))
+      .ToList();
 
     // Removing overdue shopping lists
     var overdueShoppingLists = groupedByExpirationStatus.FirstOrDefault(group => group.Key);

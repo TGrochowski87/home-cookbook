@@ -10,6 +10,8 @@ interface InfoModalProps {
   readonly renameHandler: (newName: string) => void;
 }
 
+const daysTillExpiration: number = 14;
+
 const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
   const [renameActive, setRenameActive] = useState<boolean>(false);
   const [input, setInput] = useState<string>(shoppingListInfo.name);
@@ -61,10 +63,10 @@ const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
 
 const calculateTimeUntilDeletion = (originalCreationDate: string): number => {
   const creationDate = new Date(originalCreationDate);
-  const creationDatePlus30Days = new Date(originalCreationDate);
-  creationDatePlus30Days.setDate(creationDate.getDate() + 30);
+  const creationDatePlus2Weeks = new Date(originalCreationDate);
+  creationDatePlus2Weeks.setDate(creationDate.getDate() + daysTillExpiration);
 
-  const timeUntilDeletion = creationDatePlus30Days.getTime() - Date.now();
+  const timeUntilDeletion = creationDatePlus2Weeks.getTime() - Date.now();
   return timeUntilDeletion;
 };
 
