@@ -48,7 +48,7 @@ internal static class EndpointModelMapper
     => domainModels.Select(Map).ToList();
 
   public static AmountDto Map(Amount domainModel)
-    => new(domainModel.Value, domainModel.Unit.GetValueOrDefault());
+    => new(domainModel.Value.GetValueOrDefault(), domainModel.Unit.GetValueOrDefault());
 
   public static QuantifiableItemGetDto Map(QuantifiableItemGet domainModel) 
     => new(

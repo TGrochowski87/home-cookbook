@@ -68,7 +68,7 @@ const EditableQuantifiableItemsList = ({
         />
         <Input
           {...register("amount.value", {
-            required: true,
+            required: false,
             maxLength: 20,
             setValueAs: (value: string) => value.trim(),
           })}

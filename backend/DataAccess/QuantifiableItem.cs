@@ -8,7 +8,7 @@ internal partial class QuantifiableItem
 
   public string Name { get; set; } = null!;
 
-  public string Value { get; set; } = null!;
+  public string? Value { get; set; }
 
   public string? Unit { get; set; }
 

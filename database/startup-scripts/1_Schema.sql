@@ -18,7 +18,7 @@ CREATE TABLE quantifiable_items (
   id SERIAL PRIMARY KEY,
   list_id int NOT NULL,
   name varchar(100) NOT NULL,
-  value varchar(20) NOT NULL,
+  value varchar(20),
   unit varchar(10),
   checked boolean NOT NULL,
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE

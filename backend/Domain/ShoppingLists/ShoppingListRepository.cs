@@ -157,7 +157,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
         Name = newItem.Name,
         Checked = newItem.Checked,
         Unit = newItem.Amount.Unit.GetValueOrDefault(),
-        Value = newItem.Amount.Value
+        Value = newItem.Amount.Value.GetValueOrDefault()
       };
       currentListItems.Add(item);
     }
@@ -179,7 +179,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       item.Name = correspondingItemUpdate.Name;
       item.Checked = correspondingItemUpdate.Checked;
       item.Unit = correspondingItemUpdate.Amount.Unit.GetValueOrDefault();
-      item.Value = correspondingItemUpdate.Amount.Value;
+      item.Value = correspondingItemUpdate.Amount.Value.GetValueOrDefault();
     }
   }
 }

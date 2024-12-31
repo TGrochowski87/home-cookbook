@@ -71,7 +71,7 @@ internal static class RepositoryModelMapper
   public static QuantifiableItem Map(QuantifiableItemCreate domainModel) => new()
   {
     Name = domainModel.Name,
-    Value = domainModel.Amount.Value,
+    Value = domainModel.Amount.Value.GetValueOrDefault(),
     Unit = domainModel.Amount.Unit.GetValueOrDefault(),
     Checked = false
   };
