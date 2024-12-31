@@ -1,4 +1,5 @@
 import { isAxiosError } from "axios";
+import { isCookbookError } from "utilities/CookbookError";
 import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 
 const ErrorHandler = () => {
@@ -6,9 +7,14 @@ const ErrorHandler = () => {
   let message = "";
   let emoji = "";
 
-  if (isRouteErrorResponse(error) && error.status === 404) {
-    emoji = String.raw`¯\_(ツ)_/¯`;
-    message = "Nie znaleziono strony.";
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 404) {
+      emoji = String.raw`¯\_(ツ)_/¯`;
+      message = "Nie znaleziono strony.";
+    } else {
+      emoji = String.raw`(ಥ﹏ಥ)`;
+      message = "Coś poszło bardzo nie tak.";
+    }
   } else if (isAxiosError(error)) {
     if (error.response === undefined) {
       emoji = String.raw`(╯°□°）╯︵ ┻━┻`;
@@ -17,6 +23,14 @@ const ErrorHandler = () => {
       emoji = String.raw`(╯°□°）╯︵ ┻━┻`;
       message = "Serwer zwrócił nieoczekiwany błąd. Powiadomienie powinno zostać wysłane.";
     } else if (error.response?.status === 404) {
+      emoji = String.raw`¯\_(ツ)_/¯`;
+      message = "Serwer nie znalazł oczekiwanego zasobu.";
+    } else {
+      emoji = String.raw`(ಥ﹏ಥ)`;
+      message = "Coś poszło bardzo nie tak.";
+    }
+  } else if (isCookbookError(error)) {
+    if (error.status === 404) {
       emoji = String.raw`¯\_(ツ)_/¯`;
       message = "Serwer nie znalazł oczekiwanego zasobu.";
     } else {

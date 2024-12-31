@@ -3,6 +3,7 @@ import { ShoppingListDetailsGetDto, ShoppingListGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { RootState } from "../store";
 import { DeepWriteable, WithOptional } from "utilities/types";
+import CookbookError from "utilities/CookbookError";
 
 /**
  * We first get all shopping lists without sublists. They get filled lazily.
@@ -44,7 +45,7 @@ const fetchShoppingListDetails = createAsyncThunk(
     const currentState = getState() as RootState;
     const shoppingListInCache = currentState.shoppingLists.shoppingLists.find(sh => sh.id === id);
     if (shoppingListInCache === undefined) {
-      throw Error("Shopping list was not found in storage.");
+      return rejectWithValue(new CookbookError(404, "Shopping list was not found in storage."));
     }
     if (shoppingListInCache.sublists) {
       return null;
