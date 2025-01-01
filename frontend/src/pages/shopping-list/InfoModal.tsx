@@ -1,22 +1,26 @@
+import Checkbox from "components/Checkbox";
 import Input from "components/Input";
 import Popup from "components/Popup";
-import { Info, Pencil } from "lucide-react";
+import { Info, Pencil, TriangleAlert } from "lucide-react";
 import { ShoppingList } from "models/ShoppingList";
-import { useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import formatDate from "utilities/formatDate";
+import { calculateTimeUntilDeletion, OneWeekInMilliseconds } from "utilities/shoppingListUtilities";
 
 interface InfoModalProps {
   readonly shoppingListInfo: Omit<ShoppingList, "sublists">;
   readonly renameHandler: (newName: string) => void;
+  readonly autoDeleteToggleHandler: () => void;
 }
 
-const daysTillExpiration: number = 14;
-
-const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
+const InfoModal = ({ shoppingListInfo, renameHandler, autoDeleteToggleHandler }: InfoModalProps) => {
   const [renameActive, setRenameActive] = useState<boolean>(false);
   const [input, setInput] = useState<string>(shoppingListInfo.name);
 
-  const timeUntilDeletion: number = calculateTimeUntilDeletion(shoppingListInfo.creationDate);
+  // We want this message to change only after we have saved enabling/disabling of autodelete.
+  const autoDeleteInfoMessage = useRef<ReactNode>(
+    determineAutoDeleteInfoMessage(shoppingListInfo.autoDelete, shoppingListInfo.creationDate)
+  );
 
   return (
     <Popup
@@ -47,27 +51,59 @@ const InfoModal = ({ shoppingListInfo, renameHandler }: InfoModalProps) => {
       }>
       <div className="info-space">
         <div className="date-info-row">
-          <p>utworzono:</p>
+          <p>Utworzono:</p>
           <p>{formatDate(shoppingListInfo.creationDate)}</p>
         </div>
         <div className="date-info-row">
-          <p>zaktualizowano:</p>
+          <p>Zaktualizowano:</p>
           <p>{formatDate(shoppingListInfo.updateDate)}</p>
         </div>
-        <p>automatyczne usunięcie nastąpi za:</p>
-        <p>{millisecondsToTime(timeUntilDeletion)}</p>
+        <div className="deletion-info-row">{autoDeleteInfoMessage.current}</div>
+        <Checkbox
+          className="auto-delete-checkbox"
+          checked={shoppingListInfo.autoDelete}
+          onChange={autoDeleteToggleHandler}
+          label="Automatyczne usunięcie"
+        />
       </div>
     </Popup>
   );
 };
 
-const calculateTimeUntilDeletion = (originalCreationDate: string): number => {
-  const creationDate = new Date(originalCreationDate);
-  const creationDatePlus2Weeks = new Date(originalCreationDate);
-  creationDatePlus2Weeks.setDate(creationDate.getDate() + daysTillExpiration);
+const determineAutoDeleteInfoMessage = (autoDeleteEnabled: boolean, listCreationDate: string): ReactNode => {
+  const timeUntilDeletion: number = calculateTimeUntilDeletion(listCreationDate);
 
-  const timeUntilDeletion = creationDatePlus2Weeks.getTime() - Date.now();
-  return timeUntilDeletion;
+  if (autoDeleteEnabled) {
+    return (
+      <>
+        {timeUntilDeletion < OneWeekInMilliseconds && <TriangleAlert />}
+        <span>
+          <p>Automatyczne usunięcie nastąpi za:</p>
+          <p>{millisecondsToTime(timeUntilDeletion)}</p>
+        </span>
+      </>
+    );
+  } else {
+    if (timeUntilDeletion <= 0) {
+      return (
+        <>
+          <TriangleAlert />
+          <span>
+            <p>Automatyczne usunięcie nastąpi natychmiast po włączeniu autousuwania</p>
+          </span>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <span>
+            <p>Automatyczne usunięcie nastąpiłoby za:</p>
+            <p>{millisecondsToTime(timeUntilDeletion)}</p>
+          </span>
+        </>
+      );
+    }
+  }
 };
 
 const millisecondsToTime = (milliseconds: number): string => {

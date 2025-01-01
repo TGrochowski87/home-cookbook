@@ -3,6 +3,7 @@ import QuantifiableItemData from "models/QuantifiableItemData";
 export type ShoppingList = {
   readonly id: number;
   readonly name: string;
+  readonly autoDelete: boolean;
   readonly creationDate: string;
   readonly updateDate: string;
   readonly sublists: readonly ShoppingListSublist[];

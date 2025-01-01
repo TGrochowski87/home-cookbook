@@ -60,27 +60,33 @@
   }
 }
 
-.checkbox-root {
-  width: 20px;
-  height: 20px;
+.checkbox-wrapper {
   display: flex;
+  gap: 4px;
   align-items: center;
-  justify-content: center;
-  padding: 0;
 
-  background-color: transparent;
-  border: 2px solid #colors[primary];
-  border-radius: 4px;
-  font-size: 2rem;
+  .checkbox-root {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 
-  cursor: pointer;
+    background-color: transparent;
+    border: 2px solid #colors[primary];
+    border-radius: 4px;
+    font-size: 2rem;
 
-  .indicator {
-    display: block;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    background: #colors[primary];
+    cursor: pointer;
+
+    .indicator {
+      display: block;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      background: #colors[primary];
+    }
   }
 }
 

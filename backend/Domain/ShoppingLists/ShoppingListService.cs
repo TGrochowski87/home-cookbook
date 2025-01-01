@@ -14,14 +14,14 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
   {
     var shoppingLists = await shoppingListRepository.GetAll();
     var groupedByExpirationStatus = shoppingLists
-      .GroupBy(sl => sl.AutoDelete && DateTime.Now > sl.CreationDate.AddDays(_daysTillExpiration))
+      .GroupBy(sl => sl.AutoDelete && DateTime.UtcNow > sl.CreationDate.AddDays(_daysTillExpiration))
       .ToList();
 
     // Removing overdue shopping lists
     var overdueShoppingLists = groupedByExpirationStatus.FirstOrDefault(group => group.Key);
     if (overdueShoppingLists is not null)
     {
-      logger.LogInformation("Current time: {CurrentTime}", DateTime.Now.ToLocalTime());
+      logger.LogInformation("Current UTC time: {CurrentTime}", DateTime.UtcNow);
       foreach (var shoppingList in overdueShoppingLists)
       {
         logger.LogInformation(

@@ -3,7 +3,7 @@ import { QuantifiableItemGetDto } from "api/GET/DTOs";
 export interface RecipeCreateDto {
   readonly name: string;
   readonly categoryId: number;
-  readonly image?: Blob;
+  readonly image: Blob | null;
   readonly tagIds: ReadonlyArray<number>;
   readonly newTags: ReadonlyArray<TagCreateDto>;
   readonly ingredients: ReadonlyArray<IngredientCreateDto>;

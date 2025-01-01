@@ -1,6 +1,9 @@
 @import "../../variables.less";
 @import "../../common.less";
+
 @import "@radix-ui/colors/black-alpha.css";
+@import "@radix-ui/colors/amber.css";
+@import "@radix-ui/colors/amber-dark.css";
 
 .shopping-list-page {
   header {
@@ -70,14 +73,33 @@
   .info-space {
     margin-inline: auto;
     width: 270px;
+
     .date-info-row {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
     }
 
-    .date-info-row:last-of-type {
-      margin-bottom: 16px;
+    .deletion-info-row {
+      font-size: 0.8em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 16px;
+
+      text-wrap: pretty;
+
+      svg {
+        flex-shrink: 0;
+        color: var(--amber-9);
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .auto-delete-checkbox {
+      font-size: 0.8em;
+      margin-top: 4px;
     }
   }
 

@@ -119,7 +119,11 @@ const ShoppingListPage = () => {
 
       <header>
         <h1>{shoppingList.name}</h1>
-        <InfoModal shoppingListInfo={shoppingList} renameHandler={handle.nameUpdate} />
+        <InfoModal
+          shoppingListInfo={shoppingList}
+          renameHandler={handle.nameUpdate}
+          autoDeleteToggleHandler={handle.autoDeleteToggle}
+        />
       </header>
 
       {shoppingList.sublists

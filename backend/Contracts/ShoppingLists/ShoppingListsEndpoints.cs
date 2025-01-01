@@ -91,14 +91,12 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     [FromServices] IShoppingListService shoppingListService, [FromRoute] int id)
   {
     var shoppingList = await shoppingListService.GetById(id);
-    var test = shoppingList.Match<ShoppingListDetails, Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>>, Error>(
+    return shoppingList.Match<ShoppingListDetails, Results<Ok<ShoppingListDetailsGetDto>, NotFound<string>>, Error>(
       value => TypedResults.Ok(EndpointModelMapper.Map(value)),
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
-
-    return test;
   }
 }

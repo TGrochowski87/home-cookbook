@@ -2,9 +2,14 @@
 
 @import "@radix-ui/colors/indigo.css";
 @import "@radix-ui/colors/indigo-dark.css";
+@import "@radix-ui/colors/red.css";
+@import "@radix-ui/colors/red-dark.css";
+@import "@radix-ui/colors/amber.css";
+@import "@radix-ui/colors/amber-dark.css";
 
 .shopping-page {
   .shopping-list {
+    position: relative;
     margin-bottom: 16px;
     padding-block: 6px;
 
@@ -23,9 +28,23 @@
 
       font-size: 0.9em;
     }
+
+    svg {
+      color: var(--amber-9);
+      position: absolute;
+      top: 4px;
+      right: 6px;
+
+      width: 16px;
+      height: 16px;
+    }
   }
 
   .shopping-list.persistent {
     border: 2px solid var(--indigo-9);
+  }
+
+  .shopping-list.soon-to-be-deleted {
+    border: 2px solid var(--red-9);
   }
 }

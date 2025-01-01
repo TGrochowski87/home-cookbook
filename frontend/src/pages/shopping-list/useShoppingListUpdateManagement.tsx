@@ -5,6 +5,7 @@ const sublistCountChangeStep = 0.5;
 
 interface UpdateHandler {
   nameUpdate: (newName: string) => void;
+  autoDeleteToggle: () => void;
   sublistIncrementCount: (sublist: ShoppingListSublist) => void;
   sublistDecrementCount: (sublist: ShoppingListSublist) => void;
   listItemDelete: (item: QuantifiableItemData) => void;
@@ -21,6 +22,10 @@ const useShoppingListUpdateManagement = (
 ): UpdateHandler => {
   const nameUpdate = (newName: string) => {
     updateShoppingListState(prev => ({ ...prev, name: newName }));
+  };
+
+  const autoDeleteToggle = () => {
+    updateShoppingListState(prev => ({ ...prev, autoDelete: !prev.autoDelete }));
   };
 
   const checkboxClick = (sublistId: number): ((item: QuantifiableItemData) => void) => {
@@ -74,6 +79,7 @@ const useShoppingListUpdateManagement = (
 
   return {
     nameUpdate,
+    autoDeleteToggle,
     sublistIncrementCount,
     sublistDecrementCount,
     listItemDelete,

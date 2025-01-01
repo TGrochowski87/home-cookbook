@@ -112,7 +112,7 @@ internal static class EndpointModelMapper
 
   public static ShoppingListUpdate Map(ShoppingListUpdateDto dto)
   {
-    var model = new ShoppingListUpdate(dto.Name, dto.Sublists.Select(MapSublistUpdate).ToList());
+    var model = new ShoppingListUpdate(dto.Name, dto.AutoDelete, dto.Sublists.Select(MapSublistUpdate).ToList());
     return model;
 
     ShoppingSublistUpdate MapSublistUpdate(ShoppingSublistUpdateDto dto)

@@ -84,7 +84,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
     context.ShoppingSublists.Add(shoppingSublist);
 
     var shoppingList = await context.ShoppingLists.FindAsync(shoppingListId);
-    shoppingList!.Updatedate = DateTime.Now;
+    shoppingList!.Updatedate = DateTime.UtcNow;
     
     await context.SaveChangesAsync();
     return UnitResult.Success<Error>();
@@ -106,8 +106,8 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       Name = name,
       Autodelete = true,
       ShoppingSublists = [manualSublist],
-      Creationdate = DateTime.Now,
-      Updatedate = DateTime.Now,
+      Creationdate = DateTime.UtcNow,
+      Updatedate = DateTime.UtcNow,
     };
     
     context.ShoppingLists.Add(shoppingList);
@@ -124,6 +124,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       .FirstAsync(sl => sl.Id == id);
 
     shoppingList.Name = updateData.Name;
+    shoppingList.Autodelete = updateData.AutoDelete;
 
     foreach (var sublist in shoppingList.ShoppingSublists)
     {
@@ -144,7 +145,7 @@ internal class ShoppingListRepository(CookbookContext context) : IShoppingListRe
       UpdateShoppingListByNewItems(sublist.List.QuantifiableItems, correspondingSublistUpdate.Items);
     }
     
-    shoppingList.Updatedate = DateTime.Now;
+    shoppingList.Updatedate = DateTime.UtcNow;
     await context.SaveChangesAsync();
   }
 

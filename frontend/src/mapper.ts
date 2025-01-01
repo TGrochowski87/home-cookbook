@@ -41,6 +41,7 @@ const toRecipeCreateDto = (from: RecipeData): RecipeCreateDto => {
 const toShoppingListUpdateDto = (from: ShoppingList): ShoppingListUpdateDto => {
   return {
     name: from.name,
+    autoDelete: from.autoDelete,
     sublists: from.sublists.map(toShoppingSublistUpdateDto),
   };
 };

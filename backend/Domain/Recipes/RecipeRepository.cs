@@ -27,8 +27,8 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       ListId = list.Id,
       Description = data.Description,
       Tags = tags,
-      Creationdate = DateTime.Now,
-      Updatedate = DateTime.Now
+      Creationdate = DateTime.UtcNow,
+      Updatedate = DateTime.UtcNow
     };
 
     context.Recipes.Add(newRecipe);
@@ -63,7 +63,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
       recipe.List.QuantifiableItems.Add(item);
     }
 
-    recipe.Updatedate = DateTime.Now;
+    recipe.Updatedate = DateTime.UtcNow;
     await context.SaveChangesAsync();
     return UnitResult.Success<Error>();
   }

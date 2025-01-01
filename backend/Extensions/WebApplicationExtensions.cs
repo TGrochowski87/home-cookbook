@@ -51,12 +51,12 @@ public static class WebApplicationExtensions
         }
         else
         {
-          LogAndRollbackTransaction(context, transaction);
+          LogAndRollbackTransaction(context.RequestServices, transaction, context.Response.StatusCode);
         }  
       }
       catch (Exception)
       {
-        LogAndRollbackTransaction(context, transaction);
+        LogAndRollbackTransaction(context.RequestServices, transaction, 500);
         throw;
       }
     });
@@ -94,10 +94,10 @@ public static class WebApplicationExtensions
     return app;
   }
 
-  private static void LogAndRollbackTransaction(HttpContext context, CookbookTransaction transaction)
+  private static void LogAndRollbackTransaction(IServiceProvider services, CookbookTransaction transaction, int statusCode)
   {
-    var logger = context.RequestServices.GetRequiredService<ILogger<CookbookTransaction>>();
-    logger.LogWarning("Response status code is {StatusCode}. Rolling back transaction.", context.Response.StatusCode);
+    var logger = services.GetRequiredService<ILogger<CookbookTransaction>>();
+    logger.LogWarning("Response status code is {StatusCode}. Rolling back transaction.", statusCode);
     transaction.Rollback();
   }
 }

@@ -2,6 +2,7 @@ import { Amount } from "api/GET/DTOs";
 
 export interface ShoppingListUpdateDto {
   readonly name: string;
+  readonly autoDelete: boolean;
   readonly sublists: readonly ShoppingSublistUpdateDto[];
 }
 

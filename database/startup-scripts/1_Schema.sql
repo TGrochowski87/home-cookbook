@@ -28,8 +28,8 @@ CREATE TABLE shopping_lists (
   id SERIAL PRIMARY KEY,
   name varchar(100) NOT NULL,
   autoDelete boolean NOT NULL,
-  creationDate timestamp NOT NULL,
-  updateDate timestamp NOT NULL
+  creationDate timestamptz NOT NULL,
+  updateDate timestamptz NOT NULL
 );
 
 CREATE TABLE recipes (
@@ -39,8 +39,8 @@ CREATE TABLE recipes (
   name varchar(100) NOT NULL,
   description text NOT NULL,
   image_src varchar(2048),
-  creationDate timestamp NOT NULL,
-  updateDate timestamp NOT NULL,
+  creationDate timestamptz NOT NULL,
+  updateDate timestamptz NOT NULL,
   CONSTRAINT fk_category FOREIGN KEY (category_id) REFERENCES categories (id) ON DELETE CASCADE,
   CONSTRAINT fk_list FOREIGN KEY (list_id) REFERENCES lists (id) ON DELETE CASCADE
 );

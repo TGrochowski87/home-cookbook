@@ -3,7 +3,7 @@ using CSharpFunctionalExtensions;
 
 namespace Cookbook.Domain.ShoppingLists.Models;
 
-internal record ShoppingListUpdate(string Name, List<ShoppingSublistUpdate> Sublists);
+internal record ShoppingListUpdate(string Name, bool AutoDelete, List<ShoppingSublistUpdate> Sublists);
 
 internal record ShoppingSublistUpdate(int Id, decimal Count, List<ShoppingListItemUpdate> Items);
 

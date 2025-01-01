@@ -99,9 +99,7 @@ internal partial class CookbookContext : DbContext
 
       entity.Property(e => e.Id).HasColumnName("id");
       entity.Property(e => e.CategoryId).HasColumnName("category_id");
-      entity.Property(e => e.Creationdate)
-        .HasColumnType("timestamp without time zone")
-        .HasColumnName("creationdate");
+      entity.Property(e => e.Creationdate).HasColumnName("creationdate");
       entity.Property(e => e.Description).HasColumnName("description");
       entity.Property(e => e.ImageSrc)
         .HasMaxLength(2048)
@@ -110,9 +108,7 @@ internal partial class CookbookContext : DbContext
       entity.Property(e => e.Name)
         .HasMaxLength(100)
         .HasColumnName("name");
-      entity.Property(e => e.Updatedate)
-        .HasColumnType("timestamp without time zone")
-        .HasColumnName("updatedate");
+      entity.Property(e => e.Updatedate).HasColumnName("updatedate");
 
       entity.HasOne(d => d.Category).WithMany(p => p.Recipes)
         .HasForeignKey(d => d.CategoryId)
@@ -148,15 +144,11 @@ internal partial class CookbookContext : DbContext
 
       entity.Property(e => e.Id).HasColumnName("id");
       entity.Property(e => e.Autodelete).HasColumnName("autodelete");
-      entity.Property(e => e.Creationdate)
-        .HasColumnType("timestamp without time zone")
-        .HasColumnName("creationdate");
+      entity.Property(e => e.Creationdate).HasColumnName("creationdate");
       entity.Property(e => e.Name)
         .HasMaxLength(100)
         .HasColumnName("name");
-      entity.Property(e => e.Updatedate)
-        .HasColumnType("timestamp without time zone")
-        .HasColumnName("updatedate");
+      entity.Property(e => e.Updatedate).HasColumnName("updatedate");
     });
 
     modelBuilder.Entity<ShoppingSublist>(entity =>

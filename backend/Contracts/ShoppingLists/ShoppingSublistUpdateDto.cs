@@ -2,7 +2,7 @@
 
 namespace Cookbook.Contracts.ShoppingLists;
 
-public record ShoppingListUpdateDto(string Name, List<ShoppingSublistUpdateDto> Sublists);
+public record ShoppingListUpdateDto(string Name, bool AutoDelete, List<ShoppingSublistUpdateDto> Sublists);
 
 public record ShoppingSublistUpdateDto(int Id, decimal Count, List<ShoppingListItemUpdateDto> Items);
 
