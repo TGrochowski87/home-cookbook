@@ -30,6 +30,9 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
     app.MapPut("/shopping-lists/{id:int}", OverrideShoppingList)
       .WithTags("ShoppingLists")
       .AddFluentValidationAutoValidation();
+    
+    app.MapDelete("/shopping-lists/{id:int}", RemoveShoppingList)
+      .WithTags("ShoppingLists");
   }
 
   private static async Task<Created<ShoppingListDetailsGetDto>> CreateShoppingList(
@@ -98,5 +101,23 @@ public class ShoppingListsEndpoints : IEndpointsDefinition
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
+  }
+  
+  private static async Task<Results<NoContent, NotFound<string>, ProblemHttpResult>> RemoveShoppingList(
+    [FromServices] IShoppingListService shoppingListService,
+    [FromRoute] int id,
+    [FromHeader(Name = "If-Unmodified-Since")] DateTime resourceStateTimestamp)
+  {
+    var result = await shoppingListService.Remove(id, resourceStateTimestamp);
+
+    return result
+      .Match<Results<NoContent, NotFound<string>, ProblemHttpResult>, Error>(
+        () => TypedResults.NoContent(),
+        error => error.StatusCode switch
+        {
+          HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
+          HttpStatusCode.PreconditionFailed => TypedResults.Problem(statusCode: (int)HttpStatusCode.PreconditionFailed, detail: error.Message),
+          _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
+        });
   }
 }

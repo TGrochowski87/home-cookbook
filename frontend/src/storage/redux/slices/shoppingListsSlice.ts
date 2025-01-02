@@ -77,6 +77,14 @@ const shoppingListsSlice = createSlice({
       state.shoppingLists.splice(index, 1);
       state.shoppingLists.unshift(writablePayload);
     },
+    removeShoppingList(state, action: PayloadAction<number>) {
+      const index = state.shoppingLists.findIndex(sl => sl.id === action.payload);
+      if (index === -1) {
+        throw Error("Shopping list was not found in storage.");
+      }
+
+      state.shoppingLists.splice(index, 1);
+    },
     addShoppingList(state, action: PayloadAction<ShoppingListDetailsGetDto>) {
       const writablePayload = action.payload as DeepWriteable<ShoppingListDetailsGetDto>;
 

@@ -17,4 +17,6 @@ internal interface IShoppingListService
     int id, 
     DateTime resourceStateTimestampFromRequest, 
     ShoppingListUpdate updateData);
+  
+  Task<UnitResult<Error>> Remove(int id, DateTime resourceStateTimestampFromRequest);
 }

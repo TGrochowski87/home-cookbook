@@ -69,6 +69,16 @@ internal class ShoppingListService(IShoppingListRepository shoppingListRepositor
       .Bind(() => shoppingListRepository.GetById(id)); // Return updated object.
   }
 
+  public async Task<UnitResult<Error>> Remove(int id, DateTime resourceStateTimestampFromRequest)
+  {
+    return await shoppingListRepository.GetById(id)
+      .Tap(shoppingList => logger.LogInformation("Update date passed: {PassedUpdateDate}\nUpdate date from DB: {DBUpdateDate}", 
+        resourceStateTimestampFromRequest, shoppingList.UpdateDate))
+      .Check(shoppingList =>
+        CommonResourceValidator.VerifyResourceStateNotOutdated(resourceStateTimestampFromRequest, shoppingList.UpdateDate))
+      .Tap(() => shoppingListRepository.Remove(id));
+  }
+
   private static UnitResult<Error> VerifyRecipeIsNotOnShoppingList(ShoppingListDetails shoppingList, int recipeId)
   {
     return shoppingList.Sublists.Any(sl => sl.RecipeId == recipeId)
