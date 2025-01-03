@@ -1,23 +1,23 @@
-import { baseUrl } from "api/api";
+import { BaseUrl } from "api/api";
 import { RecipeCreateDto } from "./DTOs";
 import axios from "axios";
 import { RecipeDetailsGetDto, ShoppingListDetailsGetDto } from "api/GET/DTOs";
 
 export const createShoppingListSublist = async (shoppingListId: number, recipeId: number) => {
-  const url = `${baseUrl}/shopping-lists/${shoppingListId}/sublists`;
+  const url = `${BaseUrl}/shopping-lists/${shoppingListId}/sublists`;
   const response = await axios.post(url, { recipeId });
   return response.data;
 };
 
 export const createShoppingList = async (name: string): Promise<ShoppingListDetailsGetDto> => {
-  const url = `${baseUrl}/shopping-lists`;
+  const url = `${BaseUrl}/shopping-lists`;
   const response = await axios.post(url, { name });
   return response.data;
 };
 
 export const createRecipe = async (recipe: RecipeCreateDto): Promise<RecipeDetailsGetDto> => {
   const formData = prepareRecipeFormData(recipe);
-  const url = `${baseUrl}/recipes`;
+  const url = `${BaseUrl}/recipes`;
   const response = await axios.post(url, formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });

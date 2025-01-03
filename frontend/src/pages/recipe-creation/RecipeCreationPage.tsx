@@ -47,7 +47,7 @@ const RecipeCreationPage = () => {
     const pendingCreate = localStorage.getItem(pendingChangesLocalStorageKey);
     if (pendingCreate && window.confirm("Przywrócić ostatni stan formularza?")) {
       const data = JSON.parse(pendingCreate) as RecipeData;
-      setInitialFormData({ ...data, image: undefined }); // Binary data is not serializable.
+      setInitialFormData({ ...data, image: null }); // Binary data is not serializable.
       setPendingChangesLoaded(true);
       localStorage.removeItem(pendingChangesLocalStorageKey);
     } else {

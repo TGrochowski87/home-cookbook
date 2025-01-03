@@ -1,6 +1,6 @@
 import { RecipeCreateDto } from "api/POST/DTOs";
 import { prepareRecipeFormData } from "api/POST/requests";
-import { baseUrl } from "api/api";
+import { BaseUrl } from "api/api";
 import axios from "axios";
 import { ShoppingListUpdateDto } from "./DTOs";
 import { RecipeDetailsGetDto, ShoppingListDetailsGetDto } from "api/GET/DTOs";
@@ -11,7 +11,7 @@ export const updateRecipe = async (
   data: RecipeCreateDto
 ): Promise<RecipeDetailsGetDto> => {
   const formData = prepareRecipeFormData(data);
-  const url = `${baseUrl}/recipes/${recipeId}`;
+  const url = `${BaseUrl}/recipes/${recipeId}`;
   const response = await axios.put(url, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
@@ -26,7 +26,7 @@ export const updateShoppingList = async (
   resourceStateTimestamp: string,
   dto: ShoppingListUpdateDto
 ): Promise<ShoppingListDetailsGetDto> => {
-  const url = `${baseUrl}/shopping-lists/${shoppingListId}`;
+  const url = `${BaseUrl}/shopping-lists/${shoppingListId}`;
   const response = await axios.put(url, dto, {
     headers: {
       "If-Unmodified-Since": resourceStateTimestamp,
@@ -44,7 +44,7 @@ export const updateShoppingListWithFetch = async (
   resourceStateTimestamp: string,
   dto: ShoppingListUpdateDto
 ): Promise<ShoppingListDetailsGetDto> => {
-  const url = `${baseUrl}/shopping-lists/${shoppingListId}`;
+  const url = `${BaseUrl}/shopping-lists/${shoppingListId}`;
   const bodyJsonString = JSON.stringify(dto);
 
   // The options are either fetch with keepalive or navigator.sendBeacon, but the latter is much more restrictive.
