@@ -18,6 +18,7 @@ export default defineConfig({
     alias: {
       pages: "/src/pages",
       api: "/src/api",
+      db: "/src/db",
       components: "/src/components",
       models: "/src/models",
       hooks: "/src/hooks",

@@ -8,17 +8,14 @@ import {
   TagGetDto,
 } from "./DTOs";
 import { BaseUrl } from "api/api";
+import dbData from "db/data";
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {
-  const url = `${BaseUrl}/categories`;
-  const response = await axios.get<CategoryGetDto[]>(url);
-  return response.data;
+  return [...dbData.categories];
 };
 
 export const getTags = async (): Promise<TagGetDto[]> => {
-  const url = `${BaseUrl}/tags`;
-  const response = await axios.get<TagGetDto[]>(url);
-  return response.data;
+  return [...dbData.tags];
 };
 
 export type GetRecipesURL = { type: "Query"; query: string } | { type: "FullUrl"; url: string };
