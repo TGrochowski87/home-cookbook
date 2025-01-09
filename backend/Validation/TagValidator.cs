@@ -7,8 +7,8 @@ public class TagValidator : AbstractValidator<TagCreateDto>
 {
   public TagValidator()
   {
-    RuleFor(t => t.Name)
+    RuleFor(tag => tag.Name)
       .MaximumLength(100)
-      .WithMessage("Tekst tagu nie może być dłuższy niż 100 znaków.");
+      .WithMessage(tag => $"The tag must not be longer than 100 characters. Provided: {tag.Name}.");
   }
 }

@@ -7,8 +7,9 @@ public class ShoppingListCreateValidator : AbstractValidator<ShoppingListCreateD
 {
   public ShoppingListCreateValidator()
   {
-    RuleFor(sl => sl.Name)
+    RuleFor(shoppingList => shoppingList.Name)
       .MaximumLength(100)
-      .WithMessage("Nazwa listy zakupów nie może być dłuższa niż 100 znaków.");
+      .WithMessage(shoppingList => $"The shopping list's name must not be longer than 100 characters. " +
+                                   $"Provided name: {shoppingList.Name}.");
   }
 }

@@ -7,26 +7,27 @@ public class ShoppingListUpdateValidator : AbstractValidator<ShoppingListUpdateD
 {
   public ShoppingListUpdateValidator()
   {
-    RuleFor(l => l.Name)
+    RuleFor(shoppingList => shoppingList.Name)
       .MaximumLength(100)
-      .WithMessage("Nazwa listy powinna mieć maksymalnie 100 znaków.");
+      .WithMessage(shoppingList => $"The shopping list's name must not be longer than 100 characters. " +
+                                   $"Provided name: {shoppingList.Name}.");
 
-    RuleFor(l => l.Sublists)
+    RuleFor(shoppingList => shoppingList.Sublists)
       .NotEmpty()
-      .WithMessage("Lista zakupów musi zawierać przynajmniej manualną podlistę.");
+      .WithMessage("The shopping list must have at least the manual sublist.");
 
-    RuleForEach(l => l.Sublists).SetValidator(new ShoppingSublistUpdateValidator());
+    RuleForEach(shoppingList => shoppingList.Sublists).SetValidator(new ShoppingSublistUpdateValidator());
   }
 
   private class ShoppingSublistUpdateValidator : AbstractValidator<ShoppingSublistUpdateDto>
   {
     public ShoppingSublistUpdateValidator()
     {
-      RuleFor(sl => sl.Count)
+      RuleFor(sublist => sublist.Count)
         .GreaterThan(0)
-        .WithMessage("Mnożnik podlisty zakupów musi mieć wartość wyższą od zera.");
+        .WithMessage("The shopping list's multiplier must be greater than zero.");
 
-      RuleForEach(sl => sl.Items).SetValidator(new ShoppingListItemUpdateValidator());
+      RuleForEach(sublist => sublist.Items).SetValidator(new ShoppingListItemUpdateValidator());
     }
   }
 
@@ -34,16 +35,16 @@ public class ShoppingListUpdateValidator : AbstractValidator<ShoppingListUpdateD
   {
     public ShoppingListItemUpdateValidator()
     {
-      RuleFor(i => i.Name)
+      RuleFor(item => item.Name)
         .MaximumLength(100)
-        .WithMessage("Nazwa przedmiotu z listy powinna mieć maksymalnie 100 znaków.");
+        .WithMessage(item => $"The shopping list item's name must not be longer than 100 characters. Provided name: {item.Name}.");
 
       RuleFor(item => item.Amount)
         .Must(amount => amount.Value!.Length <= 20)
-        .WithMessage("Tekst określający ilość powinien mieć maksymalnie 20 znaków.")
+        .WithMessage(item => $"The amount value must not be longer than 20 characters. Provided value: {item.Amount.Value}.")
         .When(item => item.Amount.Value != null, ApplyConditionTo.CurrentValidator)
         .Must(amount => amount.Unit!.Length <= 10)
-        .WithMessage("Tekst określający jednostkę powinien mieć maksymalnie 10 znaków.")
+        .WithMessage(item => $"The amount unit must not be longer than 10 characters. Provided value: {item.Amount.Unit}.")
         .When(item => item.Amount.Unit != null, ApplyConditionTo.CurrentValidator);
     }
   }

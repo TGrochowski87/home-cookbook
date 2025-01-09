@@ -10,21 +10,24 @@ public class RecipeValidator : AbstractValidator<RecipeCreateDto>
 
   public RecipeValidator()
   {
-    RuleFor(t => t.Name)
+    RuleFor(recipe => recipe.Name)
       .MaximumLength(100)
-      .WithMessage("Nazwa przepisu nie może być dłuższa niż 100 znaków.");
+      .WithMessage(recipe => $"The recipe's name must not be longer than 100 characters. Provided name: {recipe.Name}."); 
 
-    RuleForEach(r => r.NewTags).SetValidator(new TagValidator());
+    RuleForEach(recipe => recipe.NewTags).SetValidator(new TagValidator());
 
-    When(r => r.Image != null, () =>
+    When(recipe => recipe.Image != null, () =>
     {
-      RuleFor(r => r.Image!)
-      .Must(i => i.Length <= _maxFileSize)
-      .WithMessage("Limit rozmiaru zdjęcia wynosi 3MB.")
-      .Must(i => _allowedImageFormats.Contains(Path.GetExtension(i.FileName).ToLowerInvariant()))
-      .WithMessage($"Zdjęcie musi być w jednym z tych formatów: {String.Join(", ", _allowedImageFormats)}");
+      RuleFor(recipe => recipe.Image!)
+      .Must(image => image.Length <= _maxFileSize)
+      .WithMessage(recipe => $"The image size limit is 3MB. Size of the provided image: {recipe.Image!.Length / 1024}KB.")
+      .Must(image => _allowedImageFormats.Contains(GetFileExtension(image.FileName)))
+      .WithMessage(recipe => $"The image must be in one of the following formats: {string.Join(", ", _allowedImageFormats)}. " +
+                             $"Format of the provided image: {GetFileExtension(recipe.Image!.FileName)}.");
     });
 
     RuleForEach(r => r.Ingredients).SetValidator(new QuantifiableItemValidator());
   }
+  
+  private static string GetFileExtension(string fileName) => Path.GetExtension(fileName).ToLowerInvariant();
 }
