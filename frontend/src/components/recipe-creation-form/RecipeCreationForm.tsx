@@ -249,6 +249,14 @@ const RecipeCreationForm = ({
       </TitledSection>
 
       <Button
+        onClick={() => {
+          console.log(getValues());
+          console.log(JSON.stringify(getValues()));
+        }}>
+        Log
+      </Button>
+
+      <Button
         onClick={handleSubmit(onSubmit, error => {
           console.error(error);
           if (error.name?.type !== "required" && error.categoryId?.type === "required") {
