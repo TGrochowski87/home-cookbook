@@ -131,6 +131,19 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
     return UnitResult.Success<Error>();
   }
 
+  public async Task<UnitResult<Error>> RemoveImageSource(int recipeId)
+  {
+    var recipe = await context.Recipes.SingleOrDefaultAsync(r => r.Id == recipeId);
+    if (recipe == null)
+    {
+      return new Error(HttpStatusCode.NotFound, $"The recipe of ID = {recipeId} does not exist.");
+    }
+
+    recipe.ImageSrc = null;
+    await context.SaveChangesAsync();
+    return UnitResult.Success<Error>();
+  }
+
   private static void ApplyFiltering(ref IQueryable<Recipe> query, GetRecipesQueryParams queryParams)
   {
     if (!queryParams.Filtering.HasValue)

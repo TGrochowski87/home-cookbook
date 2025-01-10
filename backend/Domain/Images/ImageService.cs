@@ -26,6 +26,18 @@ internal class ImageService : IImageService
     return $"{nameToBeSavedUnder}{imageFormat}";
   }
 
+  public void Delete(string fileName)
+  {
+    var file = Directory.GetFiles(_storageLocation, $"{fileName}*").ToArray();
+    if (file.Length == 0)
+    {
+      // Nothing to delete
+      return;
+    }
+    
+    File.Delete(file.Single());
+  }
+
   public async Task<Result<byte[], Error>> Get(string fileName)
   {
     var imageFormat = Path.GetExtension(fileName).ToLowerInvariant();
@@ -45,6 +57,12 @@ internal class ImageService : IImageService
     }
 
     return await File.ReadAllBytesAsync(fileFullPath);
+  }
+
+  private UnitResult<Error> DeleteFileByName(string fileName)
+  {
+    File.Delete(fileName);
+    return UnitResult.Success<Error>();
   }
 
   private void CreateFolderForImagesIfNotExists()

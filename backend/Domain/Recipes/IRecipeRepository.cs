@@ -14,4 +14,6 @@ internal interface IRecipeRepository
   Task<UnitResult<Error>> Update(int id, RecipeCreate data);
 
   Task<UnitResult<Error>> SetImageSource(int recipeId, string imageSrc);
+  
+  Task<UnitResult<Error>> RemoveImageSource(int recipeId);
 }

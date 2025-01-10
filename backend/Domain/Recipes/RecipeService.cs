@@ -61,7 +61,7 @@ internal class RecipeService : IRecipeService
         Description = _sanitizer.Sanitize(data.Description)
       })
       .Bind(updateData => _recipeRepository.Update(id, updateData))
-      .CheckIf(data.Image.HasValue, () => SaveRecipeImage(id, data.Image.Value))
+      .Tap(() => data.Image.HasValue ? SaveRecipeImage(id, data.Image.Value) : DeleteRecipeImage(id))
       .Bind(() => _recipeRepository.GetById(id));
   }
 
@@ -77,5 +77,12 @@ internal class RecipeService : IRecipeService
     var imageName = await _imageService.Save(image, $"recipe-{recipeId}");
     var imageSrc = $"/recipes/images/{imageName}";
     return await _recipeRepository.SetImageSource(recipeId, imageSrc);
+  }
+
+  private async Task<UnitResult<Error>> DeleteRecipeImage(int recipeId)
+  {
+    _logger.LogInformation("Deleting image for recipe of ID = {RecipeId}", recipeId);
+    _imageService.Delete($"recipe-{recipeId}");
+    return await _recipeRepository.RemoveImageSource(recipeId);
   }
 }
