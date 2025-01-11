@@ -1,4 +1,3 @@
-import placehoder from "assets/burger-placeholder.jpg";
 import ThumbnailSelection from "./ThumbnailSelection";
 import { useState } from "react";
 import { ErrorCode as FileUploadError } from "react-dropzone";
@@ -25,19 +24,16 @@ const Thumbnail = ({ image, setImage }: ThumbnailProps) => {
       <div className="thumbnail-dropzone floating">
         {image ? (
           <>
-            <img src={URL.createObjectURL(image as Blob) ?? placehoder} />
+            <img src={URL.createObjectURL(image as Blob)} />
             <button className="discard-button" type="button" onClick={() => setImage(null)}>
               <CircleX />
             </button>
           </>
         ) : (
-          <>
-            <ThumbnailSelection setImage={setImage} setFileUploadErrors={setFileUploadErrors} />
-            <img className="placeholder" src={placehoder} />
-          </>
+          <ThumbnailSelection setImage={setImage} setFileUploadErrors={setFileUploadErrors} />
         )}
       </div>
-      <p>{fileUploadErrors.map(error => `${errorMessages[error]}\n`)}</p>
+      <p className="error-message">{fileUploadErrors.map(error => `${errorMessages[error]}\n`)}</p>
     </div>
   );
 };

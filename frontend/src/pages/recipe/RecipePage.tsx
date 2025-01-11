@@ -175,7 +175,11 @@ const RecipePage = () => {
       </header>
 
       <div className="image-space floating">
-        <img src={recipe.imageSrc ?? BurgerPlaceHolder} />
+        {recipe.imageSrc ? (
+          <img src={recipe.imageSrc} />
+        ) : (
+          <div className="image-placeholder" dangerouslySetInnerHTML={{ __html: recipe.category.symbol }} />
+        )}
       </div>
 
       <TagSet tags={recipe.tags} tagSize="small" />

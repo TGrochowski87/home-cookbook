@@ -1,4 +1,3 @@
-import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
 import "./styles.less";
 import CategoryIndicator from "./CategoryIndicator";
 import { RecipeGetDto } from "api/GET/DTOs";
@@ -16,7 +15,13 @@ const RecipeListItem = ({ recipe }: RecipeListItemProps) => {
     <article
       className="recipe-list-item block floating interactive-element"
       onClick={() => navigate(`./${recipe.id}`, { relative: "path" })}>
-      <img src={recipe.imageSrc ?? BurgerPlaceHolder} />
+      <div className="image-wrapper">
+        {recipe.imageSrc ? (
+          <img src={recipe.imageSrc} />
+        ) : (
+          <div className="image-placeholder" dangerouslySetInnerHTML={{ __html: recipe.category.symbol }} />
+        )}
+      </div>
       <h2>{recipe.name}</h2>
       <TagSet tags={recipe.tags} tagSize="small" disableShadow align="start" />
       <CategoryIndicator category={recipe.category} />
