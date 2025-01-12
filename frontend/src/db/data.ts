@@ -1,4 +1,4 @@
-import { CategoryGetDto, RecipeDetailsGetDto, RecipeGetDto, TagGetDto } from "api/GET/DTOs";
+import { CategoryGetDto, RecipeDetailsGetDto, ShoppingListDetailsGetDto, TagGetDto } from "api/GET/DTOs";
 
 const categories: ReadonlyArray<CategoryGetDto> = [
   {
@@ -164,14 +164,14 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
   {
     id: 3,
     name: "Margarita",
-    category: categories[6],
+    category: categories[5],
     tags: [tags[4], tags[16]],
     imageSrc: "src/db/images/3-margarita.jpg",
     ingredients: [
       {
         id: 25,
         name: "ice",
-        amount: { value: "", unit: null },
+        amount: { value: null, unit: null },
         checked: false,
       },
       {
@@ -195,7 +195,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
       {
         id: 29,
         name: "salt",
-        amount: { value: "", unit: null },
+        amount: { value: null, unit: null },
         checked: false,
       },
       {
@@ -213,7 +213,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
   {
     id: 4,
     name: "Oatmeal",
-    category: categories[3],
+    category: categories[2],
     tags: [tags[1], tags[2], tags[8], tags[10], tags[11]],
     imageSrc: "src/db/images/4-oatmeal.jpg",
     ingredients: [
@@ -238,25 +238,25 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
       {
         id: 34,
         name: "cinnamon",
-        amount: { value: "", unit: null },
+        amount: { value: null, unit: null },
         checked: false,
       },
       {
         id: 35,
         name: "honey",
-        amount: { value: "", unit: null },
+        amount: { value: null, unit: null },
         checked: false,
       },
       {
         id: 36,
         name: "nuts",
-        amount: { value: "", unit: null },
+        amount: { value: null, unit: null },
         checked: false,
       },
       {
         id: 37,
         name: "fruits",
-        amount: { value: "", unit: null },
+        amount: { value: null, unit: null },
         checked: false,
       },
     ],
@@ -268,7 +268,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
   {
     id: 5,
     name: "Cheesecake",
-    category: categories[2],
+    category: categories[1],
     tags: [tags[1], tags[2], tags[15]],
     imageSrc: "src/db/images/5-cheesecake.jpg",
     ingredients: [
@@ -346,5 +346,218 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
   },
 ];
 
-const dbData = { categories, tags, recipes };
+const createDateWithDaysOffset = (days: number): string => {
+  const date = new Date();
+  date.setDate(new Date().getDate() + days);
+  return date.toLocaleDateString();
+};
+
+const shoppingLists: ReadonlyArray<ShoppingListDetailsGetDto> = [
+  {
+    id: 1,
+    name: "groceries",
+    autoDelete: true,
+    creationDate: new Date().toLocaleDateString(),
+    updateDate: new Date().toLocaleDateString(),
+    sublists: [
+      {
+        id: 1,
+        name: "Manual sublist",
+        recipeId: null,
+        count: 1,
+        items: [
+          { id: 1, name: "carrots", amount: { value: "0.5", unit: "kg" }, checked: false },
+          { id: 2, name: "onion", amount: { value: "3", unit: null }, checked: false },
+          { id: 3, name: "cheese", amount: { value: "1", unit: "pack" }, checked: false },
+          { id: 4, name: "bread", amount: { value: "1", unit: null }, checked: false },
+        ],
+      },
+      {
+        id: 2,
+        name: "Beef burritos",
+        recipeId: 1,
+        count: 1,
+        items: [
+          { id: 16, name: "sunflower oil", amount: { value: "2", unit: "tbsp" }, checked: false },
+          { id: 17, name: "onion", amount: { value: "1", unit: null }, checked: false },
+          { id: 18, name: "garlic cloves", amount: { value: "4", unit: null }, checked: false },
+          { id: 19, name: "ground cumin", amount: { value: "1", unit: "tbsp" }, checked: false },
+          { id: 5, name: "ground coriander", amount: { value: "1", unit: "tbsp" }, checked: false },
+          { id: 6, name: "cayenne pepper", amount: { value: "pinch", unit: null }, checked: false },
+          { id: 7, name: "dried oregano", amount: { value: "1", unit: "tsp" }, checked: false },
+          { id: 8, name: "beef mince", amount: { value: "500", unit: "g" }, checked: false },
+          { id: 9, name: "golden caster sugar", amount: { value: "pinch", unit: null }, checked: false },
+          { id: 10, name: "wine vinegar", amount: { value: "1", unit: "tbsp" }, checked: false },
+          { id: 11, name: "chopped tomatoes", amount: { value: "400", unit: "g" }, checked: false },
+          { id: 12, name: "black beans", amount: { value: "400", unit: "g" }, checked: false },
+          { id: 13, name: "flour or corn tortillas", amount: { value: "8", unit: null }, checked: false },
+          { id: 14, name: "cooked rice", amount: { value: "500", unit: "g" }, checked: false },
+          { id: 15, name: "sliced avocado", amount: { value: "some", unit: null }, checked: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 2,
+    name: "christmas presents",
+    autoDelete: false,
+    creationDate: createDateWithDaysOffset(-20),
+    updateDate: createDateWithDaysOffset(-20),
+    sublists: [
+      {
+        id: 1,
+        name: "Manual sublist",
+        recipeId: null,
+        count: 1,
+        items: [
+          { id: 1, name: "christmas jumper", amount: { value: null, unit: null }, checked: false },
+          { id: 2, name: "Nintendo game", amount: { value: null, unit: null }, checked: false },
+          { id: 3, name: "Thermos", amount: { value: null, unit: null }, checked: false },
+          { id: 4, name: "Electric kettle", amount: { value: null, unit: null }, checked: false },
+        ],
+      },
+    ],
+  },
+  {
+    id: 3,
+    name: "groceries - older list",
+    autoDelete: true,
+    creationDate: createDateWithDaysOffset(-10),
+    updateDate: createDateWithDaysOffset(-10),
+    sublists: [
+      {
+        id: 1,
+        name: "Manual sublist",
+        recipeId: null,
+        count: 1,
+        items: [
+          { id: 1, name: "carrots", amount: { value: "0.5", unit: "kg" }, checked: false },
+          { id: 2, name: "onion", amount: { value: "3", unit: null }, checked: false },
+          { id: 3, name: "cheese", amount: { value: "1", unit: "pack" }, checked: false },
+          { id: 4, name: "bread", amount: { value: "1", unit: null }, checked: false },
+        ],
+      },
+      {
+        id: 2,
+        name: "Beef burritos",
+        recipeId: 1,
+        count: 1,
+        items: [
+          {
+            id: 38,
+            name: "wholewheat flour",
+            amount: { value: "250", unit: "g" },
+            checked: false,
+          },
+          {
+            id: 39,
+            name: "sour cream 18%",
+            amount: { value: "1", unit: "tbsp" },
+            checked: false,
+          },
+          {
+            id: 40,
+            name: "Farmer’s Cheese, full fat",
+            amount: { value: "1", unit: "kg" },
+            checked: false,
+          },
+          {
+            id: 41,
+            name: "eggs",
+            amount: { value: "5", unit: null },
+            checked: false,
+          },
+          {
+            id: 42,
+            name: "sugar",
+            amount: { value: "200", unit: "g" },
+            checked: false,
+          },
+          {
+            id: 43,
+            name: "vanilla extract",
+            amount: { value: "2", unit: "tbsp" },
+            checked: false,
+          },
+          {
+            id: 44,
+            name: "butter",
+            amount: { value: "220", unit: "g" },
+            checked: false,
+          },
+          {
+            id: 45,
+            name: "potato starch (optional)",
+            amount: { value: "2", unit: "tbsp" },
+            checked: false,
+          },
+          {
+            id: 46,
+            name: "candied orange peel chopped",
+            amount: { value: "2", unit: "tbsp" },
+            checked: false,
+          },
+          {
+            id: 47,
+            name: "raisins (optional)",
+            amount: { value: "2", unit: "tbsp" },
+            checked: false,
+          },
+          {
+            id: 48,
+            name: "powdered/icing sugar",
+            amount: { value: "4", unit: "tbsp" },
+            checked: false,
+          },
+        ],
+      },
+      {
+        id: 3,
+        name: "Margarita",
+        recipeId: 3,
+        count: 1,
+        items: [
+          {
+            id: 25,
+            name: "ice",
+            amount: { value: null, unit: null },
+            checked: false,
+          },
+          {
+            id: 26,
+            name: "tequila",
+            amount: { value: "50", unit: "ml" },
+            checked: false,
+          },
+          {
+            id: 27,
+            name: "lime juice",
+            amount: { value: "25", unit: "ml" },
+            checked: false,
+          },
+          {
+            id: 28,
+            name: "triple sec",
+            amount: { value: "20", unit: "ml" },
+            checked: false,
+          },
+          {
+            id: 29,
+            name: "salt",
+            amount: { value: null, unit: null },
+            checked: false,
+          },
+          {
+            id: 30,
+            name: "lime wedges",
+            amount: { value: "2", unit: null },
+            checked: false,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const dbData = { categories, tags, recipes, shoppingLists };
 export default dbData;

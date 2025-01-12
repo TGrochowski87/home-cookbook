@@ -28,21 +28,25 @@ export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponse
 };
 
 export const getRecipe = async (id: number): Promise<RecipeDetailsGetDto> => {
-  const url = `${BaseUrl}/recipes/${id}`;
-  const response = await axios.get<RecipeDetailsGetDto>(url);
-  return response.data;
+  const recipe = dbData.recipes.find(r => r.id === id);
+  if (recipe === undefined) {
+    throw new Error("Recipe not found");
+  }
+
+  return recipe;
 };
 
 export const getShoppingLists = async (): Promise<ShoppingListGetDto[]> => {
-  const url = `${BaseUrl}/shopping-lists`;
-  const response = await axios.get<ShoppingListGetDto[]>(url);
-  return response.data;
+  return [...dbData.shoppingLists];
 };
 
 export const getShoppingList = async (id: number): Promise<ShoppingListDetailsGetDto> => {
-  const url = `${BaseUrl}/shopping-lists/${id}`;
-  const response = await axios.get<ShoppingListDetailsGetDto>(url);
-  return response.data;
+  const list = dbData.shoppingLists.find(l => l.id === id);
+  if (list === undefined) {
+    throw new Error("List not found");
+  }
+
+  return list;
 };
 
 export const getImage = async (url: string): Promise<Blob> => {
