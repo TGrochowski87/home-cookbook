@@ -123,7 +123,7 @@ const RecipeListPage = () => {
         className="recipe-list"
         dataLength={recipes.length}
         next={fetchMoreRecipes}
-        hasMore={nextRecipesPage.current !== null}
+        hasMore={false}
         loader={<LoadingIndicator className="loading" />}
         endMessage={
           <p style={{ textAlign: "center", margin: "0.5rem 0 1rem 0" }}>

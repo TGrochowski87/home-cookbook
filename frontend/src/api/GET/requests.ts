@@ -21,14 +21,10 @@ export const getTags = async (): Promise<TagGetDto[]> => {
 export type GetRecipesURL = { type: "Query"; query: string } | { type: "FullUrl"; url: string };
 
 export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponseDto> => {
-  const finalUrl = url.type === "Query" ? `${BaseUrl}/recipes${url.query}` : url.url;
-
-  // await new Promise(resolve => {
-  //   setTimeout(resolve, 3000);
-  // });
-
-  const response = await axios.get<GetRecipesResponseDto>(finalUrl);
-  return response.data;
+  return {
+    nextPage: null,
+    recipes: [...dbData.recipes],
+  };
 };
 
 export const getRecipe = async (id: number): Promise<RecipeDetailsGetDto> => {
