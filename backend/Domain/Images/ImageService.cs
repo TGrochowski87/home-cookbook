@@ -5,7 +5,6 @@ namespace Cookbook.Domain.Images;
 
 internal class ImageService : IImageService
 {
-  private readonly List<string> _allowedImageFormats = [".jpeg", ".jpg", ".png", ".webp"];
   private readonly string _storageLocation;
 
   public ImageService()
@@ -16,7 +15,7 @@ internal class ImageService : IImageService
 
   public async Task<string> Save(IFormFile image, string nameToBeSavedUnder)
   {
-    var imageFormat = Path.GetExtension(image.FileName).ToLowerInvariant();
+    var imageFormat = GetExtensionFromContentType(image.ContentType);
     
     var fileFullPath = $"{_storageLocation}{nameToBeSavedUnder}{imageFormat}";
     await using var fileStream = new FileStream(fileFullPath, FileMode.Create);
@@ -40,14 +39,6 @@ internal class ImageService : IImageService
 
   public async Task<Result<byte[], Error>> Get(string fileName)
   {
-    var imageFormat = Path.GetExtension(fileName).ToLowerInvariant();
-    if (_allowedImageFormats.Contains(imageFormat) == false)
-    {
-      return new Error(
-        HttpStatusCode.UnsupportedMediaType,
-        $"Supported image formats are: {string.Join(", ", _allowedImageFormats)}");
-    }
-
     var sanitizedFileName = Path.GetFileName(fileName);
     var fileFullPath = $"{_storageLocation}{sanitizedFileName}";
 
@@ -59,10 +50,15 @@ internal class ImageService : IImageService
     return await File.ReadAllBytesAsync(fileFullPath);
   }
 
-  private UnitResult<Error> DeleteFileByName(string fileName)
+  private static string GetExtensionFromContentType(string contentType)
   {
-    File.Delete(fileName);
-    return UnitResult.Success<Error>();
+    return contentType switch
+    {
+      "image/jpeg" => ".jpg",
+      "image/png" => ".png",
+      "image/webp" => ".webp",
+      _ => throw new NotSupportedException($"Image format {contentType} is not supported."),
+    };
   }
 
   private void CreateFolderForImagesIfNotExists()

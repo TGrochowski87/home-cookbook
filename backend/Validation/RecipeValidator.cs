@@ -6,7 +6,7 @@ namespace Cookbook.Validation;
 public class RecipeValidator : AbstractValidator<RecipeCreateDto>
 {
   private const int _maxFileSize = 3145728;
-  private readonly List<string> _allowedImageFormats = [".jpeg", ".jpg", ".png", ".webp"];
+  private readonly List<string> _allowedImageFormats = ["image/jpeg", "image/png", "image/webp"];
 
   public RecipeValidator()
   {
@@ -21,13 +21,11 @@ public class RecipeValidator : AbstractValidator<RecipeCreateDto>
       RuleFor(recipe => recipe.Image!)
       .Must(image => image.Length <= _maxFileSize)
       .WithMessage(recipe => $"The image size limit is 3MB. Size of the provided image: {recipe.Image!.Length / 1024}KB.")
-      .Must(image => _allowedImageFormats.Contains(GetFileExtension(image.FileName)))
+      .Must(image => _allowedImageFormats.Contains(image.ContentType))
       .WithMessage(recipe => $"The image must be in one of the following formats: {string.Join(", ", _allowedImageFormats)}. " +
-                             $"Format of the provided image: {GetFileExtension(recipe.Image!.FileName)}.");
+                             $"Format of the provided image: {recipe.Image!.ContentType}.");
     });
 
     RuleForEach(r => r.Ingredients).SetValidator(new QuantifiableItemValidator());
   }
-  
-  private static string GetFileExtension(string fileName) => Path.GetExtension(fileName).ToLowerInvariant();
 }

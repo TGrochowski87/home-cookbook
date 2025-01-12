@@ -112,19 +112,17 @@ public class RecipesEndpoints : IEndpointsDefinition
       });
   }
 
-  private static async Task<Results<FileContentHttpResult, NotFound<string>, ProblemHttpResult>> GetFile(
+  private static async Task<Results<FileContentHttpResult, NotFound<string>>> GetFile(
     [FromServices] IImageService imageService,
     [FromRoute] string fileName)
   {
     var result = await imageService.Get(fileName);
 
-    return result.Match<byte[], Results<FileContentHttpResult, NotFound<string>, ProblemHttpResult>, Error>(
+    return result.Match<byte[], Results<FileContentHttpResult, NotFound<string>>, Error>(
       file => TypedResults.File(file, MimeTypeFromExtension(Path.GetExtension(fileName).ToLowerInvariant())),
       error => error.StatusCode switch
       {
         HttpStatusCode.NotFound => TypedResults.NotFound(error.Message),
-        HttpStatusCode.UnsupportedMediaType => TypedResults.Problem(detail: error.Message,
-          statusCode: (int?)error.StatusCode),
         _ => throw new UnreachableException($"Received unexpected status code: {error.StatusCode}.")
       });
   }
