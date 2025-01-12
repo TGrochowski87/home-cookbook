@@ -19,8 +19,20 @@ import { useAppDispatch } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
 import { useEffect } from "react";
 
-// It is important to use null instead of undefined.
-// https://react-hook-form.com/docs/useform#defaultValues
+/**
+ * [Notes regarding 'defaultValues in useForm]
+ *
+ * Wrong 'defaultValues' handling can lead to unexpected behavior!
+ *
+ * It is important to use null instead of undefined.
+ * 'undefined' conflicts with some internal mechanism when using controlled components.
+ * https://react-hook-form.com/docs/useform#defaultValues
+ *
+ * 'defaultValues' should always be provided.
+ * The single character passed to the third input in EditableQuantifiableItemsList.tsx was sometimes
+ * getting ignored on submission, even though rendered.
+ * This weird behavior was fixed by providing the previously missing default values.
+ */
 export interface RecipeData {
   readonly name: string;
   readonly categoryId: number | null;

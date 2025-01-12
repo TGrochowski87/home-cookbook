@@ -1,6 +1,5 @@
 import { useAlerts } from "components/alert/AlertStack";
 import { useForm } from "react-hook-form";
-import { Form } from "react-router-dom";
 import QuantifiableItemData from "../../models/QuantifiableItemData";
 import QuantifiableItemsList from "./QuantifiableItemsList";
 import Input from "components/Input";
@@ -27,7 +26,12 @@ const EditableQuantifiableItemsList = ({
   leftSideAction,
   rightSideAction,
 }: EditableQuantifiableItemsListProps) => {
-  const { register, handleSubmit, reset, watch, setFocus } = useForm<FormData>();
+  const { register, handleSubmit, reset, watch, setFocus } = useForm<FormData>({
+    defaultValues: {
+      name: "",
+      amount: { value: "", unit: "" },
+    },
+  });
   const { displayMessage } = useAlerts();
 
   const onSubmit = (data: FormData) => {
@@ -51,7 +55,7 @@ const EditableQuantifiableItemsList = ({
   return (
     <>
       <QuantifiableItemsList items={items} leftSideAction={leftSideAction} rightSideAction={rightSideAction} />
-      <Form
+      <form
         className="new-quantifiable-item"
         onSubmit={handleSubmit(onSubmit, errors => {
           console.error(errors);
@@ -89,7 +93,7 @@ const EditableQuantifiableItemsList = ({
         />
         {/* This enables submitting by enter/send */}
         <input type="submit" hidden />
-      </Form>
+      </form>
     </>
   );
 };
