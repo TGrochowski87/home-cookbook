@@ -53,7 +53,7 @@ const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) 
     },
     editorProps: {
       attributes: {
-        class: `rich-text-area-editor ${editable ? "editable block floating" : ""}`,
+        class: "rich-text-area-editor",
       },
     },
   });
@@ -65,9 +65,9 @@ const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) 
   }, [document.activeElement]);
 
   return (
-    <div className="rich-text-area">
-      <EditorContent editor={editor} />
+    <div className={`rich-text-area ${editable ? "block floating" : ""}`}>
       {editor && editable && <Toolbar editor={editor} />}
+      <EditorContent editor={editor} />
     </div>
   );
 };

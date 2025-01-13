@@ -112,7 +112,7 @@ const Toolbar = ({ editor }: ToolbarProps) => {
   };
 
   return (
-    <RadixToolbar.Root className="toolbar-root block floating" aria-label="Formatting options">
+    <RadixToolbar.Root className="toolbar-root floating" aria-label="Formatting options">
       <RadixToolbar.ToggleGroup
         type="multiple"
         aria-label="Text formatting"

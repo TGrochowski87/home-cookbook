@@ -1,10 +1,10 @@
 @import "../../variables.less";
 
 .rich-text-area {
+  // border: 2px solid #colors[primary];
+
   .toolbar-root {
     display: flex;
-    border-radius: 4px 4px #numeric[big-border-radius] #numeric[big-border-radius];
-    border: 2px solid #colors[primary];
 
     position: relative;
     z-index: 1;
@@ -96,7 +96,9 @@
 
   .rich-text-area-editor {
     font-weight: initial;
-    min-height: 10ch;
+    min-height: 20ch;
+    max-height: 40ch;
+    overflow: auto;
     padding: 4px;
     padding-bottom: 12px;
 
@@ -141,12 +143,6 @@
         }
       }
     }
-  }
-
-  .rich-text-area-editor.editable {
-    border: 2px solid #colors[primary];
-    border-radius: #numeric[big-border-radius] #numeric[big-border-radius] 4px 4px;
-    min-height: 20ch;
   }
 }
 
