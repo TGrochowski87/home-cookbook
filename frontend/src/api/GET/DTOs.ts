@@ -11,7 +11,7 @@ export interface CategoryGetDto {
 }
 
 export interface GetRecipesResponseDto {
-  readonly nextPage: string;
+  readonly nextPage: string | null;
   readonly recipes: readonly RecipeGetDto[];
 }
 
@@ -38,7 +38,7 @@ export type QuantifiableItemGetDto = {
 };
 
 export interface Amount {
-  readonly value: string;
+  readonly value: string | null;
   readonly unit: string | null;
 }
 
@@ -57,7 +57,7 @@ export interface ShoppingListDetailsGetDto extends ShoppingListGetDto {
 export interface ShoppingListSublistGetDto {
   readonly id: number;
   readonly name: string;
-  readonly recipeId?: number;
+  readonly recipeId: number | null;
   readonly count: number;
   readonly items: readonly QuantifiableItemGetDto[];
 }
