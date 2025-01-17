@@ -48,7 +48,7 @@ const RecipeEditionPage = () => {
       firstRender.current = false;
 
       // Binary data is not serializable so in both cases we use the current recipe image.
-      const image = recipe.imageSrc ? await api.get.getImage(recipe.imageSrc) : null;
+      const image = recipe.imageSrc ? await api.get.getImage(`../../${recipe.imageSrc}`) : null;
 
       // An option to load the unsaved changes from the last session.
       const pendingEdit = localStorage.getItem(pendingChangesLocalStorageKey.current);
