@@ -14,7 +14,7 @@ import History from "@tiptap/extension-history";
 import Toolbar from "./Toolbar";
 import "./styles.less";
 import CustomHeading from "./extensions/CustomHeading";
-import { useEffect } from "react";
+import { useRef } from "react";
 import CustomListItem from "./extensions/CustomListItem";
 import CustomTaskItem from "./extensions/CustomTaskItem";
 
@@ -26,6 +26,7 @@ interface RichTextAreaProps {
 
 // TODO: Mobile context menu can cover the toolbar. Maybe the toolbar should be below the text are on mobile.
 const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) => {
+  const editorInputRef = useRef<HTMLDivElement>(null);
   const editor = useEditor({
     extensions: [
       Document,
@@ -51,6 +52,26 @@ const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) 
 
       onChange?.(editor.getHTML());
     },
+    onFocus() {
+      /**
+       * When virtual keyboard appears on mobile, it covers the text area. This is a solution for it.
+       * It takes some time for the keyboard to fully open. I guess that until the JS VirtualKeyboard API
+       * is released as stable, this is the best way to implement this.
+       */
+      const preKeyboardViewportHeight = window.visualViewport?.height ?? 0;
+      let attemptsLeft = 10;
+      const intervalId = setInterval(() => {
+        if (preKeyboardViewportHeight - (window.visualViewport?.height ?? 0) > 150) {
+          editorInputRef.current?.scrollIntoView({ behavior: "smooth" });
+          clearInterval(intervalId);
+        }
+
+        attemptsLeft -= 1;
+        if (attemptsLeft === 0) {
+          clearInterval(intervalId);
+        }
+      }, 100);
+    },
     editorProps: {
       attributes: {
         class: "rich-text-area-editor",
@@ -58,16 +79,10 @@ const RichTextArea = ({ value, onChange, editable = false }: RichTextAreaProps) 
     },
   });
 
-  useEffect(() => {
-    if (document.activeElement?.classList.contains("toolbar-select-trigger")) {
-      editor?.commands.focus();
-    }
-  }, [document.activeElement]);
-
   return (
     <div className={`rich-text-area ${editable ? "block floating" : ""}`}>
       {editor && editable && <Toolbar editor={editor} />}
-      <EditorContent editor={editor} />
+      <EditorContent ref={editorInputRef} editor={editor} />
     </div>
   );
 };
