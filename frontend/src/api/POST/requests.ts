@@ -39,8 +39,10 @@ export const prepareRecipeFormData = (recipe: RecipeCreateDto): FormData => {
   });
   recipe.ingredients.forEach((ingredient, index) => {
     formData.append(`ingredients[${index}].name`, ingredient.name);
-    formData.append(`ingredients[${index}].amount.value`, ingredient.amount.value);
 
+    if (ingredient.amount.value) {
+      formData.append(`ingredients[${index}].amount.value`, ingredient.amount.value);
+    }
     if (ingredient.amount.unit) {
       formData.append(`ingredients[${index}].amount.unit`, ingredient.amount.unit);
     }

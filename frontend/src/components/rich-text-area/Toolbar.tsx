@@ -31,28 +31,33 @@ const highlightColors: readonly string[] = [
   "#E434BC", // pink
 ];
 
-const toggleActions: Record<MultiToggle | SingleToggle, (editor: Editor, ...params: any) => void> = {
-  bold: editor => {
+type CommonCallback = (editor: Editor) => void;
+type HighlightCallback = (editor: Editor, color: string) => void;
+type HeadingCallback = (editor: Editor, level: number) => void;
+type ActionCallback = CommonCallback | HighlightCallback | HeadingCallback;
+
+const toggleActions: Record<MultiToggle | SingleToggle, ActionCallback> = {
+  bold: (editor: Editor) => {
     editor.view.focus();
     editor.chain().focus().toggleBold().run();
   },
-  italic: editor => {
+  italic: (editor: Editor) => {
     editor.view.focus();
     editor.chain().focus().toggleItalic().run();
   },
-  underline: editor => {
+  underline: (editor: Editor) => {
     editor.view.focus();
     editor.chain().focus().toggleUnderline().run();
   },
-  strike: editor => {
+  strike: (editor: Editor) => {
     editor.view.focus();
     editor.chain().focus().toggleStrike().run();
   },
-  highlight: (editor, color: string) => {
+  highlight: (editor: Editor, color: string) => {
     editor.view.focus();
     editor.chain().focus().toggleHighlight({ color: color }).run();
   },
-  heading: (editor, level: number) => {
+  heading: (editor: Editor, level: number) => {
     editor.view.focus();
     editor
       .chain()
@@ -60,15 +65,15 @@ const toggleActions: Record<MultiToggle | SingleToggle, (editor: Editor, ...para
       .toggleHeading({ level: level as Level })
       .run();
   },
-  bulletList: editor => {
+  bulletList: (editor: Editor) => {
     editor.view.focus();
     editor.chain().focus().toggleBulletList().run();
   },
-  orderedList: editor => {
+  orderedList: (editor: Editor) => {
     editor.view.focus();
     editor.chain().focus().toggleOrderedList().run();
   },
-  taskList: editor => {
+  taskList: (editor: Editor) => {
     editor.view.focus();
     editor.chain().focus().toggleTaskList().run();
   },
@@ -98,15 +103,15 @@ const Toolbar = ({ editor }: ToolbarProps) => {
   const invokeToggleAction = (modifier: MultiToggle | SingleToggle): void => {
     switch (modifier) {
       case "highlight":
-        toggleActions[modifier](editor, highlightColor);
+        (toggleActions[modifier] as HighlightCallback)(editor, highlightColor);
         break;
 
       case "heading":
-        toggleActions[modifier](editor, headingLevel);
+        (toggleActions[modifier] as HeadingCallback)(editor, headingLevel);
         break;
 
       default:
-        toggleActions[modifier](editor);
+        (toggleActions[modifier] as CommonCallback)(editor);
         break;
     }
   };

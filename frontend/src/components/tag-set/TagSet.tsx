@@ -41,7 +41,7 @@ const TagSet = ({
     if (selection.onSelectionChange) {
       selection.onSelectionChange([...selections]);
     }
-  }, [selections]);
+  }, [selections, selection]);
 
   const newTags = selections.filter(t => t.id === undefined).map(t => t.name);
 

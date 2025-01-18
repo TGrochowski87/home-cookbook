@@ -10,14 +10,15 @@ const ListItem = ({ isHighlighted, handleTouchStart, dataKey, children }: ListIt
   const listItemRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
+    const listElement = listItemRef.current;
     const localTouchStartHandler = () => handleTouchStart(dataKey);
 
-    listItemRef.current?.addEventListener("touchstart", localTouchStartHandler, { passive: false });
+    listElement?.addEventListener("touchstart", localTouchStartHandler, { passive: false });
 
     return () => {
-      listItemRef.current?.removeEventListener("touchstart", localTouchStartHandler);
+      listElement?.removeEventListener("touchstart", localTouchStartHandler);
     };
-  }, [listItemRef.current, handleTouchStart]);
+  }, [handleTouchStart, dataKey]);
 
   return (
     <li ref={listItemRef} data-key={dataKey} className={`list-item ${isHighlighted ? "highlighted" : ""}`}>

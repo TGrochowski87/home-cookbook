@@ -26,6 +26,8 @@ export const AlertStackContextProvider = ({ children }: PropsWithChildren) => {
 
     setTimeout(() => {
       setAlertStack(prev => {
+        // This entry must be assigned to a variable to be discarded.
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { [currentKey]: _, ...remainingStack } = prev;
         return remainingStack;
       });

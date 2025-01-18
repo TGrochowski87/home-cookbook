@@ -9,7 +9,7 @@ import storeActions from "storage/redux/actions";
 import { useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 
-export async function loader({ params }: any): Promise<null> {
+export async function loader({ params }: { params: { id: string } }): Promise<null> {
   await store.dispatch(storeActions.recipes.async.fetchRecipe(+params.id)).unwrap();
   await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
   await store.dispatch(storeActions.tags.async.fetchTags()).unwrap();
@@ -69,6 +69,8 @@ const RecipeEditionPage = () => {
     };
 
     prepareInitialFormData();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

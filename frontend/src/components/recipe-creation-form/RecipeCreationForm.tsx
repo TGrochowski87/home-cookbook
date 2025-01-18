@@ -121,7 +121,7 @@ const RecipeCreationForm = ({
         localStorage.removeItem(pendingChangesLocalStorageKey);
       }
     };
-  }, [formState.isDirty, formState.isSubmitted]);
+  }, [formState.isDirty, formState.isSubmitted, getValues, pendingChangesLocalStorageKey]);
 
   // Handle saving pending changes on closing the page.
   useEffect(() => {
@@ -143,7 +143,7 @@ const RecipeCreationForm = ({
     return () => {
       document.removeEventListener("visibilitychange", savePendingChanges);
     };
-  }, [formState.isDirty, formState.isSubmitted]);
+  }, [formState.isDirty, formState.isSubmitted, getValues, pendingChangesLocalStorageKey]);
 
   /**
    * The purpose of this effect and the property is to be able to make the form dirty right away after pending changes have been loaded.
@@ -153,6 +153,7 @@ const RecipeCreationForm = ({
     if (initiallyDirty) {
       setValue("dummyForInitialDirty", "dirty", { shouldDirty: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

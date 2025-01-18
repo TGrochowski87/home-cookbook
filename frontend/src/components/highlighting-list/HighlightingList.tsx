@@ -36,45 +36,47 @@ const HighlightingList = <T extends { readonly key: string | number }>({
     }, 200);
   };
 
-  const handleTouchMove = (event: TouchEvent) => {
-    // Immediate movement means page scrolling attempt. (No highlighting.)
-    if (highlightingActive === false) {
-      clearTimeout(timeoutId.current);
-      return;
-    }
-
-    event.preventDefault();
-
-    const touch = event.touches[0];
-    const element = document.elementFromPoint(touch.clientX, touch.clientY)!;
-    if (element) {
-      const parent = findParentWithDataKey(element as HTMLElement);
-      if (parent) {
-        setHighlightedItem(parent.dataset.key);
-      }
-    }
-  };
-
-  const handleTouchEnd = () => {
-    // Immediate release means clicking. (No highlighting.)
-    if (highlightingActive === false) {
-      clearTimeout(timeoutId.current);
-      return;
-    }
-
-    setHighlightingActive(false);
-    setHighlightedItem(undefined);
-  };
-
   useEffect(() => {
-    listRef.current?.addEventListener("touchmove", handleTouchMove, { passive: false });
-    listRef.current?.addEventListener("touchend", handleTouchEnd, { passive: false });
+    const handleTouchMove = (event: TouchEvent) => {
+      // Immediate movement means page scrolling attempt. (No highlighting.)
+      if (highlightingActive === false) {
+        clearTimeout(timeoutId.current);
+        return;
+      }
+
+      event.preventDefault();
+
+      const touch = event.touches[0];
+      const element = document.elementFromPoint(touch.clientX, touch.clientY)!;
+      if (element) {
+        const parent = findParentWithDataKey(element as HTMLElement);
+        if (parent) {
+          setHighlightedItem(parent.dataset.key);
+        }
+      }
+    };
+
+    const handleTouchEnd = () => {
+      // Immediate release means clicking. (No highlighting.)
+      if (highlightingActive === false) {
+        clearTimeout(timeoutId.current);
+        return;
+      }
+
+      setHighlightingActive(false);
+      setHighlightedItem(undefined);
+    };
+
+    const listElement = listRef.current;
+
+    listElement?.addEventListener("touchmove", handleTouchMove, { passive: false });
+    listElement?.addEventListener("touchend", handleTouchEnd, { passive: false });
 
     return () => {
-      listRef.current?.removeEventListener("touchmove", handleTouchMove);
-      listRef.current?.removeEventListener("touchend", handleTouchEnd);
+      listElement?.removeEventListener("touchmove", handleTouchMove);
+      listElement?.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [listRef.current, handleTouchMove, handleTouchEnd]);
+  }, [highlightingActive]);
 
   return (
     <ol ref={listRef} className={`highlighting-list ${className} ${noMarkers ? "no-markers" : ""}`}>

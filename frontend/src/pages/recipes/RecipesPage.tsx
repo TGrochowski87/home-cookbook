@@ -20,7 +20,7 @@ interface LoaderResponse {
   readonly getRecipesResponse: GetRecipesResponseDto;
 }
 
-export async function loader({ request }: any): Promise<LoaderResponse> {
+export async function loader({ request }: { request: Request }): Promise<LoaderResponse> {
   const url = new URL(request.url);
 
   await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();

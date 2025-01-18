@@ -1,5 +1,4 @@
 import { useNavigate, useParams } from "react-router-dom";
-import BurgerPlaceHolder from "assets/burger-placeholder.jpg";
 import "./styles.less";
 import TitledSection from "components/TitledSection";
 import TagSet from "components/tag-set/TagSet";
@@ -21,7 +20,7 @@ interface CheckboxChecks {
   readonly checkboxesInDescription: readonly number[];
 }
 
-export async function loader({ params }: any): Promise<null> {
+export async function loader({ params }: { params: { id: string } }): Promise<null> {
   await store.dispatch(storeActions.recipes.async.fetchRecipe(+params.id)).unwrap();
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   return null;
@@ -149,6 +148,8 @@ const RecipePage = () => {
     return () => {
       cacheCheckboxChecksInSessionStorage();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   /**
@@ -160,6 +161,9 @@ const RecipePage = () => {
     return () => {
       window.removeEventListener("beforeunload", cacheCheckboxChecksInSessionStorage);
     };
+
+    // cacheCheckboxChecksInSessionStorage is used in two different useEffects, so this is needed to prevent infinite loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ingredients]);
 
   return (
@@ -167,8 +171,7 @@ const RecipePage = () => {
       <HomeButton homeTab="recipes" />
       <header>
         <h1>{recipe.name}</h1>
-        {/* @ts-ignore */}
-        <div style={{ "--color": recipe.category.color }} className="category-indicator">
+        <div style={{ "--color": recipe.category.color } as React.CSSProperties} className="category-indicator">
           <h3>{recipe.category.name}</h3>
           <span className="svg-space" dangerouslySetInnerHTML={{ __html: recipe.category.symbol }} />
         </div>

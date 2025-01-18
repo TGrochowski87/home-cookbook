@@ -18,7 +18,7 @@ import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import store from "storage/redux/store";
 import storeActions from "storage/redux/actions";
 
-export async function loader({ params }: any): Promise<null> {
+export async function loader({ params }: { params: { id: string } }): Promise<null> {
   // If this page is opened directly, i.e. not from shopping page, just get all shopping lists now to simplify the process.
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingListDetails(+params.id)).unwrap();
@@ -48,41 +48,43 @@ const ShoppingListPage = () => {
   };
   const handle = useShoppingListUpdateManagement(updateShoppingListState);
 
-  const saveBeforeUnmount = async () => {
-    if (shoppingListChanged.current === false) {
-      return;
-    }
-
-    try {
-      const updatedShoppingList = await api.put.updateShoppingList(
-        shoppingList.id,
-        shoppingList.updateDate,
-        mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
-      );
-      setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
-      dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response?.status === 412) {
-        displayMessage({
-          type: "error",
-          message: "Zmiany nie mogły zostać zapisane.\nLista zakupów została w międzyczasie zmodyfikowana.",
-          fadeOutAfter: 5000,
-        });
-      } else {
-        throw error;
-      }
-    }
-  };
-
   useEffect(() => {
     shoppingListRef.current = shoppingList;
   }, [shoppingList]);
 
   // Call API immediately on unmount.
   useEffect(() => {
+    const saveBeforeUnmount = async () => {
+      if (shoppingListChanged.current === false) {
+        return;
+      }
+
+      try {
+        const updatedShoppingList = await api.put.updateShoppingList(
+          shoppingList.id,
+          shoppingList.updateDate,
+          mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
+        );
+        setShoppingList(mapper.map.toShoppingList(updatedShoppingList));
+        dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response?.status === 412) {
+          displayMessage({
+            type: "error",
+            message: "Zmiany nie mogły zostać zapisane.\nLista zakupów została w międzyczasie zmodyfikowana.",
+            fadeOutAfter: 5000,
+          });
+        } else {
+          throw error;
+        }
+      }
+    };
+
     return () => {
       saveBeforeUnmount();
     };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Send quick API call before page/browser closes.
@@ -109,7 +111,7 @@ const ShoppingListPage = () => {
     return () => {
       document.removeEventListener("visibilitychange", saveBeforeUnloadWithBeacon);
     };
-  }, [shoppingList, shoppingListChanged]);
+  }, [shoppingList, shoppingListChanged, dispatch]);
 
   const manualSublist: ShoppingListSublist = shoppingList.sublists.find(s => s.recipeId === null)!;
 
