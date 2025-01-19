@@ -38,7 +38,10 @@ const EditableQuantifiableItemsList = ({
     const newItem: QuantifiableItemData = {
       key: data.name,
       name: data.name,
-      amount: { value: data.amount.value, unit: data.amount.unit === "" ? null : data.amount.unit },
+      amount: {
+        value: data.amount.value === "" ? null : data.amount.value,
+        unit: data.amount.unit === "" ? null : data.amount.unit,
+      },
       checked: false,
     };
 

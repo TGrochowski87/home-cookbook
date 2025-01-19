@@ -8,6 +8,7 @@ public class QuantifiableItemCreateDto
   [FromForm(Name = "name")]
   public required string Name { get; set; }
   
+  // Both Value and Unit are nullable so Amount must be as well, because I can't pass empty object to form. 
   [FromForm(Name = "amount")]
-  public required AmountCreateDto Amount { get; set; }
+  public AmountCreateDto? Amount { get; set; }
 }

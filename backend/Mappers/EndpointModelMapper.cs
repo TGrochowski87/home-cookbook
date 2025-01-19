@@ -91,7 +91,8 @@ internal static class EndpointModelMapper
   
   public static Amount Map(AmountCreateDto dto) => new(dto.Value, dto.Unit);
 
-  public static QuantifiableItemCreate Map(QuantifiableItemCreateDto dto) => new(dto.Name, Map(dto.Amount));
+  public static QuantifiableItemCreate Map(QuantifiableItemCreateDto dto) 
+    => new(dto.Name, dto.Amount != null ? Map(dto.Amount) : new Amount(null, null));
 
   public static List<QuantifiableItemCreate> Map(IEnumerable<QuantifiableItemCreateDto> dtos) 
     => dtos.Select(Map).ToList();
