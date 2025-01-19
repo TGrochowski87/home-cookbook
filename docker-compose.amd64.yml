@@ -16,6 +16,7 @@ services:
       - "8080:8080"
     volumes:
       - ./api/appsettings.json:/app/appsettings.json
+      - ./api/uploads:/app/uploads
     depends_on:
       - db
 
