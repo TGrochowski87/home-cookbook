@@ -12,7 +12,7 @@ export type ShoppingList = {
 export interface ShoppingListSublist {
   readonly id: number;
   readonly name: string;
-  readonly recipeId?: number;
+  readonly recipeId: number | null;
   readonly count: number;
   readonly items: readonly QuantifiableItemData[];
 }

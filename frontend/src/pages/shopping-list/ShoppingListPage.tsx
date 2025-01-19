@@ -18,7 +18,9 @@ import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import store from "storage/redux/store";
 import storeActions from "storage/redux/actions";
 
-export async function loader({ params }: { params: { id: string } }): Promise<null> {
+export async function loader(args: unknown): Promise<null> {
+  const { params } = args as { params: { id: string } };
+
   // If this page is opened directly, i.e. not from shopping page, just get all shopping lists now to simplify the process.
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingLists()).unwrap();
   await store.dispatch(storeActions.shoppingLists.async.fetchShoppingListDetails(+params.id)).unwrap();
