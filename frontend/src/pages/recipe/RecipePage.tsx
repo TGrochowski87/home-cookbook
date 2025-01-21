@@ -180,7 +180,7 @@ const RecipePage = () => {
 
       <div className="image-space floating">
         {recipe.imageSrc ? (
-          <img src={`../${recipe.imageSrc}`} />
+          <img src={recipe.id > 5 ? recipe.imageSrc : `../${recipe.imageSrc}`} />
         ) : (
           <div className="image-placeholder" dangerouslySetInnerHTML={{ __html: recipe.category.symbol }} />
         )}

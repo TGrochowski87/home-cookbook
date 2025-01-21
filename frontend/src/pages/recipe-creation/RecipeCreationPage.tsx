@@ -44,16 +44,7 @@ const RecipeCreationPage = () => {
     }
     firstRender.current = false;
 
-    // An option to load the unsaved changes from the last session.
-    const pendingCreate = localStorage.getItem(pendingChangesLocalStorageKey);
-    if (pendingCreate && window.confirm("Przywrócić ostatni stan formularza?")) {
-      const data = JSON.parse(pendingCreate) as RecipeData;
-      setInitialFormData({ ...data, image: null }); // Binary data is not serializable.
-      setPendingChangesLoaded(true);
-      localStorage.removeItem(pendingChangesLocalStorageKey);
-    } else {
-      setInitialFormData(EmptyRecipeCreationFormValues);
-    }
+    setInitialFormData(EmptyRecipeCreationFormValues);
   }, []);
 
   return (
