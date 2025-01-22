@@ -94,12 +94,12 @@ const RecipeCreationForm = ({
       if (axios.isAxiosError(error)) {
         switch (error.response?.status) {
           case 400:
-            displayMessage({ type: "error", message: "Podano niepoprawne dane.", fadeOutAfter: 5000 });
+            displayMessage({ type: "error", message: "Provided incorrect data.", fadeOutAfter: 5000 });
             break;
           case 412:
             displayMessage({
               type: "error",
-              message: "Zmiany nie mogły zostać zapisane.\nPrzepis został w międzyczasie zmodyfikowany.",
+              message: "The changes could not be saved.\nThe recipe has been modified in the meantime.",
               fadeOutAfter: 5000,
             });
             break;
@@ -161,12 +161,12 @@ const RecipeCreationForm = ({
       <div className="input-with-error">
         <Input
           {...register("name", {
-            required: "Nazwa przepisu jest wymagana",
+            required: "Recipe name is required",
             maxLength: 100,
             setValueAs: (value: string) => value.trim(),
           })}
           maxLength={100}
-          placeholder="Nazwa przepisu..."
+          placeholder="Name"
         />
         {formState.errors.name && <p className="under-input-error-message">{formState.errors.name.message}</p>}
       </div>
@@ -174,7 +174,7 @@ const RecipeCreationForm = ({
       <Controller
         control={control}
         name="categoryId"
-        rules={{ required: "Kategoria jest wymagana" }}
+        rules={{ required: "Category is required" }}
         render={({ field: { value, onChange, ref } }) => (
           <div className="input-with-error">
             <CategorySelect
@@ -198,7 +198,7 @@ const RecipeCreationForm = ({
         )}
       />
 
-      <TitledSection title="Tagi">
+      <TitledSection title="Tags">
         <Controller
           control={control}
           name="tags"
@@ -221,7 +221,7 @@ const RecipeCreationForm = ({
         />
       </TitledSection>
 
-      <TitledSection title="Składniki">
+      <TitledSection title="Ingredients">
         <Controller
           control={control}
           name="ingredients"
@@ -240,21 +240,13 @@ const RecipeCreationForm = ({
         />
       </TitledSection>
 
-      <TitledSection title="Treść">
+      <TitledSection title="Description">
         <Controller
           control={control}
           name="description"
           render={({ field: { value, onChange } }) => <RichTextArea value={value} editable onChange={onChange} />}
         />
       </TitledSection>
-
-      <Button
-        onClick={() => {
-          console.log(getValues());
-          console.log(JSON.stringify(getValues()));
-        }}>
-        Log
-      </Button>
 
       <Button
         onClick={handleSubmit(onSubmit, error => {
@@ -264,7 +256,7 @@ const RecipeCreationForm = ({
           }
         })}
         className="save-button">
-        zapisz
+        save
       </Button>
 
       <input hidden {...register("dummyForInitialDirty")}></input>

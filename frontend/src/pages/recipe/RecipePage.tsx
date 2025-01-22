@@ -92,7 +92,7 @@ const RecipePage = () => {
       sessionStorage.removeItem(`checks-recipe-${recipe.id}`);
       displayMessage({
         type: "info",
-        message: "Wyczyszczono zapisane zaznaczenia, ponieważ przepis został zmodyfikowany.",
+        message: "All selections were cleared, because the recipe has been modified.",
         fadeOutAfter: 5000,
       });
       return;
@@ -188,32 +188,35 @@ const RecipePage = () => {
 
       <TagSet tags={recipe.tags} tagSize="small" />
 
-      <TitledSection title="Składniki">
+      <TitledSection title="Ingredients">
         <IngredientListRead ingredients={ingredients} setIngredients={setIngredients} />
         <AddToShoppingListScreen recipeId={recipe.id} shoppingLists={shoppingLists} />
       </TitledSection>
 
-      <TitledSection title="Treść">
+      <TitledSection title="Description">
         <RichTextArea value={recipe.description} />
       </TitledSection>
 
       <div className="bottom-buttons-bar">
         <button
           onClick={() =>
-            displayMessage({ type: "info", message: "Ten przycisk na razie nic nie robi :)", fadeOutAfter: 5000 })
+            displayMessage({ type: "info", message: "This feature is not implemented yet.", fadeOutAfter: 5000 })
           }>
           <CirclePlus />
-          <p>Wariant</p>
+          <p>Variant</p>
         </button>
 
         <button onClick={() => navigate(`/recipes/${recipe.id}/edit`)}>
           <Edit />
-          <p>Edytuj</p>
+          <p>Edit</p>
         </button>
 
-        <button>
+        <button
+          onClick={() =>
+            displayMessage({ type: "info", message: "This feature is not implemented yet.", fadeOutAfter: 5000 })
+          }>
           <Trash2 />
-          <p>Usuń</p>
+          <p>Delete</p>
         </button>
       </div>
     </div>

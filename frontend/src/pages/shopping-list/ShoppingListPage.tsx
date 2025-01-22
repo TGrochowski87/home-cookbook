@@ -73,7 +73,7 @@ const ShoppingListPage = () => {
         if (axios.isAxiosError(error) && error.response?.status === 412) {
           displayMessage({
             type: "error",
-            message: "Zmiany nie mogły zostać zapisane.\nLista zakupów została w międzyczasie zmodyfikowana.",
+            message: "The changes could not be saved.\nThe list has been modified in the meantime.",
             fadeOutAfter: 5000,
           });
         } else {
@@ -149,7 +149,7 @@ const ShoppingListPage = () => {
           </TitledSection>
         ))}
 
-      <TitledSection title={"Manualnie dodane"}>
+      <TitledSection title={"Manual sublist"}>
         <EditableQuantifiableItemsList
           items={manualSublist.items}
           setItems={items => handle.manualSublistItemsUpdate(items)}

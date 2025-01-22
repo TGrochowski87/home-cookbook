@@ -42,7 +42,7 @@ const CreateTagButton = ({ onCreate, size }: NewTagProps) => {
     </form>
   ) : (
     <Button className={`tag-chip tag-chip-interactive ${size} tag-creation`} onClick={() => setIsInInputMode(true)}>
-      nowy tag <PlusIcon width="16px" height="16px" thickness={2} />
+      new tag <PlusIcon width="16px" height="16px" thickness={2} />
     </Button>
   );
 };

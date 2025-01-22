@@ -5,10 +5,10 @@ import "./styles.less";
 import { CircleX } from "lucide-react";
 
 const errorMessages: Record<FileUploadError, string> = {
-  "file-invalid-type": "Nieobsługiwany format pliku.",
-  "file-too-large": "Plik jest za duży. Musi być mniejszy niż 5MB.",
-  "too-many-files": "Wysłano więcej niż jeden plik.",
-  "file-too-small": "Plik jest za mały.",
+  "file-invalid-type": "Unsupported file format.",
+  "file-too-large": "The file is too large. The maximum size is 3MB.",
+  "too-many-files": "Selected more than one file.",
+  "file-too-small": "The file is too small.",
 };
 
 interface ThumbnailProps {

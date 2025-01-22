@@ -19,7 +19,7 @@ const ConfirmationPopover = ({ children, onConfirm, text, side = "top" }: Confir
         <Popover.Content className="confirmation-popover-content floating" side={side} sideOffset={2}>
           <p>{text}</p>
           <Button onClick={onConfirm} className="confirmation-popover-button" disableShadow>
-            tak
+            yes
           </Button>
           <Popover.Arrow className="popover-arrow" />
         </Popover.Content>

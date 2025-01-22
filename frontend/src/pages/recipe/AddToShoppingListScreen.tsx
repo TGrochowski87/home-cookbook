@@ -23,12 +23,12 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
       await api.post.createShoppingListSublist(listId, recipeId);
       const updatedShoppingList = await api.get.getShoppingList(listId);
       dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
-      displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
+      displayMessage({ type: "success", message: "The recipe has been added.", fadeOutAfter: 5000 });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 409) {
         displayMessage({
           type: "info",
-          message: "Przepis już jest na tej liście zakupów.",
+          message: "The recipe is already in the list.",
           fadeOutAfter: 5000,
         });
       } else {
@@ -44,10 +44,10 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
       className="add-to-shopping-list-popup"
       trigger={
         <div className="add-to-shopping-list-button-space">
-          <button>Dodaj składniki do listy zakupów</button>
+          <button>Add ingredients to the shopping list</button>
         </div>
       }
-      title="Wybierz listę"
+      title="Choose a list"
       fullScreen>
       <HighlightingList
         className="shopping-lists"

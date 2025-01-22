@@ -22,7 +22,7 @@ const SublistTitle = ({ sublist, onIncrement, onDecrement }: SublistTitleProps) 
       <h2>{`x${sublist.count.toFixed(1)}`}</h2>
 
       {sublist.count === 0.5 ? (
-        <ConfirmationPopover text="Usunąć listę?" onConfirm={() => onDecrement(sublist)} side="left">
+        <ConfirmationPopover text="Remove sublist?" onConfirm={() => onDecrement(sublist)} side="left">
           <CircleMinus className="delete-icon" width="1.5em" height="1.5em" />
         </ConfirmationPopover>
       ) : (

@@ -46,7 +46,7 @@ const EditableQuantifiableItemsList = ({
     };
 
     if (items.find(i => i.name === newItem.name)) {
-      displayMessage({ type: "error", message: "Ten przedmiot jest już na liście.", fadeOutAfter: 10000 });
+      displayMessage({ type: "error", message: "This item is already in the list.", fadeOutAfter: 10000 });
       return;
     }
 
@@ -71,7 +71,7 @@ const EditableQuantifiableItemsList = ({
           })}
           maxLength={100}
           autoCapitalize="none"
-          placeholder="Nazwa"
+          placeholder="Name"
         />
         <Input
           {...register("amount.value", {
@@ -81,7 +81,7 @@ const EditableQuantifiableItemsList = ({
           })}
           maxLength={20}
           autoCapitalize="none"
-          placeholder="Ilość"
+          placeholder="Amount"
         />
         <Input
           {...register("amount.unit", {
@@ -89,10 +89,9 @@ const EditableQuantifiableItemsList = ({
             maxLength: 10,
             setValueAs: (value: string) => value.trim(),
           })}
-          className={`${watch("amount.unit")?.length > 0 ? "" : "smaller-placeholder"}`}
           maxLength={10}
           autoCapitalize="none"
-          placeholder="Jednostka"
+          placeholder="Unit"
         />
         {/* This enables submitting by enter/send */}
         <input type="submit" hidden />

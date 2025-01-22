@@ -127,7 +127,7 @@ const RecipeListPage = () => {
         loader={<LoadingIndicator className="loading" />}
         endMessage={
           <p style={{ textAlign: "center", margin: "0.5rem 0 1rem 0" }}>
-            {recipes.length === 0 ? "Żaden przepis nie spełnia kryteriów" : "Koniec listy przepisów"}
+            {recipes.length === 0 ? "No recipe matches the criteria" : "No more recipes to load"}
           </p>
         }>
         {nexPageLoading && <LoadingIndicator className="loading" />}

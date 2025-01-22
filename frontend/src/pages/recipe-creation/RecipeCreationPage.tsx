@@ -34,7 +34,7 @@ const RecipeCreationPage = () => {
     const newRecipe = await api.post.createRecipe(dto);
     localStorage.removeItem(pendingChangesLocalStorageKey);
     dispatch(storeActions.recipes.setRecipeInCache(newRecipe));
-    displayMessage({ type: "success", message: "Przepis został utworzony.", fadeOutAfter: 5000 });
+    displayMessage({ type: "success", message: "Recipe created.", fadeOutAfter: 5000 });
   };
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const RecipeCreationPage = () => {
 
   return (
     <div className="page recipe-creation-page">
-      <h1>Nowy przepis</h1>
+      <h1>New recipe</h1>
       {initialFormData && (
         <RecipeCreationForm
           categories={categories}

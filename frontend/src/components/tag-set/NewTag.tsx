@@ -10,7 +10,7 @@ interface NewTagProps {
 
 const NewTag = ({ tagName, size, onDelete }: NewTagProps) => {
   return (
-    <ConfirmationPopover text="Usunąć tag?" onConfirm={onDelete}>
+    <ConfirmationPopover text="Delete tag?" onConfirm={onDelete}>
       <TagChip tagName={tagName} size={size} />
     </ConfirmationPopover>
   );

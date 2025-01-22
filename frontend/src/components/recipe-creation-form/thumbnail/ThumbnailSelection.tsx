@@ -32,7 +32,7 @@ const ThumbnailSelection = ({ setImage, setFileUploadErrors }: ThumbnailSelectio
         <div className="input-space" {...getRootProps()}>
           <input {...getInputProps()} />
           <Upload />
-          <p>dodaj zdjęcie</p>
+          <p>include photo</p>
         </div>
       )}
     </Dropzone>

@@ -51,11 +51,11 @@ const InfoModal = ({ shoppingListInfo, renameHandler, autoDeleteToggleHandler }:
       }>
       <div className="info-space">
         <div className="date-info-row">
-          <p>Utworzono:</p>
+          <p>Created:</p>
           <p>{formatDate(shoppingListInfo.creationDate)}</p>
         </div>
         <div className="date-info-row">
-          <p>Zaktualizowano:</p>
+          <p>Updated:</p>
           <p>{formatDate(shoppingListInfo.updateDate)}</p>
         </div>
         <div className="deletion-info-row">{autoDeleteInfoMessage.current}</div>
@@ -63,7 +63,7 @@ const InfoModal = ({ shoppingListInfo, renameHandler, autoDeleteToggleHandler }:
           className="auto-delete-checkbox"
           checked={shoppingListInfo.autoDelete}
           onChange={autoDeleteToggleHandler}
-          label="Automatyczne usunięcie"
+          label="Automatic deletion"
         />
       </div>
     </Popup>
@@ -78,7 +78,7 @@ const determineAutoDeleteInfoMessage = (autoDeleteEnabled: boolean, listCreation
       <>
         {timeUntilDeletion < OneWeekInMilliseconds && <TriangleAlert />}
         <span>
-          <p>Automatyczne usunięcie nastąpi za:</p>
+          <p>Automatic deletion will happen in:</p>
           <p>{millisecondsToTime(timeUntilDeletion)}</p>
         </span>
       </>
@@ -89,7 +89,7 @@ const determineAutoDeleteInfoMessage = (autoDeleteEnabled: boolean, listCreation
         <>
           <TriangleAlert />
           <span>
-            <p>Automatyczne usunięcie nastąpi natychmiast po włączeniu autousuwania</p>
+            <p>The list would be immediately deleted after enabling automatic deletion</p>
           </span>
         </>
       );
@@ -97,7 +97,7 @@ const determineAutoDeleteInfoMessage = (autoDeleteEnabled: boolean, listCreation
       return (
         <>
           <span>
-            <p>Automatyczne usunięcie nastąpiłoby za:</p>
+            <p>Automatic deletion would happen in:</p>
             <p>{millisecondsToTime(timeUntilDeletion)}</p>
           </span>
         </>
@@ -113,13 +113,13 @@ const millisecondsToTime = (milliseconds: number): string => {
 
   let time = "";
   if (days > 0) {
-    time += `${Math.floor(days)} dni `;
+    time += `${Math.floor(days)} days `;
   }
   if (hours > 0) {
-    time += `${Math.floor(hours)} godzin `;
+    time += `${Math.floor(hours)} hours `;
   }
   if (minutes > 0) {
-    time += `${Math.floor(minutes)} minut`;
+    time += `${Math.floor(minutes)} minutes`;
   }
 
   return time;

@@ -15,7 +15,7 @@ const CategorySelect = forwardRef<HTMLButtonElement, CustomSelectProps>(
     return (
       <Select.Root value={value} onValueChange={(newValue: string) => setValue(newValue)}>
         <Select.Trigger ref={ref} className="input category-select-trigger floating" aria-label="Food">
-          <Select.Value placeholder="Kategoria..." />
+          <Select.Value placeholder="Category" />
           <Select.Icon className="category-select-icon">
             <ChevronDown />
           </Select.Icon>

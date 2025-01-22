@@ -13,8 +13,8 @@ const PageSwitch = () => {
         navigate(`/${location.pathname.includes("shopping-lists") ? "recipes" : "shopping-lists"}`)
       }>
       <div className="labels">
-        <p>Przepisy</p>
-        <p>Zakupy</p>
+        <p>Recipes</p>
+        <p>Shopping</p>
       </div>
       <Switch.Thumb className="switch-thumb" />
     </Switch.Root>

@@ -10,36 +10,36 @@ const ErrorHandler = () => {
   if (isRouteErrorResponse(error)) {
     if (error.status === 404) {
       emoji = String.raw`¯\_(ツ)_/¯`;
-      message = "Nie znaleziono strony.";
+      message = "Page not found.";
     } else {
       emoji = String.raw`(ಥ﹏ಥ)`;
-      message = "Coś poszło bardzo nie tak.";
+      message = "Something went really wrong.";
     }
   } else if (isAxiosError(error)) {
     if (error.response === undefined) {
       emoji = String.raw`(╯°□°）╯︵ ┻━┻`;
-      message = "Nie udało się nawiązać połączenia z serwerem.";
+      message = "Could not connect to the server.";
     } else if (error.response?.status === 500) {
       emoji = String.raw`(╯°□°）╯︵ ┻━┻`;
-      message = "Serwer zwrócił nieoczekiwany błąd. Powiadomienie powinno zostać wysłane.";
+      message = "Server returned an unexpected error.";
     } else if (error.response?.status === 404) {
       emoji = String.raw`¯\_(ツ)_/¯`;
-      message = "Serwer nie znalazł oczekiwanego zasobu.";
+      message = "Server could not find the requested resource.";
     } else {
       emoji = String.raw`(ಥ﹏ಥ)`;
-      message = "Coś poszło bardzo nie tak.";
+      message = "Something went really wrong.";
     }
   } else if (isCookbookError(error)) {
     if (error.status === 404) {
       emoji = String.raw`¯\_(ツ)_/¯`;
-      message = "Serwer nie znalazł oczekiwanego zasobu.";
+      message = "Server could not find the requested resource.";
     } else {
       emoji = String.raw`(ಥ﹏ಥ)`;
-      message = "Coś poszło bardzo nie tak.";
+      message = "Something went really wrong.";
     }
   } else {
     emoji = String.raw`(ಥ﹏ಥ)`;
-    message = "Coś poszło bardzo nie tak.";
+    message = "Something went really wrong.";
   }
 
   return (

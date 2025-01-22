@@ -36,7 +36,7 @@ const RecipeEditionPage = () => {
     const updatedRecipe = await api.put.updateRecipe(recipe.id, recipe.updateDate, dto);
     localStorage.removeItem(pendingChangesLocalStorageKey.current);
     dispatch(storeActions.recipes.setRecipeInCache(updatedRecipe));
-    displayMessage({ type: "success", message: "Zmiany zostały zapisane.", fadeOutAfter: 5000 });
+    displayMessage({ type: "success", message: "Recipe updated.", fadeOutAfter: 5000 });
   };
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const RecipeEditionPage = () => {
 
   return (
     <div className="page recipe-edition-page">
-      <h1>Edycja przepisu</h1>
+      <h1>Edit recipe</h1>
       {initialFormData && (
         <RecipeCreationForm
           categories={categories}
