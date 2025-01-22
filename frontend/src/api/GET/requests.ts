@@ -18,12 +18,32 @@ export const getTags = async (): Promise<TagGetDto[]> => {
   return [...dbData.tags];
 };
 
-export type GetRecipesURL = { type: "Query"; query: string } | { type: "FullUrl"; url: string };
+export type GetRecipesURL = { type: "Query"; query: string };
 
 export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponseDto> => {
+  console.log(url.query);
+
+  let recipes = [...dbData.recipes];
+  const filters = {
+    name: url.query.match(/(?<=name=)[^&]*/g)?.[0] ?? null,
+    category: url.query.match(/(?<=category=)[^&]*/g)?.[0] ?? null,
+    tags: url.query.match(/(?<=tags=)[^&]*/g) ?? null,
+  };
+  console.log(filters);
+
+  if (filters.name) {
+    recipes = recipes.filter(r => r.name.toLowerCase().includes(filters.name!.toLowerCase()));
+  }
+  if (filters.category) {
+    recipes = recipes.filter(r => r.category.name === filters.category);
+  }
+  if (filters.tags) {
+    recipes = recipes.filter(r => filters.tags!.every(tag => r.tags.some(t => t.name === tag)));
+  }
+
   return {
     nextPage: null,
-    recipes: [...dbData.recipes],
+    recipes,
   };
 };
 

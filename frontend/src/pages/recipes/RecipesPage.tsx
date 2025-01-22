@@ -58,10 +58,11 @@ const RecipeListPage = () => {
     //   setTimeout(resolve, 1000);
     // });
 
-    const nextPage = await api.get.getRecipes({ type: "FullUrl", url: nextRecipesPage.current });
-    nextRecipesPage.current = nextPage.nextPage;
-    setRecipes(prev => prev.concat(nextPage.recipes));
-    setNextPageLoading(false);
+    // This not gonna happen in the demo.
+    // const nextPage = await api.get.getRecipes({ type: "FullUrl", url: nextRecipesPage.current });
+    // nextRecipesPage.current = nextPage.nextPage;
+    // setRecipes(prev => prev.concat(nextPage.recipes));
+    // setNextPageLoading(false);
   };
 
   // Rerunning loader does not cause rerender, so we need a separate state to copy data to.
