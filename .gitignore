@@ -1,0 +1,12 @@
+/design
+/database/dev
+Dockerfile.dev
+
+/prometheus/data
+/grafana/data
+/loki/data
+
+/api
+/web
+/prometheus/web.yml
+*.env
