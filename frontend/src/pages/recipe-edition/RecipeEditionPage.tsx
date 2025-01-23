@@ -48,9 +48,7 @@ const RecipeEditionPage = () => {
       firstRender.current = false;
 
       // Binary data is not serializable so in both cases we use the current recipe image.
-      const image = recipe.imageSrc
-        ? await api.get.getImage(recipe.id > 5 ? recipe.imageSrc : `../../${recipe.imageSrc}`)
-        : null;
+      const image = recipe.imageSrc ? await api.get.getImage(recipe.imageSrc) : null;
 
       setInitialFormData({
         name: recipe.name,

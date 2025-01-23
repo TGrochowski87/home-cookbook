@@ -72,7 +72,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
     name: "Beef burritos",
     category: categories[0],
     tags: [tags[3], tags[6], tags[13]],
-    imageSrc: "src/db/images/1-beef-burrito.jpg",
+    imageSrc: "assets/images/1-beef-burrito.jpg",
     ingredients: [
       { id: 1, name: "sunflower oil", amount: { value: "2", unit: "tbsp" }, checked: false },
       { id: 2, name: "onion", amount: { value: "1", unit: null }, checked: false },
@@ -99,7 +99,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
     name: "Carbonara",
     category: categories[0],
     tags: [tags[7], tags[10], tags[14]],
-    imageSrc: "src/db/images/2-carbonara.jpg",
+    imageSrc: "assets/images/2-carbonara.jpg",
     ingredients: [
       {
         id: 16,
@@ -166,7 +166,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
     name: "Margarita",
     category: categories[5],
     tags: [tags[4], tags[16]],
-    imageSrc: "src/db/images/3-margarita.jpg",
+    imageSrc: "assets/images/3-margarita.jpg",
     ingredients: [
       {
         id: 25,
@@ -215,7 +215,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
     name: "Oatmeal",
     category: categories[2],
     tags: [tags[1], tags[2], tags[8], tags[10], tags[11]],
-    imageSrc: "src/db/images/4-oatmeal.jpg",
+    imageSrc: "assets/images/4-oatmeal.jpg",
     ingredients: [
       {
         id: 31,
@@ -270,7 +270,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
     name: "Cheesecake",
     category: categories[1],
     tags: [tags[1], tags[2], tags[15]],
-    imageSrc: "src/db/images/5-cheesecake.jpg",
+    imageSrc: "assets/images/5-cheesecake.jpg",
     ingredients: [
       {
         id: 38,

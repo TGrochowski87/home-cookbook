@@ -1,19 +1,29 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     react(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: "assets/images/*",
+          dest: "assets/images",
+        },
+      ],
+    }),
     {
       name: "inject-config-js",
       transformIndexHtml(html) {
         return html
           .replace('<script type="module" src="/config.js"></script>', "")
-          .replace("</title>", '</title>\n<script type="module" src="/config.js"></script>');
+          .replace("</title>", '</title>\n<script type="module" src="/cookbook/config.js"></script>');
       },
     },
   ],
+  base: "/cookbook/",
   resolve: {
     alias: {
       pages: "/src/pages",
