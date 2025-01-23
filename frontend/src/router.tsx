@@ -1,4 +1,4 @@
-import { Navigate, Route, createBrowserRouter, createRoutesFromElements } from "react-router-dom";
+import { Navigate, Route, createHashRouter, createRoutesFromElements } from "react-router-dom";
 import MainPageLayout from "pages/MainPageLayout.tsx";
 import App from "./App";
 import RecipesPage, { loader as recipesPageLoader } from "pages/recipes/RecipesPage";
@@ -9,7 +9,7 @@ import ShoppingListPage, { loader as shoppingListPageLoader } from "pages/shoppi
 import ShoppingPage, { loader as shoppingPageLoader } from "pages/shopping-lists/ShoppingPage";
 import ErrorHandler from "./ErrorHandler";
 
-const router = createBrowserRouter(
+const router = createHashRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />} errorElement={<ErrorHandler />}>
       <Route index element={<Navigate replace to="/recipes" />} />
