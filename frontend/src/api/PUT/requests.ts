@@ -1,13 +1,11 @@
 import { RecipeCreateDto } from "api/POST/DTOs";
-import { BaseUrl } from "api/api";
-import axios from "axios";
 import { ShoppingListUpdateDto } from "./DTOs";
 import { QuantifiableItemGetDto, RecipeDetailsGetDto, ShoppingListDetailsGetDto, TagGetDto } from "api/GET/DTOs";
 import dbData from "db/data";
 
 export const updateRecipe = async (
   recipeId: number,
-  resourceStateTimestamp: string,
+  _resourceStateTimestamp: string,
   data: RecipeCreateDto
 ): Promise<RecipeDetailsGetDto> => {
   const recipeTags = data.tagIds.map(id => dbData.tags.find(t => t.id === id)!);
@@ -47,7 +45,7 @@ export const updateRecipe = async (
 
 export const updateShoppingList = async (
   shoppingListId: number,
-  resourceStateTimestamp: string,
+  _resourceStateTimestamp: string,
   dto: ShoppingListUpdateDto
 ): Promise<ShoppingListDetailsGetDto> => {
   const currentState = dbData.shoppingLists.find(l => l.id === shoppingListId)!;
@@ -78,7 +76,7 @@ export const updateShoppingList = async (
  */
 export const updateShoppingListWithFetch = async (
   shoppingListId: number,
-  resourceStateTimestamp: string,
+  _resourceStateTimestamp: string,
   dto: ShoppingListUpdateDto
 ): Promise<ShoppingListDetailsGetDto> => {
   const currentState = dbData.shoppingLists.find(l => l.id === shoppingListId)!;

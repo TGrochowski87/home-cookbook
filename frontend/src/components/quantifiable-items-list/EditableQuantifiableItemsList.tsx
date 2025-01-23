@@ -26,7 +26,7 @@ const EditableQuantifiableItemsList = ({
   leftSideAction,
   rightSideAction,
 }: EditableQuantifiableItemsListProps) => {
-  const { register, handleSubmit, reset, watch, setFocus } = useForm<FormData>({
+  const { register, handleSubmit, reset, setFocus } = useForm<FormData>({
     defaultValues: {
       name: "",
       amount: { value: "", unit: "" },

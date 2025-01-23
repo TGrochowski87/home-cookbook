@@ -7,7 +7,6 @@ import {
   ShoppingListGetDto,
   TagGetDto,
 } from "./DTOs";
-import { BaseUrl } from "api/api";
 import dbData from "db/data";
 
 export const getCategories = async (): Promise<CategoryGetDto[]> => {

@@ -29,7 +29,7 @@ const RecipeEditionPage = () => {
   const { displayMessage } = useAlerts();
 
   const [initialFormData, setInitialFormData] = useState<RecipeData>();
-  const [pendingChangesLoaded, setPendingChangesLoaded] = useState<boolean>(false);
+  const [pendingChangesLoaded] = useState<boolean>(false);
   const firstRender = useRef<boolean>(true);
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
