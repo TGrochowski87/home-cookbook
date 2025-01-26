@@ -1,6 +1,6 @@
-# Personal Cookbook
+# Home Cookbook
 
-A private, modern-looking and intuitive web application designed to help you manage your recipes and access them whenever you need.
+A personal, modern-looking and intuitive web application designed to help you manage your recipes and access them whenever you need.
 
 The application's main focus are the recipes, but it also provides a very helpful "Shopping" page, where you can keep track of your groceries.
 
