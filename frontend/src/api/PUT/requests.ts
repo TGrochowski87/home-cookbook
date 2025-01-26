@@ -27,7 +27,7 @@ export const updateRecipe = async (
   }));
 
   const updatedRecipe: RecipeDetailsGetDto = {
-    id: dbData.recipes.length + 1,
+    id: recipeId,
     name: data.name,
     description: data.description,
     category: dbData.categories.find(c => c.id === data.categoryId)!,
