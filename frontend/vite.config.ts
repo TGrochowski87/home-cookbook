@@ -19,11 +19,11 @@ export default defineConfig({
       transformIndexHtml(html) {
         return html
           .replace('<script type="module" src="/config.js"></script>', "")
-          .replace("</title>", '</title>\n<script type="module" src="/cookbook/config.js"></script>');
+          .replace("</title>", '</title>\n<script type="module" src="/home-cookbook/config.js"></script>');
       },
     },
   ],
-  base: "/cookbook/",
+  base: "/home-cookbook/",
   resolve: {
     alias: {
       pages: "/src/pages",
