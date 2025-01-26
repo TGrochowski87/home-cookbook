@@ -32,6 +32,7 @@ const RecipeCreationPage = () => {
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
     const newRecipe = await api.post.createRecipe(dto);
+    localStorage.removeItem(pendingChangesLocalStorageKey);
     dispatch(storeActions.recipes.setRecipeInCache(newRecipe));
     displayMessage({ type: "success", message: "Przepis został utworzony.", fadeOutAfter: 5000 });
   };
