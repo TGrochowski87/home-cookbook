@@ -11,12 +11,17 @@ Here is the list of all the features that are part of the current version. You c
 <table>
 
 <tr>
+<th width="500px">
+</th>
+<th width="500px">
+</th>
+</tr>
+
+<tr>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image.png">
 </td>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">The first page of the application shows the list of all the recipes split into pages in a form of infinite scroll.</p>
 
 <p align="justify">Above the list is a search section, which allows filtering recipes by name, category and tags.</p>
@@ -25,31 +30,26 @@ Here is the list of all the features that are part of the current version. You c
 
 <tr>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">Clicking on the '+' button redirects the user to the recipe creation form.</p>
 
 <p align="justify">The user is not forced to finish it in one go. All recipes can be later edited. Additionally, if the form is closed without saving, the entered data can be restored the next time it is opened.</p>
 </td>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image-5.png">
 </td>
 </tr>
 
 <tr>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image-4.png">
 </td>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">The recipe description supports various text decorations, thanks to the rich text editor that renders enered text in the adequate HTML tags with styling.</p>
 </td>
 </tr>
 
 <tr>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">Clicking on any recipe redirects the user to the recipe view page.</p>
 
 <p align="justify">The state of any checkboxes visible on this page, including the ones in the recipe description, if there are any, is preserved in session to not lose track on the preparation progress.</p>
@@ -57,18 +57,15 @@ Here is the list of all the features that are part of the current version. You c
 <p align="justify">From this view, the user can also add all the ingredients to the selected shopping list.</p>
 </td>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image-7.png">
 </td>
 </tr>
 
 <tr>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image-8.png">
 </td>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">From the view page, the user can open the editing form by clicking on the 'Edit' button at the bottom of the page.</p>
 
 <p align="justify">The pending changes in this form get preserved the same way as in the one for creation.</p>
@@ -77,7 +74,6 @@ Here is the list of all the features that are part of the current version. You c
 
 <tr>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">With this big switch on top of the page, the user can switch between the recipes and the shopping lists.</p>
 
 <p align="justify">By default, shopping lists get automatically deleted after two weeks. This, combined with the shopping list creation being done with a single click (with the name being the current date), allows quick preparation of a list for groceries for the near future shopping, without the need for further management.</p>
@@ -87,18 +83,15 @@ Here is the list of all the features that are part of the current version. You c
 <p align="justify">The lists with blue border are the ones that were opted out of the automatic deletion.</p>
 </td>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image-9.png">
 </td>
 </tr>
 
 <tr>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image-12.png">
 </td>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">Clicking on any shopping list opens the view with its details.</p>
 
 <p align="justify">There is no option to add items to the list of ingredients copied from recipes, but besides that, the list can be edited freely and all changes get saved automatically on closing the view or the application.</p>
@@ -107,11 +100,9 @@ Here is the list of all the features that are part of the current version. You c
 
 <tr>
 <td align="center">
-<img width="441" height="1">
 <p align="justify">The application also supports dark mode, with the initial choice being based on the browser settings.</p>
 </td>
 <td align="center">
-<img width="441" height="1">
 <img src="./readme-assets/image-13.png">
 </td>
 </tr>
