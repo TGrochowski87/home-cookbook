@@ -131,3 +131,5 @@ Prior to the implementation, all the designes were created with:
 The project is not yet in its final version. Although its core design likely won't change, some bits and pieces may undergo some redesign in the future.
 
 The UI has been implemented in a way that it is responsive, but only targeting the mobile devices. The desktop-friendly layout will come in time.
+
+For simplicity, this application has not been provided with any authentication and authorization features. For now, it is designed so that a single instance is used by a single household, without a separation to multiple users, and through a VPN server.
