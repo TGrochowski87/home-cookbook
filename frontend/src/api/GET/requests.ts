@@ -20,15 +20,12 @@ export const getTags = async (): Promise<TagGetDto[]> => {
 export type GetRecipesURL = { type: "Query"; query: string };
 
 export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponseDto> => {
-  console.log(url.query);
-
   let recipes = [...dbData.recipes];
   const filters = {
     name: url.query.match(/(?<=name=)[^&]*/g)?.[0] ?? null,
     category: url.query.match(/(?<=category=)[^&]*/g)?.[0] ?? null,
     tags: url.query.match(/(?<=tags=)[^&]*/g) ?? null,
   };
-  console.log(filters);
 
   if (filters.name) {
     recipes = recipes.filter(r => r.name.toLowerCase().includes(filters.name!.toLowerCase()));
