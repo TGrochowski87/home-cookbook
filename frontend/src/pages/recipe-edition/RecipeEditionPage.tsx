@@ -29,7 +29,7 @@ const RecipeEditionPage = () => {
   const { displayMessage } = useAlerts();
 
   const [initialFormData, setInitialFormData] = useState<RecipeData>();
-  const [pendingChangesLoaded] = useState<boolean>(false);
+  const [pendingChangesLoaded, setPendingChangesLoaded] = useState<boolean>(false);
   const firstRender = useRef<boolean>(true);
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
@@ -50,14 +50,23 @@ const RecipeEditionPage = () => {
       // Binary data is not serializable so in both cases we use the current recipe image.
       const image = recipe.imageSrc ? await api.get.getImage(recipe.imageSrc) : null;
 
-      setInitialFormData({
-        name: recipe.name,
-        categoryId: recipe.category.id,
-        image: image,
-        tags: recipe.tags.map(t => t.id),
-        ingredients: recipe.ingredients.map(i => ({ ...i, key: i.id, checked: false })),
-        description: recipe.description,
-      });
+      // An option to load the unsaved changes from the last session.
+      const pendingEdit = localStorage.getItem(pendingChangesLocalStorageKey.current);
+      if (pendingEdit && window.confirm("Przywrócić ostatni stan formularza dla tego przepisu?")) {
+        const data = JSON.parse(pendingEdit) as RecipeData;
+        setInitialFormData({ ...data, image: image });
+        setPendingChangesLoaded(true);
+        localStorage.removeItem(pendingChangesLocalStorageKey.current);
+      } else {
+        setInitialFormData({
+          name: recipe.name,
+          categoryId: recipe.category.id,
+          image: image,
+          tags: recipe.tags.map(t => t.id),
+          ingredients: recipe.ingredients.map(i => ({ ...i, key: i.id, checked: false })),
+          description: recipe.description,
+        });
+      }
     };
 
     prepareInitialFormData();

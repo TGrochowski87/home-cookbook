@@ -7,6 +7,9 @@ import router from "./router";
 import { Provider } from "react-redux";
 import store from "storage/redux/store";
 
+localStorage.clear();
+sessionStorage.clear();
+
 // TODO: Tests
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

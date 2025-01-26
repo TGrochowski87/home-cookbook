@@ -27,7 +27,7 @@ const RecipeCreationPage = () => {
   const { displayMessage } = useAlerts();
 
   const [initialFormData, setInitialFormData] = useState<RecipeData>();
-  const [pendingChangesLoaded] = useState<boolean>(false);
+  const [pendingChangesLoaded, setPendingChangesLoaded] = useState<boolean>(false);
   const firstRender = useRef<boolean>(true);
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
@@ -44,7 +44,16 @@ const RecipeCreationPage = () => {
     }
     firstRender.current = false;
 
-    setInitialFormData(EmptyRecipeCreationFormValues);
+    // An option to load the unsaved changes from the last session.
+    const pendingCreate = localStorage.getItem(pendingChangesLocalStorageKey);
+    if (pendingCreate && window.confirm("Bring back the unsaved changes?")) {
+      const data = JSON.parse(pendingCreate) as RecipeData;
+      setInitialFormData({ ...data, image: null }); // Binary data is not serializable.
+      setPendingChangesLoaded(true);
+      localStorage.removeItem(pendingChangesLocalStorageKey);
+    } else {
+      setInitialFormData(EmptyRecipeCreationFormValues);
+    }
   }, []);
 
   return (
