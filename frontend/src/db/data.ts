@@ -349,7 +349,7 @@ const recipes: ReadonlyArray<RecipeDetailsGetDto> = [
 const createDateWithDaysOffset = (days: number): string => {
   const date = new Date();
   date.setDate(new Date().getDate() + days);
-  return date.toLocaleDateString();
+  return date.toString();
 };
 
 const shoppingLists: ReadonlyArray<ShoppingListDetailsGetDto> = [
@@ -357,8 +357,8 @@ const shoppingLists: ReadonlyArray<ShoppingListDetailsGetDto> = [
     id: 1,
     name: "groceries",
     autoDelete: true,
-    creationDate: new Date().toLocaleDateString(),
-    updateDate: new Date().toLocaleDateString(),
+    creationDate: new Date().toString(),
+    updateDate: new Date().toString(),
     sublists: [
       {
         id: 1,
