@@ -44,7 +44,7 @@ Here is the list of all the features that are part of the current version. You c
 <img src="./readme-assets/image-4.png">
 </td>
 <td align="center">
-<p align="justify">The recipe description supports various text decorations, thanks to the rich text editor that renders enered text in the adequate HTML tags with styling.</p>
+<p align="justify">The recipe description supports various text decorations, thanks to the rich text editor that renders entered text in the adequate HTML tags with styling.</p>
 </td>
 </tr>
 
@@ -94,7 +94,7 @@ Here is the list of all the features that are part of the current version. You c
 <td align="center">
 <p align="justify">Clicking on any shopping list opens the view with its details.</p>
 
-<p align="justify">There is no option to add items to the list of ingredients copied from recipes, but besides that, the list can be edited freely and all changes get saved automatically on closing the view or the application.</p>
+<p align="justify">There is no option to add items to the sublist with ingredients copied from recipes, but besides that, the list can be edited freely and all changes get saved automatically on closing the view or the application.</p>
 </td>
 </tr>
 
@@ -117,11 +117,11 @@ The entire project was implemented with the following technologies:
 | --------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
 | <img src="./readme-assets/image-15.png" width="60"> | <img src="./readme-assets/image-1.png" width="60"> | <img src="./readme-assets/image-2.png" width="60"> | <img src="./readme-assets/image-3.png" width="60"> | <img src="./readme-assets/image-10.png" width="60"> | <img src="./readme-assets/image-11.png" width="60"> |
 
-And many useful and overall great libraries listed `in package.json` and `Cookbook.csproj` files.
+And many useful and overall great libraries listed in `package.json` and `Cookbook.csproj` files.
 
 <br>
 
-Prior to the implementation, all the designed were created with:
+Prior to the implementation, all the designes were created with:
 | Figma |
 | -------------------------------- |
 | <img src="./readme-assets/image-14.png" width="60"> |
