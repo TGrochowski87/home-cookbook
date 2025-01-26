@@ -120,4 +120,23 @@ Here is the list of all the features that are part of the current version. You c
 
 ## Technology Stack
 
+The entire project was implemented with the following technologies:
+
+| .NET                                                | React                                              | TypeScript                                         | PostgreSQL                                         | Docker                                              | Grafana                                             |
+| --------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | -------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
+| <img src="./readme-assets/image-15.png" width="60"> | <img src="./readme-assets/image-1.png" width="60"> | <img src="./readme-assets/image-2.png" width="60"> | <img src="./readme-assets/image-3.png" width="60"> | <img src="./readme-assets/image-10.png" width="60"> | <img src="./readme-assets/image-11.png" width="60"> |
+
+And many useful and overall great libraries listed `in package.json` and `Cookbook.csproj` files.
+
+<br>
+
+Prior to the implementation, all the designed were created with:
+| Figma |
+| -------------------------------- |
+| <img src="./readme-assets/image-14.png" width="60"> |
+
 ## Remarks
+
+The project is not yet in its final version. Although its core design likely won't change, some bits and pieces may undergo some redesign in the future.
+
+The UI has been implemented in a way that it is responsive, but only targeting the mobile devices. The desktop-friendly layout will come in time.
