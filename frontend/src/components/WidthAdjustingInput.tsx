@@ -3,6 +3,7 @@ interface ContentWidthInputProps
   readonly minWidth?: string;
 }
 
+// TODO: Use field-sizing CSS property once it receives widespread support.
 const WidthAdjustingInput = ({ minWidth, ...other }: ContentWidthInputProps) => {
   return (
     <span className="input-sizing-wrapper">
