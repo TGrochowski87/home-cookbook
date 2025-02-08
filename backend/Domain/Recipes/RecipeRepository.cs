@@ -106,6 +106,7 @@ internal class RecipeRepository(CookbookContext context) : IRecipeRepository
 
   public async Task<Result<RecipeDetailsGet, Error>> GetById(int id)
   {
+    // TODO: Check queries for cartesian explosion
     var entity = await context.Recipes
       .Include(r => r.Category)
       .Include(r => r.Tags)
