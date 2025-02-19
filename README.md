@@ -6,7 +6,7 @@ The application's main focus are the recipes, but it also provides a very helpfu
 
 ## Features
 
-Here is the list of all the features that are part of the current version. You can also check them out in the [interactive demo](https://tgrochowski87.github.io/cookbook/#/recipes). All the data there is stored in memory so feel free to play around with it and it will be right back to the initial state when you refresh the page.
+Here is the list of all the features that are part of the current version. You can also check them out in the [interactive demo](https://tgrochowski87.github.io/home-cookbook/#/recipes). All the data there is stored in memory so feel free to play around with it and it will be right back to the initial state when you refresh the page.
 
 <table>
 
