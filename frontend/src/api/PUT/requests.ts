@@ -1,6 +1,12 @@
 import { RecipeCreateDto } from "api/POST/DTOs";
 import { ShoppingListUpdateDto } from "./DTOs";
-import { QuantifiableItemGetDto, RecipeDetailsGetDto, ShoppingListDetailsGetDto, TagGetDto } from "api/GET/DTOs";
+import {
+  QuantifiableItemGetDto,
+  RecipeDetailsGetDto,
+  ShoppingListDetailsGetDto,
+  ShoppingListSublistGetDto,
+  TagGetDto,
+} from "api/GET/DTOs";
 import dbData from "db/data";
 
 export const updateRecipe = async (
@@ -48,6 +54,23 @@ export const updateShoppingList = async (
   _resourceStateTimestamp: string,
   dto: ShoppingListUpdateDto
 ): Promise<ShoppingListDetailsGetDto> => {
+  const createNewItemIndexGenerator = () => {
+    const newIndexTracker: Record<number, number> = {};
+
+    const generateNewIndex = (parentSublist: ShoppingListSublistGetDto): number => {
+      if (newIndexTracker[parentSublist.id] === undefined) {
+        const currentMax = parentSublist.items.length > 0 ? Math.max(...parentSublist.items.map(i => i.id)) : 0;
+        newIndexTracker[parentSublist.id] = currentMax;
+      }
+
+      return ++newIndexTracker[parentSublist.id];
+    };
+
+    return generateNewIndex;
+  };
+
+  const generateNewIndex = createNewItemIndexGenerator();
+
   const currentState = dbData.shoppingLists.find(l => l.id === shoppingListId)!;
   const newList: ShoppingListDetailsGetDto = {
     id: shoppingListId,
@@ -62,7 +85,7 @@ export const updateShoppingList = async (
       count: sub.count,
       items: sub.items.map(item => ({
         ...item,
-        id: item.id ?? Math.max(...currentState.sublists.find(s => s.id === sub.id)!.items.map(i => i.id)) + 1,
+        id: item.id ?? generateNewIndex(currentState.sublists.find(s => s.id === sub.id)!),
       })),
     })),
   };
