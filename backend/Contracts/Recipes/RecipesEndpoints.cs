@@ -1,10 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Net;
 using System.Text;
-using Cookbook.Domain.Images;
-using Cookbook.Domain.Recipes;
-using Cookbook.Domain.Recipes.Models;
 using Cookbook.Extensions;
+using Cookbook.Features.Images;
+using Cookbook.Features.Recipes;
+using Cookbook.Features.Recipes.Models;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;

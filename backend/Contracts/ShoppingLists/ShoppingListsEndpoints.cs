@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Net;
-using Cookbook.Domain.ShoppingLists;
-using Cookbook.Domain.ShoppingLists.Models;
+using Cookbook.Features.ShoppingLists;
+using Cookbook.Features.ShoppingLists.Models;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Mvc;
 using CSharpFunctionalExtensions;

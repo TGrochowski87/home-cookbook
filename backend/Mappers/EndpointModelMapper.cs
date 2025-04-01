@@ -3,16 +3,16 @@ using Cookbook.Contracts.Common;
 using Cookbook.Contracts.Recipes;
 using Cookbook.Contracts.ShoppingLists;
 using Cookbook.Contracts.Tags;
-using Cookbook.Domain.Common.Models;
-using Cookbook.Domain.Recipes.Models;
-using Cookbook.Domain.ShoppingLists.Models;
-using Cookbook.Domain.Tags;
+using Cookbook.Features.Common.Models;
+using Cookbook.Features.Recipes.Models;
+using Cookbook.Features.ShoppingLists.Models;
+using Cookbook.Features.Tags.Models;
 using CSharpFunctionalExtensions;
-using Category = Cookbook.Domain.Categories.Models.Category;
-using QuantifiableItemGet = Cookbook.Domain.Common.Models.QuantifiableItemGet;
-using RecipeGet = Cookbook.Domain.Recipes.Models.RecipeGet;
-using ShoppingList = Cookbook.Domain.ShoppingLists.Models.ShoppingList;
-using TagGet = Cookbook.Domain.Tags.TagGet;
+using Category = Cookbook.Features.Categories.Models.Category;
+using QuantifiableItemGet = Cookbook.Features.Common.Models.QuantifiableItemGet;
+using RecipeGet = Cookbook.Features.Recipes.Models.RecipeGet;
+using ShoppingList = Cookbook.Features.ShoppingLists.Models.ShoppingList;
+using TagGet = Cookbook.Features.Tags.Models.TagGet;
 
 namespace Cookbook.Mappers;
 

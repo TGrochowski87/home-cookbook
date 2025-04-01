@@ -1,4 +1,4 @@
-﻿using Cookbook.Domain.Categories;
+﻿using Cookbook.Features.Categories;
 using Cookbook.Mappers;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
