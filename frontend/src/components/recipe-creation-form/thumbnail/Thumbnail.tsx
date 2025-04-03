@@ -6,7 +6,7 @@ import { CircleX } from "lucide-react";
 
 const errorMessages: Record<FileUploadError, string> = {
   "file-invalid-type": "Nieobsługiwany format pliku.",
-  "file-too-large": "Plik jest za duży. Musi być mniejszy niż 5MB.",
+  "file-too-large": "Plik jest za duży. Musi być mniejszy niż 6MB.",
   "too-many-files": "Wysłano więcej niż jeden plik.",
   "file-too-small": "Plik jest za mały.",
 };

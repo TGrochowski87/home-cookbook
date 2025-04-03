@@ -20,7 +20,7 @@ import storeActions from "storage/redux/actions";
 import { useEffect } from "react";
 
 /**
- * [Notes regarding 'defaultValues in useForm]
+ * [Notes regarding 'defaultValues' in useForm]
  *
  * Wrong 'defaultValues' handling can lead to unexpected behavior!
  *
