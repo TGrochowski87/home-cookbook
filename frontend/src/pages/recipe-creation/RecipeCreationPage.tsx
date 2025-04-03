@@ -1,6 +1,5 @@
 import "./styles.less";
 import api from "api/api";
-import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import RecipeCreationForm, {
   EmptyRecipeCreationFormValues,
@@ -10,6 +9,7 @@ import store from "storage/redux/store";
 import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
 import { useEffect, useRef, useState } from "react";
+import { RecipeCreateDto } from "api/recipes/DTOs";
 
 export async function loader(): Promise<null> {
   await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
@@ -31,7 +31,7 @@ const RecipeCreationPage = () => {
   const firstRender = useRef<boolean>(true);
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
-    const newRecipe = await api.post.createRecipe(dto);
+    const newRecipe = await api.recipes.createRecipe(dto);
     localStorage.removeItem(pendingChangesLocalStorageKey);
     dispatch(storeActions.recipes.setRecipeInCache(newRecipe));
     displayMessage({ type: "success", message: "Przepis został utworzony.", fadeOutAfter: 5000 });

@@ -1,9 +1,9 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ShoppingListDetailsGetDto, ShoppingListGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { RootState } from "../store";
 import { DeepWriteable, WithOptional } from "utilities/types";
 import CookbookError from "utilities/CookbookError";
+import { ShoppingListDetailsGetDto, ShoppingListGetDto } from "api/shopping-lists/DTOs";
 
 /**
  * We first get all shopping lists without sublists. They get filled lazily.
@@ -29,7 +29,7 @@ const fetchShoppingLists = createAsyncThunk(
     }
 
     try {
-      return await api.get.getShoppingLists();
+      return await api.shoppingLists.getShoppingLists();
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -52,7 +52,7 @@ const fetchShoppingListDetails = createAsyncThunk(
     }
 
     try {
-      return await api.get.getShoppingList(id);
+      return await api.shoppingLists.getShoppingList(id);
     } catch (error) {
       return rejectWithValue(error);
     }

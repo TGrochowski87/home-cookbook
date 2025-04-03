@@ -1,8 +1,8 @@
 import "./styles.less";
 import CategoryIndicator from "./CategoryIndicator";
-import { RecipeGetDto } from "api/GET/DTOs";
 import { useNavigate } from "react-router-dom";
 import TagSet from "components/tag-set/TagSet";
+import { RecipeGetDto } from "api/recipes/DTOs";
 
 interface RecipeListItemProps {
   readonly recipe: RecipeGetDto;

@@ -1,13 +1,11 @@
 import Input from "components/Input";
 import "./styles.less";
-import { CategoryGetDto, TagGetDto } from "api/GET/DTOs";
 import { useNavigate } from "react-router-dom";
 import Thumbnail from "./thumbnail/Thumbnail";
 import TitledSection from "components/TitledSection";
 import TagSet, { TagSelection } from "components/tag-set/TagSet";
 import Button from "components/buttons/Button";
 import { useForm, Controller } from "react-hook-form";
-import { RecipeCreateDto } from "api/POST/DTOs";
 import axios from "axios";
 import { useAlerts } from "components/alert/AlertStack";
 import EditableQuantifiableItemsList from "components/quantifiable-items-list/EditableQuantifiableItemsList";
@@ -18,6 +16,9 @@ import mapper from "mapper";
 import { useAppDispatch } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
 import { useEffect } from "react";
+import { CategoryGetDto } from "api/categories/DTOs";
+import { RecipeCreateDto } from "api/recipes/DTOs";
+import { TagGetDto } from "api/tags/DTOs";
 
 /**
  * [Notes regarding 'defaultValues' in useForm]

@@ -1,4 +1,3 @@
-import { TagGetDto } from "api/GET/DTOs";
 import "./styles.less";
 import { useEffect, useState } from "react";
 import TagChip from "./TagChip";
@@ -6,6 +5,7 @@ import TagChipCheckbox from "./TagChipCheckbox";
 import CreateTagButton from "./CreateTagButton";
 import TagSize from "./TagSize";
 import NewTag from "./NewTag";
+import { TagGetDto } from "api/tags/DTOs";
 
 export interface TagSelection {
   readonly id?: number;

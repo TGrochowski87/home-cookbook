@@ -1,4 +1,4 @@
-import { CategoryGetDto } from "api/GET/DTOs";
+import { CategoryGetDto } from "api/categories/DTOs";
 import { useState } from "react";
 
 interface CategoryIndicatorProps {

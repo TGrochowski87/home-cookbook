@@ -1,23 +1,28 @@
-import { RecipeCreateDto } from "api/POST/DTOs";
-import { prepareRecipeFormData } from "api/POST/requests";
 import { BaseUrl } from "api/api";
 import axios from "axios";
-import { ShoppingListUpdateDto } from "./DTOs";
-import { RecipeDetailsGetDto, ShoppingListDetailsGetDto } from "api/GET/DTOs";
+import { ShoppingListGetDto, ShoppingListDetailsGetDto, ShoppingListUpdateDto } from "./DTOs";
 
-export const updateRecipe = async (
-  recipeId: number,
-  resourceStateTimestamp: string,
-  data: RecipeCreateDto
-): Promise<RecipeDetailsGetDto> => {
-  const formData = prepareRecipeFormData(data);
-  const url = `${BaseUrl}/recipes/${recipeId}`;
-  const response = await axios.put(url, formData, {
-    headers: {
-      "Content-Type": "multipart/form-data",
-      "If-Unmodified-Since": resourceStateTimestamp,
-    },
-  });
+export const getShoppingLists = async (): Promise<ShoppingListGetDto[]> => {
+  const url = `${BaseUrl}/shopping-lists`;
+  const response = await axios.get<ShoppingListGetDto[]>(url);
+  return response.data;
+};
+
+export const getShoppingList = async (id: number): Promise<ShoppingListDetailsGetDto> => {
+  const url = `${BaseUrl}/shopping-lists/${id}`;
+  const response = await axios.get<ShoppingListDetailsGetDto>(url);
+  return response.data;
+};
+
+export const createShoppingListSublist = async (shoppingListId: number, recipeId: number) => {
+  const url = `${BaseUrl}/shopping-lists/${shoppingListId}/sublists`;
+  const response = await axios.post(url, { recipeId });
+  return response.data;
+};
+
+export const createShoppingList = async (name: string): Promise<ShoppingListDetailsGetDto> => {
+  const url = `${BaseUrl}/shopping-lists`;
+  const response = await axios.post(url, { name });
   return response.data;
 };
 
@@ -59,4 +64,10 @@ export const updateShoppingListWithFetch = async (
   });
 
   return response.json();
+};
+
+export const deleteShoppingList = async (listId: number, resourceStateTimestamp: string): Promise<void> => {
+  const url = `${BaseUrl}/shopping-lists/${listId}`;
+  const response = await axios.delete(url, { headers: { "If-Unmodified-Since": resourceStateTimestamp } });
+  return response.data;
 };

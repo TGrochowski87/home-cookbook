@@ -20,7 +20,7 @@ const ShoppingPage = () => {
 
   const handleShoppingListCreate = async () => {
     const name = new Date().toLocaleDateString("pl-PL");
-    const newShoppingList = await api.post.createShoppingList(name);
+    const newShoppingList = await api.shoppingLists.createShoppingList(name);
     dispatch(storeActions.shoppingLists.addShoppingList(newShoppingList));
     navigate(`/shopping-lists/${newShoppingList.id}`);
   };

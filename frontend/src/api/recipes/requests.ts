@@ -1,17 +1,28 @@
 import { BaseUrl } from "api/api";
-import { RecipeCreateDto } from "./DTOs";
 import axios from "axios";
-import { RecipeDetailsGetDto, ShoppingListDetailsGetDto } from "api/GET/DTOs";
+import { GetRecipesResponseDto, RecipeDetailsGetDto, RecipeCreateDto } from "./DTOs";
 
-export const createShoppingListSublist = async (shoppingListId: number, recipeId: number) => {
-  const url = `${BaseUrl}/shopping-lists/${shoppingListId}/sublists`;
-  const response = await axios.post(url, { recipeId });
+export type GetRecipesURL = { type: "Query"; query: string } | { type: "FullUrl"; url: string };
+
+export const getRecipes = async (url: GetRecipesURL): Promise<GetRecipesResponseDto> => {
+  const finalUrl = url.type === "Query" ? `${BaseUrl}/recipes${url.query}` : url.url;
+
+  // await new Promise(resolve => {
+  //   setTimeout(resolve, 3000);
+  // });
+
+  const response = await axios.get<GetRecipesResponseDto>(finalUrl);
   return response.data;
 };
 
-export const createShoppingList = async (name: string): Promise<ShoppingListDetailsGetDto> => {
-  const url = `${BaseUrl}/shopping-lists`;
-  const response = await axios.post(url, { name });
+export const getRecipe = async (id: number): Promise<RecipeDetailsGetDto> => {
+  const url = `${BaseUrl}/recipes/${id}`;
+  const response = await axios.get<RecipeDetailsGetDto>(url);
+  return response.data;
+};
+
+export const getImage = async (url: string): Promise<Blob> => {
+  const response = await axios.get(url, { responseType: "blob" });
   return response.data;
 };
 
@@ -50,4 +61,20 @@ export const prepareRecipeFormData = (recipe: RecipeCreateDto): FormData => {
   formData.append("description", recipe.description);
 
   return formData;
+};
+
+export const updateRecipe = async (
+  recipeId: number,
+  resourceStateTimestamp: string,
+  data: RecipeCreateDto
+): Promise<RecipeDetailsGetDto> => {
+  const formData = prepareRecipeFormData(data);
+  const url = `${BaseUrl}/recipes/${recipeId}`;
+  const response = await axios.put(url, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      "If-Unmodified-Since": resourceStateTimestamp,
+    },
+  });
+  return response.data;
 };

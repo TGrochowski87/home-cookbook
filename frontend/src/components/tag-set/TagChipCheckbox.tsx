@@ -1,7 +1,7 @@
 import * as Checkbox from "@radix-ui/react-checkbox";
-import { TagGetDto } from "api/GET/DTOs";
 import "./styles.less";
 import TagSize from "./TagSize";
+import { TagGetDto } from "api/tags/DTOs";
 
 interface TagChipProps {
   readonly tag: TagGetDto;

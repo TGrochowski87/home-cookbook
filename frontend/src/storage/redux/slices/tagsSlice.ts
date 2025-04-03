@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TagGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { RootState } from "../store";
+import { TagGetDto } from "api/tags/DTOs";
 
 interface State {
   tags: TagGetDto[];
@@ -18,7 +18,7 @@ const fetchTags = createAsyncThunk("tags/fetchTags", async (_args, { getState, r
   }
 
   try {
-    return await api.get.getTags();
+    return await api.tags.getTags();
   } catch (error) {
     return rejectWithValue(error);
   }

@@ -3,7 +3,6 @@ import CategoryChip from "pages/recipes/search/CategoryChip";
 import "./styles.less";
 import { useEffect, useRef, useState } from "react";
 import api from "api/api";
-import { GetRecipesResponseDto, RecipeGetDto } from "api/GET/DTOs";
 import RecipeListItem from "./recipe/RecipeListItem";
 import { Form, useLoaderData, useNavigate, useSearchParams, useSubmit } from "react-router-dom";
 import AddButton from "components/buttons/AddButton";
@@ -15,6 +14,7 @@ import ScrollUpButton from "./ScrollUpButton";
 import store from "storage/redux/store";
 import { useAppSelector } from "storage/redux/hooks";
 import storeActions from "storage/redux/actions";
+import { GetRecipesResponseDto, RecipeGetDto } from "api/recipes/DTOs";
 
 interface LoaderResponse {
   readonly getRecipesResponse: GetRecipesResponseDto;
@@ -25,7 +25,7 @@ export async function loader({ request }: { request: Request }): Promise<LoaderR
 
   await store.dispatch(storeActions.categories.async.fetchCategories()).unwrap();
   await store.dispatch(storeActions.tags.async.fetchTags()).unwrap();
-  const getRecipesResponse = await api.get.getRecipes({ type: "Query", query: url.search });
+  const getRecipesResponse = await api.recipes.getRecipes({ type: "Query", query: url.search });
   return { getRecipesResponse };
 }
 
@@ -54,11 +54,7 @@ const RecipeListPage = () => {
     }
     setNextPageLoading(true);
 
-    // await new Promise(resolve => {
-    //   setTimeout(resolve, 1000);
-    // });
-
-    const nextPage = await api.get.getRecipes({ type: "FullUrl", url: nextRecipesPage.current });
+    const nextPage = await api.recipes.getRecipes({ type: "FullUrl", url: nextRecipesPage.current });
     nextRecipesPage.current = nextPage.nextPage;
     setRecipes(prev => prev.concat(nextPage.recipes));
     setNextPageLoading(false);

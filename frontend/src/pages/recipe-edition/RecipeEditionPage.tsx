@@ -1,6 +1,5 @@
 import "./styles.less";
 import api from "api/api";
-import { RecipeCreateDto } from "api/POST/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import RecipeCreationForm, { RecipeData } from "components/recipe-creation-form/RecipeCreationForm";
 import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
@@ -8,6 +7,7 @@ import store from "storage/redux/store";
 import storeActions from "storage/redux/actions";
 import { useParams } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { RecipeCreateDto } from "api/recipes/DTOs";
 
 export async function loader(args: unknown): Promise<null> {
   const { params } = args as { params: { id: string } };
@@ -33,7 +33,7 @@ const RecipeEditionPage = () => {
   const firstRender = useRef<boolean>(true);
 
   const onSubmitCallback = async (dto: RecipeCreateDto): Promise<void> => {
-    const updatedRecipe = await api.put.updateRecipe(recipe.id, recipe.updateDate, dto);
+    const updatedRecipe = await api.recipes.updateRecipe(recipe.id, recipe.updateDate, dto);
     localStorage.removeItem(pendingChangesLocalStorageKey.current);
     dispatch(storeActions.recipes.setRecipeInCache(updatedRecipe));
     displayMessage({ type: "success", message: "Zmiany zostały zapisane.", fadeOutAfter: 5000 });
@@ -48,7 +48,7 @@ const RecipeEditionPage = () => {
       firstRender.current = false;
 
       // Binary data is not serializable so in both cases we use the current recipe image.
-      const image = recipe.imageSrc ? await api.get.getImage(recipe.imageSrc) : null;
+      const image = recipe.imageSrc ? await api.recipes.getImage(recipe.imageSrc) : null;
 
       // An option to load the unsaved changes from the last session.
       const pendingEdit = localStorage.getItem(pendingChangesLocalStorageKey.current);

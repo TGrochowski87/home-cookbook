@@ -1,7 +1,7 @@
-import { Amount } from "api/GET/DTOs";
 import QuantifiableItemData from "../../models/QuantifiableItemData";
 import ActionData from "../../models/ActionData";
 import Action from "./Action";
+import { Amount } from "api/common-DTOs";
 
 interface QuantifiableItemProps {
   readonly data: QuantifiableItemData;

@@ -1,4 +1,3 @@
-import { ShoppingListDetailsGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import TitledSection from "components/TitledSection";
 import { useParams } from "react-router-dom";
@@ -17,6 +16,7 @@ import HomeButton from "components/buttons/HomeButton";
 import { useAppDispatch, useAppSelector } from "storage/redux/hooks";
 import store from "storage/redux/store";
 import storeActions from "storage/redux/actions";
+import { ShoppingListDetailsGetDto } from "api/shopping-lists/DTOs";
 
 export async function loader(args: unknown): Promise<null> {
   const { params } = args as { params: { id: string } };
@@ -62,7 +62,7 @@ const ShoppingListPage = () => {
       }
 
       try {
-        const updatedShoppingList = await api.put.updateShoppingList(
+        const updatedShoppingList = await api.shoppingLists.updateShoppingList(
           shoppingList.id,
           shoppingList.updateDate,
           mapper.map.toShoppingListUpdateDto(shoppingListRef.current)
@@ -96,7 +96,7 @@ const ShoppingListPage = () => {
         return;
       }
 
-      const updatedShoppingList = await api.put.updateShoppingListWithFetch(
+      const updatedShoppingList = await api.shoppingLists.updateShoppingListWithFetch(
         shoppingList.id,
         shoppingList.updateDate,
         mapper.map.toShoppingListUpdateDto(shoppingList)

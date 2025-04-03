@@ -1,6 +1,12 @@
-import { QuantifiableItemGetDto, ShoppingListDetailsGetDto, ShoppingListSublistGetDto } from "api/GET/DTOs";
-import { RecipeCreateDto } from "api/POST/DTOs";
-import { ShoppingListItemUpdateDto, ShoppingListUpdateDto, ShoppingSublistUpdateDto } from "api/PUT/DTOs";
+import { QuantifiableItemGetDto } from "api/common-DTOs";
+import { RecipeCreateDto } from "api/recipes/DTOs";
+import {
+  ShoppingListSublistGetDto,
+  ShoppingListDetailsGetDto,
+  ShoppingListUpdateDto,
+  ShoppingSublistUpdateDto,
+  ShoppingListItemUpdateDto,
+} from "api/shopping-lists/DTOs";
 import { RecipeData } from "components/recipe-creation-form/RecipeCreationForm";
 import QuantifiableItemData from "models/QuantifiableItemData";
 import { ShoppingList, ShoppingListSublist } from "models/ShoppingList";

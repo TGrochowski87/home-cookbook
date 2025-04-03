@@ -1,8 +1,8 @@
 import * as Select from "@radix-ui/react-select";
 import SelectItem from "./SelectItem";
-import { CategoryGetDto } from "api/GET/DTOs";
 import { forwardRef } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { CategoryGetDto } from "api/categories/DTOs";
 
 interface CustomSelectProps {
   readonly categories: readonly CategoryGetDto[];

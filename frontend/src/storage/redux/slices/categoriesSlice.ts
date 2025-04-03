@@ -1,7 +1,7 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { CategoryGetDto } from "api/GET/DTOs";
 import api from "api/api";
 import { RootState } from "../store";
+import { CategoryGetDto } from "api/categories/DTOs";
 
 interface State {
   categories: CategoryGetDto[];
@@ -18,7 +18,7 @@ const fetchCategories = createAsyncThunk("categories/fetchCategories", async (_a
   }
 
   try {
-    return await api.get.getCategories();
+    return await api.categories.getCategories();
   } catch (error) {
     return rejectWithValue(error);
   }

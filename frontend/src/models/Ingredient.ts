@@ -1,4 +1,4 @@
-import { Amount } from "api/GET/DTOs";
+import { Amount } from "api/common-DTOs";
 
 interface Ingredient {
   readonly key: string | number;

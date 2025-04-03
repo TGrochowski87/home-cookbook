@@ -211,7 +211,10 @@ const RecipePage = () => {
           <p>Edytuj</p>
         </button>
 
-        <button>
+        <button
+          onClick={() =>
+            displayMessage({ type: "info", message: "Ten przycisk na razie nic nie robi :)", fadeOutAfter: 5000 })
+          }>
           <Trash2 />
           <p>Usuń</p>
         </button>

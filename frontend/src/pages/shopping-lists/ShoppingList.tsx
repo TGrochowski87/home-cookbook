@@ -1,5 +1,5 @@
 import api from "api/api";
-import { ShoppingListGetDto } from "api/GET/DTOs";
+import { ShoppingListGetDto } from "api/shopping-lists/DTOs";
 import { useAlerts } from "components/alert/AlertStack";
 import { TriangleAlert, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -29,7 +29,7 @@ const ShoppingList = ({ listData }: ShoppingListProps) => {
 
           if (window.confirm("Na pewno usunąć listę?")) {
             try {
-              await api.delete.deleteShoppingList(listData.id, listData.updateDate);
+              await api.shoppingLists.deleteShoppingList(listData.id, listData.updateDate);
               dispatch(storeActions.shoppingLists.removeShoppingList(listData.id));
             } catch (error) {
               displayMessage({ type: "error", message: "Nie udało się usunąć listy.", fadeOutAfter: 5000 });

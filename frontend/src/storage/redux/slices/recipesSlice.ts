@@ -1,8 +1,8 @@
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RecipeDetailsGetDto } from "api/GET/DTOs";
 import { RootState } from "../store";
 import api from "api/api";
 import { DeepWriteable } from "utilities/types";
+import { RecipeDetailsGetDto } from "api/recipes/DTOs";
 
 interface State {
   recipes: Record<number, RecipeDetailsGetDto>;
@@ -19,7 +19,7 @@ const fetchRecipe = createAsyncThunk("recipes/fetchRecipe", async (id: number, {
   }
 
   try {
-    return await api.get.getRecipe(id);
+    return await api.recipes.getRecipe(id);
   } catch (error) {
     // Without this, redux swallows the original error and returns barely any information.
     return rejectWithValue(error);

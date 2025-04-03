@@ -1,5 +1,5 @@
-import { ShoppingListGetDto } from "api/GET/DTOs";
 import api from "api/api";
+import { ShoppingListGetDto } from "api/shopping-lists/DTOs";
 import axios from "axios";
 import Popup from "components/Popup";
 import { useAlerts } from "components/alert/AlertStack";
@@ -20,8 +20,8 @@ const AddToShoppingListScreen = ({ recipeId, shoppingLists }: AddToShoppingListS
 
   const listClickHandler = async (listId: number) => {
     try {
-      await api.post.createShoppingListSublist(listId, recipeId);
-      const updatedShoppingList = await api.get.getShoppingList(listId);
+      await api.shoppingLists.createShoppingListSublist(listId, recipeId);
+      const updatedShoppingList = await api.shoppingLists.getShoppingList(listId);
       dispatch(storeActions.shoppingLists.updateCachedShoppingList(updatedShoppingList));
       displayMessage({ type: "success", message: "Przepis został dodany.", fadeOutAfter: 5000 });
     } catch (error) {
