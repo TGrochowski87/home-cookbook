@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Cookbook.Features.Common;
 using Cookbook.Features.ShoppingLists.Models;
+using Cookbook.Features.ShoppingLists.Repository;
 using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.ShoppingLists;

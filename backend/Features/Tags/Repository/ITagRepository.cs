@@ -1,7 +1,7 @@
 ﻿using Cookbook.Features.Tags.Models;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Features.Tags;
+namespace Cookbook.Features.Tags.Repository;
 
 internal interface ITagRepository
 {

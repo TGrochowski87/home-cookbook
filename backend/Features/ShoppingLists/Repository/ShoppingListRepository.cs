@@ -6,7 +6,7 @@ using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 using ShoppingList = Cookbook.Features.ShoppingLists.Models.ShoppingList;
 
-namespace Cookbook.Features.ShoppingLists;
+namespace Cookbook.Features.ShoppingLists.Repository;
 
 internal class ShoppingListRepository(CookbookContext context) : IShoppingListRepository
 {

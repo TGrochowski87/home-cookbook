@@ -5,7 +5,7 @@ using Cookbook.Mappers;
 using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cookbook.Features.Recipes;
+namespace Cookbook.Features.Recipes.Repository;
 
 internal class RecipeRepository(CookbookContext context) : IRecipeRepository
 {

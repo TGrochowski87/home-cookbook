@@ -2,6 +2,7 @@
 using Cookbook.Features.Common;
 using Cookbook.Features.Images;
 using Cookbook.Features.Recipes.Models;
+using Cookbook.Features.Recipes.Repository;
 using Cookbook.Features.Tags;
 using CSharpFunctionalExtensions;
 using Ganss.Xss;

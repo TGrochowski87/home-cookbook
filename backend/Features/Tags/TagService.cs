@@ -1,4 +1,5 @@
 ﻿using Cookbook.Features.Tags.Models;
+using Cookbook.Features.Tags.Repository;
 using CSharpFunctionalExtensions;
 
 namespace Cookbook.Features.Tags;

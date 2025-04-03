@@ -1,4 +1,5 @@
 ﻿using Cookbook.Features.Categories.Models;
+using Cookbook.Features.Categories.Repository;
 
 namespace Cookbook.Features.Categories;
 

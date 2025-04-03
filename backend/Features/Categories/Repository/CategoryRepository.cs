@@ -3,7 +3,7 @@ using Cookbook.Mappers;
 using Microsoft.EntityFrameworkCore;
 using Category = Cookbook.Features.Categories.Models.Category;
 
-namespace Cookbook.Features.Categories;
+namespace Cookbook.Features.Categories.Repository;
 
 internal class CategoryRepository(CookbookContext context) : ICategoryRepository
 {

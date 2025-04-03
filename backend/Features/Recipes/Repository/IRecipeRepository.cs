@@ -1,7 +1,7 @@
 ﻿using Cookbook.Features.Recipes.Models;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Features.Recipes;
+namespace Cookbook.Features.Recipes.Repository;
 
 internal interface IRecipeRepository
 {

@@ -1,7 +1,7 @@
 ﻿using Cookbook.Features.ShoppingLists.Models;
 using CSharpFunctionalExtensions;
 
-namespace Cookbook.Features.ShoppingLists;
+namespace Cookbook.Features.ShoppingLists.Repository;
 
 internal interface IShoppingListRepository
 {

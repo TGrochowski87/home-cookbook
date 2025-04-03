@@ -6,7 +6,7 @@ using CSharpFunctionalExtensions;
 using EntityFramework.Exceptions.Common;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cookbook.Features.Tags;
+namespace Cookbook.Features.Tags.Repository;
 
 internal class TagRepository(CookbookContext context) : ITagRepository
 {
